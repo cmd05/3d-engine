@@ -1,0 +1,2 @@
+[1/2] Building CXX object CMakeFiles/3dengine.dir/src/ecs/systems/RenderSystem.cpp.obj
+[2/2] Linking CXX executable 3dengine.exe
