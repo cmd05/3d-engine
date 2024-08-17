@@ -1,11 +1,9 @@
-#include <bitset>
-// #include <iostream>
-
-#include <ecs/core/Coordinator.hpp>
-#include <ecs/core/Event.hpp>
+#include <glad/glad.h>
 
 #include <window/WindowManager.hpp>
 
+#include <ecs/core/Coordinator.hpp>
+#include <ecs/core/Event.hpp>
 
 extern Coordinator gCoordinator; // extern gCoordinator can be accessed from main.cpp as it is not static
 

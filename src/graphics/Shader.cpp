@@ -1,3 +1,5 @@
+#include <glad/glad.h>
+
 #include <graphics/Shader.hpp>
 
 #include <fstream>

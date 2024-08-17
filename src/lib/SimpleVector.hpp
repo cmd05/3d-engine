@@ -1,6 +1,7 @@
 #pragma once
 
 #include <memory>
+#include <cstddef> // for std::size_t
 
 template<typename T, typename size_type = std::size_t, typename A = std::allocator<T>>
 struct SimpleVector {
