@@ -4,7 +4,6 @@ project(3dengine)
 # C:/msys64/ucrt64/bin/c++.exe
 # message (${CMAKE_CXX_COMPILER})
 
-
 ###########################################################
 # DIRECTORIES
 ###########################################################
@@ -26,9 +25,12 @@ add_subdirectory(${INCLUDES_DIR}/glfw-3.3.3)
 # glad (OpenGL function loading)
 add_subdirectory(${INCLUDES_DIR}/glad)
 
+# glm
+# add_subdirectory(${INCLUDES_DIR}/glm)
+find_package(glm CONFIG REQUIRED)
+
 # boost
 # add_subdirectory(${INCLUDES_DIR}/boost)
-
 
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_EXTENSIONS OFF)
@@ -87,14 +89,15 @@ target_sources(
 target_include_directories(
     3dengine
     PRIVATE
-    src)
+    src
+)
 
-    
 target_link_libraries(
     3dengine
     PRIVATE
     glad
     glfw
+    glm::glm
 )
 
 target_compile_definitions(3dengine PUBLIC FS_SHADERS_DIR="${CMAKE_CURRENT_SOURCE_DIR}/src/shaders/")
