@@ -80,9 +80,9 @@ target_sources(
     src/ecs/core/System.hpp
     src/ecs/core/Types.hpp
 
-    src/lib/math/Vec2.hpp
-    src/lib/math/Vec3.hpp
-    src/lib/math/Vec4.hpp
+    # src/lib/math/Vec2.hpp
+    # src/lib/math/Vec3.hpp
+    # src/lib/math/Vec4.hpp
 )
 
 target_include_directories(
