@@ -50,45 +50,46 @@ void WindowManager::ProcessEvents()
 {
     glfwPollEvents();
 
-    bool buttonStateChanged = true;
+    // bool buttonStateChanged = true;
 
-    if (glfwGetKey(mWindow, GLFW_KEY_ESCAPE))
+    if (glfwGetKey(mWindow, GLFW_KEY_ESCAPE) == GLFW_PRESS)
     {
         gCoordinator.send_event(Events::Window::QUIT);
     }
-    else if (glfwGetKey(mWindow, GLFW_KEY_W))
+    else if (glfwGetKey(mWindow, GLFW_KEY_W) == GLFW_PRESS)
     {
         mButtons.set(static_cast<std::size_t>(InputButtons::W));
     }
-    else if (glfwGetKey(mWindow, GLFW_KEY_A))
+    else if (glfwGetKey(mWindow, GLFW_KEY_A) == GLFW_PRESS)
     {
         mButtons.set(static_cast<std::size_t>(InputButtons::A));
     }
-    else if (glfwGetKey(mWindow, GLFW_KEY_S))
+    else if (glfwGetKey(mWindow, GLFW_KEY_S) == GLFW_PRESS)
     {
         mButtons.set(static_cast<std::size_t>(InputButtons::S));
     }
-    else if (glfwGetKey(mWindow, GLFW_KEY_D))
+    else if (glfwGetKey(mWindow, GLFW_KEY_D) == GLFW_PRESS)
     {
         mButtons.set(static_cast<std::size_t>(InputButtons::D));
     }
-    else if (glfwGetKey(mWindow, GLFW_KEY_Q))
+    else if (glfwGetKey(mWindow, GLFW_KEY_Q) == GLFW_PRESS)
     {
         mButtons.set(static_cast<std::size_t>(InputButtons::Q));
     }
-    else if (glfwGetKey(mWindow, GLFW_KEY_E))
+    else if (glfwGetKey(mWindow, GLFW_KEY_E) == GLFW_PRESS)
     {
         mButtons.set(static_cast<std::size_t>(InputButtons::E));
     }
     else
     {
-        buttonStateChanged = false;
+        mButtons.reset();
+        // buttonStateChanged = false;
     }
 
-    if (buttonStateChanged)
-    {
+    // if (buttonStateChanged)
+    // {
         Event event(Events::Window::INPUT);
         event.set_param(Events::Window::Input::INPUT, mButtons);
         gCoordinator.send_event(event);
-    }
+    // }
 }
