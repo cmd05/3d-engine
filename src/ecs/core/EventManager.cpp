@@ -10,8 +10,9 @@ void EventManager::add_listener(EventId event_id, const std::function<void(Event
 void EventManager::send_event(Event& event) {
     EventId type = event.get_type();
 
+    // call all listeners for which listen to EventId == `type`
     for(const auto& listener : m_listeners[type])
-        listener(event);
+        listener(event); // call the listeners with the `Event` as its argument
 }
 
 void EventManager::send_event(EventId event_id) {

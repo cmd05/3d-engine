@@ -33,6 +33,7 @@ enum class InputButtons
 using EventId = std::uint32_t;
 using ParamId = std::uint32_t;
 
+// see CameraControlSystem::Init() for detailed explanation of METHOD_LISTENER
 #define METHOD_LISTENER(EventType, Listener) EventType, std::bind(&Listener, this, std::placeholders::_1)
 #define FUNCTION_LISTENER(EventType, Listener) EventType, std::bind(&Listener, std::placeholders::_1)
 
@@ -50,6 +51,8 @@ static constexpr std::uint32_t operator "" _hash(char const* s, std::size_t coun
     return fnv1a_32(s, count);
 }
 
+// _hash creates uint32_t sized unique hashes for strings at compile time
+// hash comparisons are faster than string comparison for the event system
 namespace Events::Window {
     const EventId QUIT = "Events::Window::QUIT"_hash;
     const EventId RESIZED = "Events::Window::RESIZED"_hash;
