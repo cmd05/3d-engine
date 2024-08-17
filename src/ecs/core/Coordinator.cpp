@@ -3,10 +3,6 @@
 
 #include <ecs/core/Coordinator.hpp>
 
-#include <ecs/core/ComponentManager.hpp>
-#include <ecs/core/EntityManager.hpp>
-#include <ecs/core/SystemManager.hpp>
-#include <ecs/core/EventManager.hpp>
 #include <ecs/core/Types.hpp>
 #include <ecs/core/Event.hpp>
 
