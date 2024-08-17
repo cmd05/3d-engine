@@ -9,6 +9,8 @@ cmake --build build > log.txt && cd build && ./3dengine.exe; cd ..
 #include <random>
 #include <iostream>
 
+#include <glm/glm.hpp>
+
 #include <ecs/core/Coordinator.hpp>
 
 #include <ecs/systems/CameraControlSystem.hpp>
@@ -23,8 +25,6 @@ cmake --build build > log.txt && cd build && ./3dengine.exe; cd ..
 #include <ecs/components/RigidBody.hpp>
 #include <ecs/components/Thrust.hpp>
 #include <ecs/components/Transform.hpp>
-
-#include <glm/glm.hpp>
 
 #include <window/WindowManager.hpp>
 

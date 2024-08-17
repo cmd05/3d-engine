@@ -1,6 +1,8 @@
 #include <cmath>
 #include <string>
 
+#include <glm/glm.hpp>
+
 #include <ecs/systems/RenderSystem.hpp>
 
 #include <ecs/components/Camera.hpp>
@@ -10,8 +12,6 @@
 #include <ecs/core/Coordinator.hpp>
 
 #include <graphics/Shader.hpp>
-
-#include <glm/glm.hpp>
 
 extern Coordinator gCoordinator;
 
