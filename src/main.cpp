@@ -192,12 +192,13 @@ int main()
         entities.push_back(entity);
     } */
 
+    float lastFrame, currentFrame;
+    lastFrame = currentFrame = windowManager.get_time();
+    // std::cout << currentFrame << std::endl;
     float dt = 0.0f;
 
     while (!quit)
     {
-        auto startTime = std::chrono::high_resolution_clock::now();
-
         windowManager.ProcessEvents();
 
         playerControlSystem.Update(dt);
@@ -210,11 +211,10 @@ int main()
 
         windowManager.Update();
 
-        auto stopTime = std::chrono::high_resolution_clock::now();
-
-        dt = std::chrono::duration<float, std::chrono::seconds::period>(stopTime - startTime).count();
+        currentFrame = windowManager.get_time();
+        dt = currentFrame - lastFrame;
+        lastFrame = currentFrame;
     }
-
 
     windowManager.Shutdown();
 
