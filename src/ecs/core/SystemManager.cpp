@@ -1,11 +1,5 @@
-#include <cassert>
-#include <memory>
-#include <unordered_map>
-#include <typeindex>
-
 #include <ecs/core/SystemManager.hpp>
 
-#include <ecs/core/System.hpp>
 #include <ecs/core/Types.hpp>
 
 void SystemManager::entity_destroyed(Entity entity) {
