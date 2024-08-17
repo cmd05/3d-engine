@@ -1,7 +1,4 @@
 #include <cassert>
-#include <queue>
-#include <stdexcept>
-#include <map>
 
 #include <ecs/core/EntityManager.hpp>
 

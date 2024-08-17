@@ -1,9 +1,6 @@
 #pragma once
 
-#include <cassert>
 #include <queue>
-#include <stdexcept>
-// #include <iostream>
 #include <map>
 
 #include <ecs/core/Types.hpp>
