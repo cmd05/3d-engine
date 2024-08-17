@@ -125,9 +125,9 @@ int main()
         // i++;
         gCoordinator.add_component<Player>(entity, Player{});
 
-        gCoordinator.add_component<Gravity>(
-        	entity,
-        	{glm::vec3(0.0f, randGravity(generator), 0.0f)});
+        // gCoordinator.add_component<Gravity>(
+        // 	entity,
+        // 	{glm::vec3(0.0f, randGravity(generator), 0.0f)});
 
         gCoordinator.add_component( // automatic type deduction for template parameters
             entity,
