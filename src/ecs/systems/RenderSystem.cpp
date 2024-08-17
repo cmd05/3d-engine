@@ -147,10 +147,10 @@ void RenderSystem::Update(float dt)
     auto& cameraTransform = gCoordinator.get_component<Transform>(mCamera);
     auto& camera = gCoordinator.get_component<Camera>(mCamera);
 
-    for (auto const& entity : m_entities)
+    for (const auto& entity : m_entities)
     {
-        auto const& transform = gCoordinator.get_component<Transform>(entity);
-        auto const& renderable = gCoordinator.get_component<Renderable>(entity);
+        const auto& transform = gCoordinator.get_component<Transform>(entity);
+        const auto& renderable = gCoordinator.get_component<Renderable>(entity);
 
         Mat44 view;
         view.m[0][3] = -cameraTransform.position.x;

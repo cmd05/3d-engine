@@ -17,13 +17,13 @@ void PhysicsSystem::Init()
 
 void PhysicsSystem::Update(float dt)
 {
-    for (auto const& entity : m_entities)
+    for (const auto& entity : m_entities)
     {
         auto& rigidBody = gCoordinator.get_component<RigidBody>(entity);
         auto& transform = gCoordinator.get_component<Transform>(entity);
 
         // Forces
-        auto const& gravity = gCoordinator.get_component<Gravity>(entity);
+        const auto& gravity = gCoordinator.get_component<Gravity>(entity);
 
         transform.position += rigidBody.velocity * dt;
 
