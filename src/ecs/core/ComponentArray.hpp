@@ -2,7 +2,7 @@
 
 #include <ecs/core/Types.hpp>
 
-#include <lib/SimpleVector.h>
+#include <lib/SimpleVector.hpp>
 
 #include <array>
 #include <cassert>
