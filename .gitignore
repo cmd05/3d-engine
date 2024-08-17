@@ -3,3 +3,5 @@
 /out
 /includes
 test.cpp
+/log*
+/docs-dev
