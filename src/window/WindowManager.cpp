@@ -49,6 +49,8 @@ void WindowManager::Shutdown()
 void WindowManager::ProcessEvents()
 {
     glfwPollEvents();
+    
+    mButtons.reset(); // reset all bits of the bitset (do not retain previously pressed keys)
 
     // bool buttonStateChanged = false;
 
@@ -62,49 +64,55 @@ void WindowManager::ProcessEvents()
     {
         mButtons.set(static_cast<std::size_t>(InputButtons::W));
         // buttonStateChanged = true;
-    } else {
-        mButtons.reset(static_cast<std::size_t>(InputButtons::W));
     }
+    // else {
+    //     mButtons.reset(static_cast<std::size_t>(InputButtons::W));
+    // }
 
     if (glfwGetKey(mWindow, GLFW_KEY_A) == GLFW_PRESS)
     {
         mButtons.set(static_cast<std::size_t>(InputButtons::A));
         // buttonStateChanged = true;
-    } else {
-        mButtons.reset(static_cast<std::size_t>(InputButtons::A));
-    }
+    } 
+    // else {
+    //     mButtons.reset(static_cast<std::size_t>(InputButtons::A));
+    // }
 
     if (glfwGetKey(mWindow, GLFW_KEY_S) == GLFW_PRESS)
     {
         mButtons.set(static_cast<std::size_t>(InputButtons::S));
         // buttonStateChanged = true;
-    } else {
-        mButtons.reset(static_cast<std::size_t>(InputButtons::S));
-    }
+    } 
+    // else {
+    //     mButtons.reset(static_cast<std::size_t>(InputButtons::S));
+    // }
     
     if (glfwGetKey(mWindow, GLFW_KEY_D) == GLFW_PRESS)
     {
         mButtons.set(static_cast<std::size_t>(InputButtons::D));
         // buttonStateChanged = true;
-    } else {
-        mButtons.reset(static_cast<std::size_t>(InputButtons::D));
-    }
+    } 
+    // else {
+    //     mButtons.reset(static_cast<std::size_t>(InputButtons::D));
+    // }
     
     if (glfwGetKey(mWindow, GLFW_KEY_Q) == GLFW_PRESS)
     {
         mButtons.set(static_cast<std::size_t>(InputButtons::Q));
         // buttonStateChanged = true;
-    } else {
-        mButtons.reset(static_cast<std::size_t>(InputButtons::Q));
-    }
+    } 
+    // else {
+    //     mButtons.reset(static_cast<std::size_t>(InputButtons::Q));
+    // }
 
     if (glfwGetKey(mWindow, GLFW_KEY_E) == GLFW_PRESS)
     {
         mButtons.set(static_cast<std::size_t>(InputButtons::E));
         // buttonStateChanged = true;
-    } else {
-        mButtons.reset(static_cast<std::size_t>(InputButtons::E));
-    }
+    } 
+    // else {
+    //     mButtons.reset(static_cast<std::size_t>(InputButtons::E));
+    // }
 
     // else
     // {
@@ -118,7 +126,7 @@ void WindowManager::ProcessEvents()
     // if (buttonStateChanged)
     // {
         Event event(Events::Window::INPUT);
-        event.set_param(Events::Window::Input::INPUT, mButtons);
+        event.set_param(Events::Window::Input::INPUT, mButtons); // set window input parameter to buttons pressed
         gCoordinator.send_event(event);
     // }
 }
