@@ -37,84 +37,84 @@ void RenderSystem::Init()
             .projectionTransform = Camera::MakeProjectionTransform(45.0f, 0.1f, 1000.0f, 1920, 1080)
         });
 
-    std::vector<Vec3> vertices =
+    std::vector<glm::vec3> vertices =
         {
-            Vec3(-0.5f, -0.5f, -0.5f),
-            Vec3(0.5f, -0.5f, -0.5f),
-            Vec3(0.5f, 0.5f, -0.5f),
-            Vec3(0.5f, 0.5f, -0.5f),
-            Vec3(-0.5f, 0.5f, -0.5f),
-            Vec3(-0.5f, -0.5f, -0.5f),
-            Vec3(-0.5f, -0.5f, 0.5),
-            Vec3(0.5f, -0.5f, 0.5),
-            Vec3(0.5f, 0.5f, 0.5),
-            Vec3(0.5f, 0.5f, 0.5),
-            Vec3(-0.5f, 0.5f, 0.5),
-            Vec3(-0.5f, -0.5f, 0.5),
-            Vec3(-0.5f, 0.5f, 0.5f),
-            Vec3(-0.5f, 0.5f, -0.5f),
-            Vec3(-0.5f, -0.5f, -0.5f),
-            Vec3(-0.5f, -0.5f, -0.5f),
-            Vec3(-0.5f, -0.5f, 0.5f),
-            Vec3(-0.5f, 0.5f, 0.5f),
-            Vec3(0.5f, 0.5f, 0.5),
-            Vec3(0.5f, 0.5f, -0.5),
-            Vec3(0.5f, -0.5f, -0.5),
-            Vec3(0.5f, -0.5f, -0.5),
-            Vec3(0.5f, -0.5f, 0.5),
-            Vec3(0.5f, 0.5f, 0.5),
-            Vec3(-0.5f, -0.5f, -0.5f),
-            Vec3(0.5f, -0.5f, -0.5f),
-            Vec3(0.5f, -0.5f, 0.5f),
-            Vec3(0.5f, -0.5f, 0.5f),
-            Vec3(-0.5f, -0.5f, 0.5f),
-            Vec3(-0.5f, -0.5f, -0.5f),
-            Vec3(-0.5f, 0.5f, -0.5),
-            Vec3(0.5f, 0.5f, -0.5),
-            Vec3(0.5f, 0.5f, 0.5),
-            Vec3(0.5f, 0.5f, 0.5),
-            Vec3(-0.5f, 0.5f, 0.5),
-            Vec3(-0.5f, 0.5f, -0.5)
+            glm::vec3(-0.5f, -0.5f, -0.5f),
+            glm::vec3(0.5f, -0.5f, -0.5f),
+            glm::vec3(0.5f, 0.5f, -0.5f),
+            glm::vec3(0.5f, 0.5f, -0.5f),
+            glm::vec3(-0.5f, 0.5f, -0.5f),
+            glm::vec3(-0.5f, -0.5f, -0.5f),
+            glm::vec3(-0.5f, -0.5f, 0.5),
+            glm::vec3(0.5f, -0.5f, 0.5),
+            glm::vec3(0.5f, 0.5f, 0.5),
+            glm::vec3(0.5f, 0.5f, 0.5),
+            glm::vec3(-0.5f, 0.5f, 0.5),
+            glm::vec3(-0.5f, -0.5f, 0.5),
+            glm::vec3(-0.5f, 0.5f, 0.5f),
+            glm::vec3(-0.5f, 0.5f, -0.5f),
+            glm::vec3(-0.5f, -0.5f, -0.5f),
+            glm::vec3(-0.5f, -0.5f, -0.5f),
+            glm::vec3(-0.5f, -0.5f, 0.5f),
+            glm::vec3(-0.5f, 0.5f, 0.5f),
+            glm::vec3(0.5f, 0.5f, 0.5),
+            glm::vec3(0.5f, 0.5f, -0.5),
+            glm::vec3(0.5f, -0.5f, -0.5),
+            glm::vec3(0.5f, -0.5f, -0.5),
+            glm::vec3(0.5f, -0.5f, 0.5),
+            glm::vec3(0.5f, 0.5f, 0.5),
+            glm::vec3(-0.5f, -0.5f, -0.5f),
+            glm::vec3(0.5f, -0.5f, -0.5f),
+            glm::vec3(0.5f, -0.5f, 0.5f),
+            glm::vec3(0.5f, -0.5f, 0.5f),
+            glm::vec3(-0.5f, -0.5f, 0.5f),
+            glm::vec3(-0.5f, -0.5f, -0.5f),
+            glm::vec3(-0.5f, 0.5f, -0.5),
+            glm::vec3(0.5f, 0.5f, -0.5),
+            glm::vec3(0.5f, 0.5f, 0.5),
+            glm::vec3(0.5f, 0.5f, 0.5),
+            glm::vec3(-0.5f, 0.5f, 0.5),
+            glm::vec3(-0.5f, 0.5f, -0.5)
         };
 
-    std::vector<Vec3> normals =
+    std::vector<glm::vec3> normals =
         {
-            Vec3(0.0f, 0.0f, -1.0f),
-            Vec3(0.0f, 0.0f, -1.0f),
-            Vec3(0.0f, 0.0f, -1.0f),
-            Vec3(0.0f, 0.0f, -1.0f),
-            Vec3(0.0f, 0.0f, -1.0f),
-            Vec3(0.0f, 0.0f, -1.0f),
-            Vec3(0.0f, 0.0f, 1.0f),
-            Vec3(0.0f, 0.0f, 1.0f),
-            Vec3(0.0f, 0.0f, 1.0f),
-            Vec3(0.0f, 0.0f, 1.0f),
-            Vec3(0.0f, 0.0f, 1.0f),
-            Vec3(0.0f, 0.0f, 1.0f),
-            Vec3(-1.0f, 0.0f, 0.0f),
-            Vec3(-1.0f, 0.0f, 0.0f),
-            Vec3(-1.0f, 0.0f, 0.0f),
-            Vec3(-1.0f, 0.0f, 0.0f),
-            Vec3(-1.0f, 0.0f, 0.0f),
-            Vec3(-1.0f, 0.0f, 0.0f),
-            Vec3(1.0f, 0.0f, 0.0f),
-            Vec3(1.0f, 0.0f, 0.0f),
-            Vec3(1.0f, 0.0f, 0.0f),
-            Vec3(1.0f, 0.0f, 0.0f),
-            Vec3(1.0f, 0.0f, 0.0f),
-            Vec3(1.0f, 0.0f, 0.0f),
-            Vec3(0.0f, -1.0f, 0.0f),
-            Vec3(0.0f, -1.0f, 0.0f),
-            Vec3(0.0f, -1.0f, 0.0f),
-            Vec3(0.0f, -1.0f, 0.0f),
-            Vec3(0.0f, -1.0f, 0.0f),
-            Vec3(0.0f, -1.0f, 0.0f),
-            Vec3(0.0f, 1.0f, 0.0f),
-            Vec3(0.0f, 1.0f, 0.0f),
-            Vec3(0.0f, 1.0f, 0.0f),
-            Vec3(0.0f, 1.0f, 0.0f),
-            Vec3(0.0f, 1.0f, 0.0f),
-            Vec3(0.0f, 1.0f, 0.0)
+            glm::vec3(0.0f, 0.0f, -1.0f),
+            glm::vec3(0.0f, 0.0f, -1.0f),
+            glm::vec3(0.0f, 0.0f, -1.0f),
+            glm::vec3(0.0f, 0.0f, -1.0f),
+            glm::vec3(0.0f, 0.0f, -1.0f),
+            glm::vec3(0.0f, 0.0f, -1.0f),
+            glm::vec3(0.0f, 0.0f, 1.0f),
+            glm::vec3(0.0f, 0.0f, 1.0f),
+            glm::vec3(0.0f, 0.0f, 1.0f),
+            glm::vec3(0.0f, 0.0f, 1.0f),
+            glm::vec3(0.0f, 0.0f, 1.0f),
+            glm::vec3(0.0f, 0.0f, 1.0f),
+            glm::vec3(-1.0f, 0.0f, 0.0f),
+            glm::vec3(-1.0f, 0.0f, 0.0f),
+            glm::vec3(-1.0f, 0.0f, 0.0f),
+            glm::vec3(-1.0f, 0.0f, 0.0f),
+            glm::vec3(-1.0f, 0.0f, 0.0f),
+            glm::vec3(-1.0f, 0.0f, 0.0f),
+            glm::vec3(1.0f, 0.0f, 0.0f),
+            glm::vec3(1.0f, 0.0f, 0.0f),
+            glm::vec3(1.0f, 0.0f, 0.0f),
+            glm::vec3(1.0f, 0.0f, 0.0f),
+            glm::vec3(1.0f, 0.0f, 0.0f),
+            glm::vec3(1.0f, 0.0f, 0.0f),
+            glm::vec3(0.0f, -1.0f, 0.0f),
+            glm::vec3(0.0f, -1.0f, 0.0f),
+            glm::vec3(0.0f, -1.0f, 0.0f),
+            glm::vec3(0.0f, -1.0f, 0.0f),
+            glm::vec3(0.0f, -1.0f, 0.0f),
+            glm::vec3(0.0f, -1.0f, 0.0f),
+            glm::vec3(0.0f, 1.0f, 0.0f),
+            glm::vec3(0.0f, 1.0f, 0.0f),
+            glm::vec3(0.0f, 1.0f, 0.0f),
+            glm::vec3(0.0f, 1.0f, 0.0f),
+            glm::vec3(0.0f, 1.0f, 0.0f),
+            glm::vec3(0.0f, 1.0f, 0.0)
         };
 
 
@@ -124,15 +124,15 @@ void RenderSystem::Init()
     // Vertices
     glGenBuffers(1, &mVboVertices);
     glBindBuffer(GL_ARRAY_BUFFER, mVboVertices);
-    glBufferData(GL_ARRAY_BUFFER, sizeof(Vec3) * vertices.size(), vertices.data(), GL_STATIC_DRAW);
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(Vec3), (void*)nullptr);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(glm::vec3) * vertices.size(), vertices.data(), GL_STATIC_DRAW); // sizeof(glm::vec3) == 12
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(glm::vec3), (void*)nullptr);
     glEnableVertexAttribArray(0);
 
     // Surface normal
     glGenBuffers(1, &mVboNormals);
     glBindBuffer(GL_ARRAY_BUFFER, mVboNormals);
-    glBufferData(GL_ARRAY_BUFFER, sizeof(Vec3) * normals.size(), normals.data(), GL_STATIC_DRAW);
-    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(Vec3), (void*)nullptr);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(glm::vec3) * normals.size(), normals.data(), GL_STATIC_DRAW);
+    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(glm::vec3), (void*)nullptr);
     glEnableVertexAttribArray(1);
 
     glBindVertexArray(0);
