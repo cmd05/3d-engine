@@ -4,10 +4,8 @@
 
 #include <lib/SimpleVector.hpp>
 
-#include <array>
 #include <cassert>
 #include <unordered_map>
-#include <stdexcept>
 
 // ComponentArray is an packed array (i.e it has no holes)
 
