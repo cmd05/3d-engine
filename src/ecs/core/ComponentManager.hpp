@@ -91,10 +91,11 @@ template<typename T>
 ComponentType ComponentManager::get_component_type() {
     std::type_index type = typeid(T);
 
-    assert(m_component_types.find(type) != m_component_types.end() && "Component not registered before use");
+    auto it = m_component_types.begin();
+    assert((it = m_component_types.find(type)) != m_component_types.end() && "Component not registered before use");
     
     // return this component's type - used for creating signatures
-    return m_component_types[type];
+    return it->second;
 }
 
 template<typename T>
