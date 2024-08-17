@@ -11,6 +11,9 @@
 
 #include <graphics/Shader.hpp>
 
+#include <glm/glm.hpp>
+#include <lib/math/Mat44.hpp>
+
 extern Coordinator gCoordinator;
 
 void RenderSystem::Init()
@@ -202,11 +205,11 @@ void RenderSystem::Update(float dt)
 
         Mat44 model = translate * scaleMat * rotY;
 
-        Mat44 projection = camera.projectionTransform;
+        glm::mat4 projection = camera.projectionTransform;
 
         shader->SetUniform<Mat44>("uModel", model);
         shader->SetUniform<Mat44>("uView", view);
-        shader->SetUniform<Mat44>("uProjection", projection);
+        shader->SetUniform<glm::mat4>("uProjection", projection);
         shader->SetUniform<Vec3>("uColor", renderable.color);
 
         glDrawArrays(GL_TRIANGLES, 0, 36);
