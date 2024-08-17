@@ -1,6 +1,7 @@
 #pragma once
 
 #include <lib/math/Mat44.hpp>
+#include <glm/glm.hpp>
 
 #include <cmath>
 
@@ -9,6 +10,7 @@ const double PI = 3.141592653589793;
 struct Camera
 {
     Mat44 projectionTransform;
+    glm::vec3 v;
 
     static inline Mat44 MakeProjectionTransform(float fov, float nearClip, float farClip, unsigned int viewWidth, unsigned int viewHeight);
 };

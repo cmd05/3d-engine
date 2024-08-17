@@ -10,7 +10,6 @@ project(3dengine)
 
 set(INCLUDES_DIR ${CMAKE_CURRENT_SOURCE_DIR}/includes)
 
-
 ###########################################################
 # 3RD PARTY LIBRARIES
 ###########################################################
@@ -20,14 +19,14 @@ set(GLFW_BUILD_EXAMPLES OFF)
 set(GLFW_BUILD_TESTS OFF)
 set(GLFW_BUILD_DOCS OFF)
 set(GLFW_INSTALL OFF)
-add_subdirectory(${INCLUDES_DIR}/glfw-3.3.3)
+add_subdirectory(${INCLUDES_DIR}/glfw-3.4)
 
 # glad (OpenGL function loading)
 add_subdirectory(${INCLUDES_DIR}/glad)
 
 # glm
-# add_subdirectory(${INCLUDES_DIR}/glm)
-find_package(glm CONFIG REQUIRED)
+# find_package(glm CONFIG REQUIRED)
+add_subdirectory(${INCLUDES_DIR}/glm)
 
 # boost
 # add_subdirectory(${INCLUDES_DIR}/boost)
