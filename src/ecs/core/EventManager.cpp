@@ -1,7 +1,3 @@
-#include <functional>
-#include <list>
-#include <unordered_map>
-
 #include <ecs/core/EventManager.hpp>
 
 #include <ecs/core/Event.hpp>
