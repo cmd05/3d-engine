@@ -51,7 +51,7 @@ template<typename T>
 void SystemManager::set_signature(Signature signature) {
     std::type_index type = typeid(T);
 
-    assert(m_systems.find(type) != m_systems.end() && "Ssytem used before registered");
+    assert(m_systems.find(type) != m_systems.end() && "System used before registered");
 
     // set the signature for this system
     m_signatures.insert({type, signature});
