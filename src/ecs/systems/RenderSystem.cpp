@@ -155,10 +155,14 @@ void RenderSystem::Update(float dt)
         const auto& transform = gCoordinator.get_component<Transform>(entity);
         const auto& renderable = gCoordinator.get_component<Renderable>(entity);
 
-        Mat44 view;
-        view.m[0][3] = -cameraTransform.position.x;
-        view.m[1][3] = -cameraTransform.position.y;
-        view.m[2][3] = -cameraTransform.position.z;
+        // Mat44 view;
+        // view.m[0][3] = -cameraTransform.position.x;
+        // view.m[1][3] = -cameraTransform.position.y;
+        // view.m[2][3] = -cameraTransform.position.z;
+
+        glm::vec3 camFront = glm::vec3(0.0f, 0.0f, -1.0f);
+        glm::vec3 up = glm::vec3(0.0f, 1.0f, 0.0f);
+        glm::mat4 view = glm::lookAt(cameraTransform.position, cameraTransform.position + camFront, up);
 
         Mat44 rotY;
 
@@ -208,7 +212,7 @@ void RenderSystem::Update(float dt)
         glm::mat4 projection = camera.projectionTransform;
 
         shader->SetUniform<Mat44>("uModel", model);
-        shader->SetUniform<Mat44>("uView", view);
+        shader->SetUniform<glm::mat4>("uView", view);
         shader->SetUniform<glm::mat4>("uProjection", projection);
         shader->SetUniform<Vec3>("uColor", renderable.color);
 
