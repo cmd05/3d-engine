@@ -38,63 +38,63 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 add_executable(3dengine)
 
 target_compile_options(
-	3dengine
-	PRIVATE
-	# -fno-exceptions
-	-fdiagnostics-color=always
-	-Wall)
+    3dengine
+    PRIVATE
+    # -fno-exceptions
+    -fdiagnostics-color=always
+    -Wall)
 
 target_sources(
-	3dengine
-	PRIVATE
-	src/graphics/Shader.cpp
-	src/main.cpp
-	
-	src/ecs/systems/CameraControlSystem.cpp
-	src/ecs/systems/PhysicsSystem.cpp
-	src/ecs/systems/PlayerControlSystem.cpp
-	src/ecs/systems/RenderSystem.cpp
-	src/window/WindowManager.cpp
+    3dengine
+    PRIVATE
+    src/graphics/Shader.cpp
+    src/main.cpp
+    
+    src/ecs/systems/CameraControlSystem.cpp
+    src/ecs/systems/PhysicsSystem.cpp
+    src/ecs/systems/PlayerControlSystem.cpp
+    src/ecs/systems/RenderSystem.cpp
+    src/window/WindowManager.cpp
 )
 
 target_sources(
-	3dengine
-	PRIVATE
-	src/ecs/components/Camera.hpp
-	src/ecs/components/Gravity.hpp
-	src/ecs/components/Player.hpp
-	src/ecs/components/Renderable.hpp
-	src/ecs/components/RigidBody.hpp
-	src/ecs/components/Thrust.hpp
-	src/ecs/components/Transform.hpp
+    3dengine
+    PRIVATE
+    src/ecs/components/Camera.hpp
+    src/ecs/components/Gravity.hpp
+    src/ecs/components/Player.hpp
+    src/ecs/components/Renderable.hpp
+    src/ecs/components/RigidBody.hpp
+    src/ecs/components/Thrust.hpp
+    src/ecs/components/Transform.hpp
 
-	src/ecs/core/ComponentArray.hpp
-	src/ecs/core/ComponentManager.cpp
-	src/ecs/core/Coordinator.cpp
-	src/ecs/core/EntityManager.cpp
-	src/ecs/core/EventManager.cpp
-	src/ecs/core/SystemManager.cpp
-	src/ecs/core/Event.cpp
+    src/ecs/core/ComponentArray.hpp
+    src/ecs/core/ComponentManager.cpp
+    src/ecs/core/Coordinator.cpp
+    src/ecs/core/EntityManager.cpp
+    src/ecs/core/EventManager.cpp
+    src/ecs/core/SystemManager.cpp
+    src/ecs/core/Event.cpp
 
-	src/ecs/core/System.hpp
-	src/ecs/core/Types.hpp
+    src/ecs/core/System.hpp
+    src/ecs/core/Types.hpp
 
-	src/lib/math/Vec2.hpp
-	src/lib/math/Vec3.hpp
-	src/lib/math/Vec4.hpp
+    src/lib/math/Vec2.hpp
+    src/lib/math/Vec3.hpp
+    src/lib/math/Vec4.hpp
 )
 
 target_include_directories(
-	3dengine
-	PRIVATE
-	src)
+    3dengine
+    PRIVATE
+    src)
 
-	
+    
 target_link_libraries(
-	3dengine
-	PRIVATE
-	glad
-	glfw
+    3dengine
+    PRIVATE
+    glad
+    glfw
 )
 
 target_compile_definitions(3dengine PUBLIC FS_SHADERS_DIR="${CMAKE_CURRENT_SOURCE_DIR}/src/shaders/")

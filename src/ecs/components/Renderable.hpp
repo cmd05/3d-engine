@@ -4,5 +4,5 @@
 
 struct Renderable
 {
-	Vec3 color;
+    Vec3 color;
 };

@@ -4,5 +4,5 @@
 
 struct Gravity
 {
-	Vec3 force;
+    Vec3 force;
 };

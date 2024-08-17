@@ -4,6 +4,6 @@
 
 struct RigidBody
 {
-	Vec3 velocity;
-	Vec3 acceleration;
+    Vec3 velocity;
+    Vec3 acceleration;
 };

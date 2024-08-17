@@ -4,5 +4,5 @@
 
 struct Thrust
 {
-	Vec3 force;
+    Vec3 force;
 };

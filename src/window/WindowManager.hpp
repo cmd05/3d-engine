@@ -8,18 +8,18 @@
 class WindowManager
 {
 public:
-	void Init(
-		std::string const& windowTitle, unsigned int windowWidth, unsigned int windowHeight,
-		unsigned int windowPositionX, unsigned int windowPositionY);
+    void Init(
+        std::string const& windowTitle, unsigned int windowWidth, unsigned int windowHeight,
+        unsigned int windowPositionX, unsigned int windowPositionY);
 
-	void Update();
+    void Update();
 
-	void ProcessEvents();
+    void ProcessEvents();
 
-	void Shutdown();
+    void Shutdown();
 
 private:
-	GLFWwindow* mWindow;
+    GLFWwindow* mWindow;
 
-	std::bitset<8> mButtons;
+    std::bitset<8> mButtons;
 };

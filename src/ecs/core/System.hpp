@@ -9,10 +9,10 @@
 class System
 {
 public:
-	// Removing entity from std::set is faster than a list
-	// inserting in std::set for existing element does nothing.
-	// If trying to erase when it doesn’t exist, it does nothing
-	
-	// All entities with a certain signature
-	std::set<Entity> m_entities;
+    // Removing entity from std::set is faster than a list
+    // inserting in std::set for existing element does nothing.
+    // If trying to erase when it doesn’t exist, it does nothing
+    
+    // All entities with a certain signature
+    std::set<Entity> m_entities;
 };
