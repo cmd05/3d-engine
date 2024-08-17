@@ -164,54 +164,60 @@ void RenderSystem::Update(float dt)
         glm::vec3 up = glm::vec3(0.0f, 1.0f, 0.0f);
         glm::mat4 view = glm::lookAt(cameraTransform.position, cameraTransform.position + camFront, up);
 
-        Mat44 rotY;
+        // Mat44 rotY;
 
-        float cos_theta_y = cosf(transform.rotation.y);
-        float sin_theta_y = sinf(transform.rotation.y);
+        // float cos_theta_y = cosf(transform.rotation.y);
+        // float sin_theta_y = sinf(transform.rotation.y);
 
-        rotY.m[0][0] = cos_theta_y;
-        rotY.m[2][0] = -sin_theta_y;
-        rotY.m[0][2] = sin_theta_y;
-        rotY.m[2][2] = cos_theta_y;
-
-
-        Mat44 rotX;
-
-        float cosThetaX = cosf(transform.rotation.x);
-        float sinThetaX = sinf(transform.rotation.x);
-
-        rotX.m[1][1] = cosThetaX;
-        rotX.m[2][1] = sinThetaX;
-        rotX.m[1][2] = -sinThetaX;
-        rotX.m[2][2] = cosThetaX;
+        // rotY.m[0][0] = cos_theta_y;
+        // rotY.m[2][0] = -sin_theta_y;
+        // rotY.m[0][2] = sin_theta_y;
+        // rotY.m[2][2] = cos_theta_y;
 
 
-        Mat44 rotZ;
+        // Mat44 rotX;
 
-        float cosThetaZ = cosf(transform.rotation.z);
-        float sinThetaZ = sinf(transform.rotation.z);
+        // float cosThetaX = cosf(transform.rotation.x);
+        // float sinThetaX = sinf(transform.rotation.x);
 
-        rotZ.m[0][0] = cosThetaZ;
-        rotZ.m[1][0] = sinThetaZ;
-        rotZ.m[0][1] = -sinThetaZ;
-        rotZ.m[1][1] = cosThetaZ;
+        // rotX.m[1][1] = cosThetaX;
+        // rotX.m[2][1] = sinThetaX;
+        // rotX.m[1][2] = -sinThetaX;
+        // rotX.m[2][2] = cosThetaX;
 
 
-        Mat44 translate;
-        translate.m[0][3] = transform.position.x;
-        translate.m[1][3] = transform.position.y;
-        translate.m[2][3] = transform.position.z;
+        // Mat44 rotZ;
 
-        Mat44 scaleMat;
-        scaleMat.m[0][0] = transform.scale.x;
-        scaleMat.m[1][1] = transform.scale.y;
-        scaleMat.m[2][2] = transform.scale.z;
+        // float cosThetaZ = cosf(transform.rotation.z);
+        // float sinThetaZ = sinf(transform.rotation.z);
 
-        Mat44 model = translate * scaleMat * rotY;
+        // rotZ.m[0][0] = cosThetaZ;
+        // rotZ.m[1][0] = sinThetaZ;
+        // rotZ.m[0][1] = -sinThetaZ;
+        // rotZ.m[1][1] = cosThetaZ;
+
+
+        // Mat44 translate;
+        // translate.m[0][3] = transform.position.x;
+        // translate.m[1][3] = transform.position.y;
+        // translate.m[2][3] = transform.position.z;
+
+        // Mat44 scaleMat;
+        // scaleMat.m[0][0] = transform.scale.x;
+        // scaleMat.m[1][1] = transform.scale.y;
+        // scaleMat.m[2][2] = transform.scale.z;
+        glm::mat4 model = glm::mat4(1.0);
+        model = glm::translate(model, transform.position);
+        model = glm::rotate(model, (transform.rotation.x), glm::vec3(1.0f, 0.0f, 0.0f));
+        model = glm::rotate(model, (transform.rotation.y), glm::vec3(0.0f, 1.0f, 0.0f));
+        model = glm::rotate(model, (transform.rotation.z), glm::vec3(0.0f, 0.0f, 1.0f));
+        model = glm::scale(model, transform.scale);
+
+        // Mat44 model = translate * scaleMat * rotY;
 
         glm::mat4 projection = camera.projectionTransform;
 
-        shader->SetUniform<Mat44>("uModel", model);
+        shader->SetUniform<glm::mat4>("uModel", model);
         shader->SetUniform<glm::mat4>("uView", view);
         shader->SetUniform<glm::mat4>("uProjection", projection);
         shader->SetUniform<Vec3>("uColor", renderable.color);
