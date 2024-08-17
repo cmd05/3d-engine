@@ -24,6 +24,8 @@ cmake --build build > log.txt && cd build && ./3dengine.exe; cd ..
 #include <ecs/components/Thrust.hpp>
 #include <ecs/components/Transform.hpp>
 
+#include <glm/glm.hpp>
+
 #include <window/WindowManager.hpp>
 
 Coordinator gCoordinator;
@@ -130,16 +132,16 @@ int main()
         gCoordinator.add_component( // automatic type deduction for template parameters
             entity,
             RigidBody{
-                .velocity = Vec3(0.0f, 0.0f, 0.0f),
-                .acceleration = Vec3(0.0f, 0.0f, 0.0f)
+                .velocity = glm::vec3(0.0f, 0.0f, 0.0f),
+                .acceleration = glm::vec3(0.0f, 0.0f, 0.0f)
             });
 
         gCoordinator.add_component(
             entity,
             Transform{
-                .position = Vec3(randPosition(generator), randPosition(generator), randPosition(generator)),
-                .rotation = Vec3(randRotation(generator), randRotation(generator), randRotation(generator)),
-                .scale = Vec3(scale, scale, scale)
+                .position = glm::vec3(randPosition(generator), randPosition(generator), randPosition(generator)),
+                .rotation = glm::vec3(randRotation(generator), randRotation(generator), randRotation(generator)),
+                .scale = glm::vec3(scale, scale, scale)
             });
 
         gCoordinator.add_component(

@@ -1,9 +1,10 @@
 #pragma once
 
-#include <lib/math/Vec3.hpp>
+// #include <lib/math/Vec3.hpp>
+#include <glm/glm.hpp>
 
 struct RigidBody
 {
-    Vec3 velocity;
-    Vec3 acceleration;
+    glm::vec3 velocity;
+    glm::vec3 acceleration;
 };

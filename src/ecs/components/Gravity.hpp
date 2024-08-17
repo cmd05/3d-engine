@@ -1,8 +1,9 @@
 #pragma once
 
-#include <lib/math/Vec3.hpp>
+// #include <lib/math/Vec3.hpp>
+#include <glm/glm.hpp>
 
 struct Gravity
 {
-    Vec3 force;
+    glm::vec3 force;
 };

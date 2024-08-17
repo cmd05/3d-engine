@@ -27,7 +27,7 @@ void RenderSystem::Init()
     gCoordinator.add_component(
         mCamera,
         Transform{
-            .position = Vec3(0.0f, 0.0f, 500.0f)
+            .position = glm::vec3(0.0f, 0.0f, 500.0f)
         });
 
     gCoordinator.add_component(

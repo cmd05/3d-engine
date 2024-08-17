@@ -1,10 +1,11 @@
 #pragma once
 
-#include <lib/math/Vec3.hpp>
+// #include <lib/math/Vec3.hpp>
+#include <glm/glm.hpp>
 
 struct Transform
 {
-    Vec3 position;
-    Vec3 rotation;
-    Vec3 scale;
+    glm::vec3 position;
+    glm::vec3 rotation;
+    glm::vec3 scale;
 };
