@@ -4,9 +4,7 @@
 
 #include <ecs/components/Gravity.hpp>
 #include <ecs/components/RigidBody.hpp>
-#include <ecs/components/Thrust.hpp>
 #include <ecs/components/Transform.hpp>
-#include <ecs/core/Event.hpp>
 
 extern Coordinator gCoordinator;
 

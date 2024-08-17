@@ -3,8 +3,6 @@
 #include <ecs/core/System.hpp>
 #include <ecs/core/Event.hpp>
 
-// class Event;
-
 class CameraControlSystem : public System
 {
 public:

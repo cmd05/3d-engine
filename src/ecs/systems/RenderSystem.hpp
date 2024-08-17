@@ -7,9 +7,6 @@
 
 #include <graphics/Shader.hpp>
 
-// class Event;
-
-
 class RenderSystem : public System
 {
 public:

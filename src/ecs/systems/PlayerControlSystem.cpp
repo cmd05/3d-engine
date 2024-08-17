@@ -1,8 +1,5 @@
 #include <ecs/systems/PlayerControlSystem.hpp>
 
-#include <ecs/components/Player.hpp>
-#include <ecs/components/Thrust.hpp>
-#include <ecs/components/Transform.hpp>
 #include <ecs/core/Coordinator.hpp>
 #include <ecs/core/Event.hpp>
 
