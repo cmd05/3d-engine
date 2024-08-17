@@ -17,6 +17,7 @@ public:
 
     void Shutdown();
 
+    float get_time() const { return glfwGetTime(); }
 private:
     GLFWwindow* mWindow;
 
