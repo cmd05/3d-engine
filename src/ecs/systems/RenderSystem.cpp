@@ -13,6 +13,7 @@
 
 #include <glm/glm.hpp>
 #include <lib/math/Mat44.hpp>
+#include <lib/math/Vec3.hpp>
 
 extern Coordinator gCoordinator;
 
@@ -220,7 +221,7 @@ void RenderSystem::Update(float dt)
         shader->SetUniform<glm::mat4>("uModel", model);
         shader->SetUniform<glm::mat4>("uView", view);
         shader->SetUniform<glm::mat4>("uProjection", projection);
-        shader->SetUniform<Vec3>("uColor", renderable.color);
+        shader->SetUniform<glm::vec3>("uColor", renderable.color);
 
         glDrawArrays(GL_TRIANGLES, 0, 36);
     }

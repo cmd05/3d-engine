@@ -125,9 +125,9 @@ int main()
         // i++;
         gCoordinator.add_component<Player>(entity, Player{});
 
-        // gCoordinator.add_component<Gravity>(
-        // 	entity,
-        // 	{Vec3(0.0f, randGravity(generator), 0.0f)});
+        gCoordinator.add_component<Gravity>(
+        	entity,
+        	{glm::vec3(0.0f, randGravity(generator), 0.0f)});
 
         gCoordinator.add_component( // automatic type deduction for template parameters
             entity,
@@ -147,7 +147,7 @@ int main()
         gCoordinator.add_component(
             entity,
             Renderable{
-                .color = Vec3(randColor(generator), randColor(generator), randColor(generator))
+                .color = glm::vec3(randColor(generator), randColor(generator), randColor(generator))
             });
     }
 

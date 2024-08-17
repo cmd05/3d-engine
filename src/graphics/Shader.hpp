@@ -26,6 +26,10 @@ public:
         {
             glUniformMatrix4fv(glGetUniformLocation(mId, name.c_str()), 1, GL_FALSE, &value[0][0]);
         }
+        if constexpr (std::is_same_v<T, glm::vec3>)
+        {
+            glUniform3fv(glGetUniformLocation(mId, name.c_str()), 1, &value[0]); 
+        }
         if constexpr (std::is_same_v<T, Vec3>)
         {
             glUniform3fv(glGetUniformLocation(mId, name.c_str()), 1, (GLfloat*)&value);

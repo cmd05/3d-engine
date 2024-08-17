@@ -1,8 +1,8 @@
 #pragma once
 
-#include <lib/math/Vec3.hpp>
+#include <glm/glm.hpp>
 
 struct Renderable
 {
-    Vec3 color;
+    glm::vec3 color;
 };
