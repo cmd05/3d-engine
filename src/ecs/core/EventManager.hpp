@@ -1,7 +1,7 @@
 #pragma once
 
 #include <functional>
-#include <list>
+#include <vector>
 #include <unordered_map>
 
 #include <ecs/core/Event.hpp>
@@ -14,5 +14,5 @@ public:
     void send_event(EventId event_id);
 
 private:
-    std::unordered_map<EventId, std::list<std::function<void(Event&)>>> m_listeners;
+    std::unordered_map<EventId, std::vector<std::function<void(Event&)>>> m_listeners;
 };
