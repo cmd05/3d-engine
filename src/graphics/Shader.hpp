@@ -4,10 +4,6 @@
 #include <glm/glm.hpp>
 #include <string>
 
-// class Mat44;
-// class Vec3;
-
-
 class Shader
 {
 public:

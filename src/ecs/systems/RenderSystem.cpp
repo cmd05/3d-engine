@@ -12,8 +12,6 @@
 #include <graphics/Shader.hpp>
 
 #include <glm/glm.hpp>
-#include <lib/math/Mat44.hpp>
-#include <lib/math/Vec3.hpp>
 
 extern Coordinator gCoordinator;
 
