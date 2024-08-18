@@ -146,7 +146,7 @@ void RenderSystem::update(float dt)
     glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); // NOLINT (hicpp-signed-bitwise)
 
-    shader->Activate();
+    shader->activate();
     glBindVertexArray(m_vao);
 
     auto& camera_transform = ref_gcoordinator.get_component<Transform>(m_camera);
@@ -171,10 +171,10 @@ void RenderSystem::update(float dt)
         camera.view_matrix = Camera::create_view_matrix(camera_transform.position); 
 
         // set uniforms
-        shader->SetUniform<glm::mat4>("uModel", model);
-        shader->SetUniform<glm::mat4>("uView", camera.view_matrix);
-        shader->SetUniform<glm::mat4>("uProjection", camera.projection_transform);
-        shader->SetUniform<glm::vec3>("uColor", renderable.color);
+        shader->set_uniform<glm::mat4>("uModel", model);
+        shader->set_uniform<glm::mat4>("uView", camera.view_matrix);
+        shader->set_uniform<glm::mat4>("uProjection", camera.projection_transform);
+        shader->set_uniform<glm::vec3>("uColor", renderable.color);
 
         // draw cube to screen
         glDrawArrays(GL_TRIANGLES, 0, 36);
