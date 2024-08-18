@@ -105,7 +105,7 @@ int main()
     std::uniform_real_distribution<float> randRotation(0.0f, 3.0f);
     std::uniform_real_distribution<float> randScale(3.0f, 5.0f);
     std::uniform_real_distribution<float> randColor(0.0f, 1.0f);
-    std::uniform_real_distribution<float> randGravity(-10.0f, -1.0f);
+    std::uniform_real_distribution<float> randGravity(-10.0f, -1.0f); // gravity is negative (downwards force)
 
     float scale = randScale(generator);
 
@@ -114,12 +114,12 @@ int main()
         entity = gCoordinator.create_entity();
         gCoordinator.add_component<Player>(entity, Player{});
 
-        // gCoordinator.add_component( // automatic type deduction for template parameters
-        // 	entity,
-        // 	Gravity {
-        //         .force = glm::vec3(0.0f, randGravity(generator), 0.0f)
-        //     }
-        // );
+        gCoordinator.add_component( // automatic type deduction for template parameters
+        	entity,
+        	Gravity {
+                .force = glm::vec3(0.0f, randGravity(generator), 0.0f)
+            }
+        );
 
         gCoordinator.add_component(
             entity,

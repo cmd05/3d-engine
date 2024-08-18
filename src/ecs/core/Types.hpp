@@ -6,7 +6,7 @@
 // ECS
 using entity_count_size_type = std::uint32_t;
 using Entity = entity_count_size_type;
-const Entity MAX_ENTITIES = 5000;
+const Entity MAX_ENTITIES = 100;
 const Entity MAX_ENTITIES_AFTER_CAMERA = MAX_ENTITIES - 1; // camera entity created in ecs/systems/RenderSystem.cpp
 
 using components_size_type = std::uint16_t; // MAX_COMPONENTS will fit within 16 bits

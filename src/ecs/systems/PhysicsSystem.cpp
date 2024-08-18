@@ -20,6 +20,10 @@ void PhysicsSystem::Update(float dt)
         // Forces
         const auto& gravity = gCoordinator.get_component<Gravity>(entity);
 
+        if(transform.position.y <= -100) {
+            rigidBody.velocity.y *= -1;
+        }
+
         transform.position += rigidBody.velocity * dt;
 
         rigidBody.velocity += gravity.force * dt;
