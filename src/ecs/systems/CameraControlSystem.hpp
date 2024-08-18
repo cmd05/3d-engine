@@ -12,6 +12,6 @@ public:
     void update(float dt);
 
 private:
-    BasicMoves moves;
+    BasicMoves to_move;
     void input_listener(Event& event);
 };

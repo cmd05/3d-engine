@@ -77,7 +77,10 @@ void WindowManager::ProcessEvents()
         moves.set(static_cast<std::size_t>(BasicMovement::Down));
     
     // always send movement (empty `moves` means no movement)
-    Event event(Events::Camera::MOVEMENT);
-    event.set_param(Events::Camera::Movement::MOVES, moves);
-    gCoordinator.send_event(event);
+    // only send camera movement if their is input
+    if(moves.any()) {
+        Event event(Events::Camera::MOVEMENT);
+        event.set_param(Events::Camera::Movement::MOVES, moves);
+        gCoordinator.send_event(event);
+    }
 }

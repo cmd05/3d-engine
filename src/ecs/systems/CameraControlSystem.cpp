@@ -27,23 +27,25 @@ void CameraControlSystem::update(float dt)
         auto& transform = ref_gcoordinator.get_component<Transform>(entity);
         float speed = 120.0f;
 
-        if (moves.test(static_cast<std::size_t>(BasicMovement::Forward)))
+        if (to_move.test(static_cast<std::size_t>(BasicMovement::Forward)))
             transform.position.z -= (dt * speed);
-        else if (moves.test(static_cast<std::size_t>(BasicMovement::Backward)))
+        else if (to_move.test(static_cast<std::size_t>(BasicMovement::Backward)))
             transform.position.z += (dt * speed);
 
 
-        if (moves.test(static_cast<std::size_t>(BasicMovement::Up)))
+        if (to_move.test(static_cast<std::size_t>(BasicMovement::Up)))
             transform.position.y += (dt * speed);
-        else if (moves.test(static_cast<std::size_t>(BasicMovement::Down)))
+        else if (to_move.test(static_cast<std::size_t>(BasicMovement::Down)))
             transform.position.y -= (dt * speed);
 
 
-        if (moves.test(static_cast<std::size_t>(BasicMovement::Left)))
+        if (to_move.test(static_cast<std::size_t>(BasicMovement::Left)))
             transform.position.x -= (dt * speed);
-        else if (moves.test(static_cast<std::size_t>(BasicMovement::Right)))
+        else if (to_move.test(static_cast<std::size_t>(BasicMovement::Right)))
             transform.position.x += (dt * speed);
     }
+
+    to_move.reset(); // all movements for current frame have been done
 }
 
 void CameraControlSystem::input_listener(Event& event)
@@ -57,5 +59,5 @@ void CameraControlSystem::input_listener(Event& event)
 
     // update the state of the CameraControlSystem
     // the updation of camera position is done when CameraControlSystem::update() is called
-    moves = event.get_param<BasicMoves>(Events::Camera::Movement::MOVES);
+    to_move = event.get_param<BasicMoves>(Events::Camera::Movement::MOVES);
 }
