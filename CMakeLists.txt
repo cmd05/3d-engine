@@ -43,7 +43,9 @@ target_compile_options(
     PRIVATE
     # -fno-exceptions
     -fdiagnostics-color=always
-    -Wall)
+    -Wall
+    -Wno-reorder
+)
 
 target_sources(
     3dengine

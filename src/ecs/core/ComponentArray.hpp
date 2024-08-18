@@ -2,7 +2,7 @@
 
 #include <ecs/core/Types.hpp>
 
-#include <lib/SimpleVector.hpp>
+#include <lib/simple-vector/SimpleVector.hpp>
 
 #include <cassert>
 #include <unordered_map>
