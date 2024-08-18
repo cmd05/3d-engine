@@ -47,6 +47,9 @@ target_compile_options(
     -Wno-reorder
 )
 
+# find_package( Boost REQUIRED COMPONENTS bimap )
+# include_directories( ${Boost_INCLUDE_DIRS} )
+
 target_sources(
     3dengine
     PRIVATE
