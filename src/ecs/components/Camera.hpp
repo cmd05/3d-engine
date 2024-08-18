@@ -3,10 +3,6 @@
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 
-#include <cmath>
-
-const double PI = 3.141592653589793;
-
 struct Camera
 {
     glm::mat4 projection_transform;
