@@ -67,7 +67,7 @@ int main()
         Gravity, RigidBody, Transform
     >();
     // initialize the system
-    physicsSystem.Init();
+    physicsSystem.init();
 
 
     auto& cameraControlSystem = gCoordinator.register_system<CameraControlSystem>();
@@ -203,7 +203,7 @@ int main()
 
         cameraControlSystem.update(dt);
 
-        physicsSystem.Update(dt);
+        physicsSystem.update(dt);
 
         renderSystem.update(dt);
 

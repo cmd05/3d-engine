@@ -7,7 +7,6 @@ class PhysicsSystem : public System
 public:
     PhysicsSystem(Coordinator& coordinator): System(coordinator) {}
 
-    void Init();
-
-    void Update(float dt);
+    void init();
+    void update(float dt);
 };
