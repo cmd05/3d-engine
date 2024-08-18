@@ -5,9 +5,6 @@
 #include <ecs/core/Coordinator.hpp>
 #include <ecs/core/Event.hpp>
 
-extern Coordinator gCoordinator; // extern gCoordinator can be accessed from main.cpp as it is not static
-
-
 // TODO: Return error to caller
 void WindowManager::init(std::string const& windowTitle, unsigned int windowWidth,
     unsigned int windowHeight, unsigned int windowPositionX, unsigned int windowPositionY)
@@ -56,7 +53,7 @@ void WindowManager::process_events()
 
     // Window quit
     if (glfwGetKey(m_window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
-        gCoordinator.send_event(Events::Window::QUIT);
+        ref_gcoordinator.send_event(Events::Window::QUIT);
     
     // Camera Movement
     if (glfwGetKey(m_window, GLFW_KEY_W) == GLFW_PRESS)
@@ -81,6 +78,6 @@ void WindowManager::process_events()
     if(moves.any()) {
         Event event(Events::Camera::MOVEMENT);
         event.set_param(Events::Camera::Movement::MOVES, moves);
-        gCoordinator.send_event(event);
+        ref_gcoordinator.send_event(event);
     }
 }
