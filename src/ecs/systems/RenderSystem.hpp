@@ -13,9 +13,7 @@ public:
     RenderSystem(Coordinator& coordinator): System(coordinator) {}
 
     void init();
-
     void update(float dt);
-
 private:
     void window_size_listener(Event& event);
 
