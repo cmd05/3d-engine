@@ -18,7 +18,7 @@ void RenderSystem::init()
     // add window resize listener
     ref_gcoordinator.add_event_listener(METHOD_LISTENER(Events::Window::RESIZED, RenderSystem::window_size_listener));
     // create shader uniqueptr
-    shader = std::make_unique<Shader>(std::string(FS_SHADERS_DIR) + "vertex.glsl", std::string(FS_SHADERS_DIR) + "fragment.glsl");
+    shader = std::make_unique<Shader>(std::string(FS_SHADERS_DIR) + "vertex.vs", std::string(FS_SHADERS_DIR) + "fragment.fs");
 
     // create camera entity
     m_camera = ref_gcoordinator.create_entity();
