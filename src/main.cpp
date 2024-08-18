@@ -165,11 +165,12 @@ int main()
 
         gCoordinator.add_component(
             entity,
-            Transform{
+            Transform {
                 .position = glm::vec3(randPosition(generator), randPosition(generator), randPosition(generator)),
                 .rotation = glm::vec3(randRotation(generator), randRotation(generator), randRotation(generator)),
                 .scale = glm::vec3(scale, scale, scale)
-            });
+            }
+        );
 
         gCoordinator.add_component(
             entity,
