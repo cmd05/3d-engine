@@ -28,27 +28,30 @@ cmake --build build > log.txt && ./build/3dengine.exe
 
 #include <window/WindowManager.hpp>
 
-Coordinator gCoordinator;
+Coordinator g_coordinator;
 
 static bool quit = false;
 
-void QuitHandler(Event& event)
+void quit_handler(Event& event)
 {
     quit = true;
 }
 
 int main()
 {
-    gCoordinator.init();
+    // initialize coordinator
+    g_coordinator.init();
 
-    WindowManager windowManager;
-    windowManager.init("3D engine", 1920, 1080, 0, 0);
+    // window setup
+    WindowManager window_manager {g_coordinator}; // window manager requires reference to coordinator
+    window_manager.init("3D engine", 1920, 1080, 0, 0);
 
-    // Quit Handler
-    gCoordinator.add_event_listener(FUNCTION_LISTENER(Events::Window::QUIT, QuitHandler));
+    // quit handler
+    g_coordinator.add_event_listener(FUNCTION_LISTENER(Events::Window::QUIT, quit_handler));
 
-    // Register Components
-    gCoordinator.register_component<
+    /// ------------- Register Components ---------------
+    
+    g_coordinator.register_component<
         Camera,
         Gravity,
         Player,
@@ -58,70 +61,78 @@ int main()
         Transform
     >();
 
-    // Register Systems
+    /// -------------------------------------------------
+
+    /// ------------- Register Systems ------------------
     
     // register system to our coordinator and set its signature
-    auto& physicsSystem = gCoordinator.register_system<PhysicsSystem>(); // note auto& is necessary. simply auto wil create a new local variable can cause copying errors
-    gCoordinator.set_system_signature<
+    auto& physics_system = g_coordinator.register_system<PhysicsSystem>(); // note auto& is necessary. simply auto wil create a new local variable can cause copying errors
+    g_coordinator.set_system_signature<
         PhysicsSystem,
         Gravity, RigidBody, Transform
     >();
     // initialize the system
-    physicsSystem.init();
+    physics_system.init();
 
 
-    auto& cameraControlSystem = gCoordinator.register_system<CameraControlSystem>();
-    gCoordinator.set_system_signature<
+    auto& camera_control_system = g_coordinator.register_system<CameraControlSystem>();
+    g_coordinator.set_system_signature<
         CameraControlSystem,
         Camera, Transform
     >();
 
-    cameraControlSystem.init();
+    camera_control_system.init();
 
-    auto& playerControlSystem = gCoordinator.register_system<PlayerControlSystem>();
-    gCoordinator.set_system_signature<
+    auto& player_control_system = g_coordinator.register_system<PlayerControlSystem>();
+    g_coordinator.set_system_signature<
         PlayerControlSystem,
         Player, Transform
     >();
 
-    playerControlSystem.init();
+    player_control_system.init();
 
-    auto& renderSystem = gCoordinator.register_system<RenderSystem>();
-    gCoordinator.set_system_signature<
+    auto& render_system = g_coordinator.register_system<RenderSystem>();
+    g_coordinator.set_system_signature<
         RenderSystem,
         Renderable, Transform
     >();
 
     // creates a camera entity using CreateEntity()
-    renderSystem.init();
+    render_system.init();
+
+    /// -------------------------------------------------
 
     // Create entities
 
     // camera entity already exists, so we we can use one less than MAX_ENTITIES number of entities
     std::vector<Entity> entities(MAX_ENTITIES_AFTER_CAMERA); 
 
+    // generate random values
     std::default_random_engine generator;
-    std::uniform_real_distribution<float> randPosition(-100.0f, 100.0f);
-    std::uniform_real_distribution<float> randRotation(0.0f, 3.0f);
-    std::uniform_real_distribution<float> randScale(3.0f, 5.0f);
-    std::uniform_real_distribution<float> randColor(0.0f, 1.0f);
-    std::uniform_real_distribution<float> randGravity(-10.0f, -1.0f); // gravity is negative (downwards force)
+    std::uniform_real_distribution<float> rand_position(-100.0f, 100.0f);
+    std::uniform_real_distribution<float> rand_rotation(0.0f, 3.0f);
+    std::uniform_real_distribution<float> rand_scale(3.0f, 5.0f);
+    std::uniform_real_distribution<float> rand_color(0.0f, 1.0f);
+    std::uniform_real_distribution<float> rand_gravity(-10.0f, -1.0f); // gravity is negative (downwards force)
 
-    float scale = randScale(generator);
+    float scale = rand_scale(generator);
 
     for (auto& entity : entities)
     {
-        entity = gCoordinator.create_entity();
-        gCoordinator.add_component<Player>(entity, Player{});
+        // Create entity
+        entity = g_coordinator.create_entity();
+        
+        // Add components to entity
+        g_coordinator.add_component<Player>(entity, Player{});
 
-        gCoordinator.add_component( // automatic type deduction for template parameters
+        g_coordinator.add_component( // automatic type deduction for template parameters
         	entity,
         	Gravity {
-                .force = glm::vec3(0.0f, randGravity(generator), 0.0f)
+                .force = glm::vec3(0.0f, rand_gravity(generator), 0.0f)
             }
         );
 
-        gCoordinator.add_component(
+        g_coordinator.add_component(
             entity,
             RigidBody {
                 .velocity = glm::vec3(0.0f, 0.0f, 0.0f),
@@ -129,19 +140,19 @@ int main()
             }
         );
 
-        gCoordinator.add_component(
+        g_coordinator.add_component(
             entity,
             Transform {
-                .position = glm::vec3(randPosition(generator), randPosition(generator), randPosition(generator)),
-                .rotation = glm::vec3(randRotation(generator), randRotation(generator), randRotation(generator)),
+                .position = glm::vec3(rand_position(generator), rand_position(generator), rand_position(generator)),
+                .rotation = glm::vec3(rand_rotation(generator), rand_rotation(generator), rand_rotation(generator)),
                 .scale = glm::vec3(scale, scale, scale)
             }
         );
 
-        gCoordinator.add_component(
+        g_coordinator.add_component(
             entity,
             Renderable {
-                .color = glm::vec3(randColor(generator), randColor(generator), randColor(generator))
+                .color = glm::vec3(rand_color(generator), rand_color(generator), rand_color(generator))
             }
         );
     }
@@ -152,69 +163,72 @@ int main()
  	auto it = entities.begin() + 1000;
 
     for(int i = 0; i < 3000; i++) {
-        gCoordinator.DestroyEntity(*it);
+        g_coordinator.DestroyEntity(*it);
         it = entities.erase(it);
     }
     
     // add some entities
     for (int i = 0; i < 2000; i++)
     {
-        auto entity = gCoordinator.CreateEntity();
-        gCoordinator.AddComponent(entity, Player{});
+        auto entity = g_coordinator.CreateEntity();
+        g_coordinator.AddComponent(entity, Player{});
 
-        gCoordinator.AddComponent<Gravity>(
+        g_coordinator.AddComponent<Gravity>(
             entity,
-            {Vec3(0.0f, randGravity(generator), 0.0f)});
+            {Vec3(0.0f, rand_gravity(generator), 0.0f)});
 
-        gCoordinator.AddComponent(
+        g_coordinator.AddComponent(
             entity,
             RigidBody{
                 .velocity = Vec3(0.0f, 0.0f, 0.0f),
                 .acceleration = Vec3(0.0f, 0.0f, 0.0f)
             });
 
-        gCoordinator.AddComponent(
+        g_coordinator.AddComponent(
             entity,
             Transform{
-                .position = Vec3(randPosition(generator), randPosition(generator), randPosition(generator)),
-                .rotation = Vec3(randRotation(generator), randRotation(generator), randRotation(generator)),
+                .position = Vec3(rand_position(generator), rand_position(generator), rand_position(generator)),
+                .rotation = Vec3(rand_rotation(generator), rand_rotation(generator), rand_rotation(generator)),
                 .scale = Vec3(scale, scale, scale)
             });
 
-        gCoordinator.AddComponent(
+        g_coordinator.AddComponent(
             entity,
             Renderable{
-                .color = Vec3(randColor(generator), randColor(generator), randColor(generator))
+                .color = Vec3(rand_color(generator), rand_color(generator), rand_color(generator))
             });
 
         entities.push_back(entity);
     }
     */
 
-    float lastFrame, currentFrame;
-    lastFrame = currentFrame = windowManager.get_time(); // note: windowManager.get_time() is not exactly zero at this call
+    // timing information
+    float last_frame, current_frame;
+    last_frame = current_frame = window_manager.get_time(); // note: windowManager.get_time() is not exactly zero at this call
     float dt = 0.0f;
 
+    // render loop
     while (!quit)
     {
-        windowManager.process_events();
+        window_manager.process_events();
 
-        playerControlSystem.update(dt);
+        player_control_system.update(dt);
 
-        cameraControlSystem.update(dt);
+        camera_control_system.update(dt);
 
-        physicsSystem.update(dt);
+        physics_system.update(dt);
 
-        renderSystem.update(dt);
+        render_system.update(dt);
 
-        windowManager.update();
+        window_manager.update();
 
-        currentFrame = windowManager.get_time();
-        dt = currentFrame - lastFrame;
-        lastFrame = currentFrame;
+        current_frame = window_manager.get_time();
+        dt = current_frame - last_frame;
+        last_frame = current_frame;
     }
 
-    windowManager.shutdown();
+    // clean resources
+    window_manager.shutdown();
 
     return 0;
 }
