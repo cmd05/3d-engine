@@ -7,19 +7,15 @@
 class WindowManager
 {
 public:
-    void Init(
-        std::string const& windowTitle, unsigned int windowWidth, unsigned int windowHeight,
-        unsigned int windowPositionX, unsigned int windowPositionY);
+    void init(std::string const& window_title, unsigned int window_width,
+        unsigned int window_height, unsigned int window_position_x, unsigned int window_position_y);
 
-    void Update();
-
-    void ProcessEvents();
-
-    void Shutdown();
-
+    void update();
+    void process_events();
+    void shutdown();
     float get_time() const { return glfwGetTime(); }
 private:
-    GLFWwindow* mWindow;
+    GLFWwindow* m_window;
 
-    std::bitset<8> mButtons;
+    std::bitset<8> m_buttons;
 };

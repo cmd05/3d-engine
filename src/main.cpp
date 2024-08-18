@@ -42,7 +42,7 @@ int main()
     gCoordinator.init();
 
     WindowManager windowManager;
-    windowManager.Init("3D engine", 1920, 1080, 0, 0);
+    windowManager.init("3D engine", 1920, 1080, 0, 0);
 
     // Quit Handler
     gCoordinator.add_event_listener(FUNCTION_LISTENER(Events::Window::QUIT, QuitHandler));
@@ -197,7 +197,7 @@ int main()
 
     while (!quit)
     {
-        windowManager.ProcessEvents();
+        windowManager.process_events();
 
         playerControlSystem.update(dt);
 
@@ -207,14 +207,14 @@ int main()
 
         renderSystem.update(dt);
 
-        windowManager.Update();
+        windowManager.update();
 
         currentFrame = windowManager.get_time();
         dt = currentFrame - lastFrame;
         lastFrame = currentFrame;
     }
 
-    windowManager.Shutdown();
+    windowManager.shutdown();
 
     return 0;
 }
