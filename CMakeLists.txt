@@ -28,6 +28,9 @@ add_subdirectory(${INCLUDES_DIR}/glad)
 # find_package(glm CONFIG REQUIRED)
 add_subdirectory(${INCLUDES_DIR}/glm)
 
+# assimp
+# add_subdirectory(${INCLUDES_DIR}/assimp)
+
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_EXTENSIONS OFF)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
@@ -51,6 +54,7 @@ target_compile_options(
 # message("Boost_LIBRARY_DIRS: ${Boost_LIBRARY_DIRS}")
 # include_directories( ${Boost_INCLUDE_DIRS} )
 # find_package( Boost REQUIRED COMPONENTS json )
+# find_package(assimp)
 
 target_sources(
     3dengine
@@ -104,6 +108,7 @@ target_link_libraries(
     glad
     glfw
     glm::glm
+    # assimp
     # ${Boost_LIBRARIES}
 )
 
