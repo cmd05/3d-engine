@@ -216,8 +216,6 @@ void RenderSystem::Update(float dt)
 
         // Mat44 model = translate * scaleMat * rotY;
 
-        glm::mat4 projection = camera.projection_transform;
-
         shader->SetUniform<glm::mat4>("uModel", model);
         shader->SetUniform<glm::mat4>("uView", camera.view_matrix);
         shader->SetUniform<glm::mat4>("uProjection", camera.projection_transform);
