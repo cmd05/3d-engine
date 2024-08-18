@@ -84,7 +84,7 @@ int main()
         Player, Transform
     >();
 
-    playerControlSystem.Init();
+    playerControlSystem.init();
 
     auto& renderSystem = gCoordinator.register_system<RenderSystem>();
     gCoordinator.set_system_signature<
@@ -199,7 +199,7 @@ int main()
     {
         windowManager.ProcessEvents();
 
-        playerControlSystem.Update(dt);
+        playerControlSystem.update(dt);
 
         cameraControlSystem.update(dt);
 

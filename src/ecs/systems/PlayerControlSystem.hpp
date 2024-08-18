@@ -7,12 +7,12 @@ class PlayerControlSystem : public System
 {
 public:
     PlayerControlSystem(Coordinator& coordinator): System(coordinator) {}
-    void Init();
+    void init();
 
-    void Update(float dt);
+    void update(float dt);
 
 private:
-    std::bitset<8> mButtons;
+    std::bitset<8> m_buttons;
 
-    void InputListener(Event& event);
+    void input_listener(Event& event);
 };

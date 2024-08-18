@@ -3,12 +3,12 @@
 #include <ecs/core/Coordinator.hpp>
 #include <ecs/core/Event.hpp>
 
-void PlayerControlSystem::Init()
+void PlayerControlSystem::init()
 {
-    gCoordinator.add_event_listener(METHOD_LISTENER(Events::Window::INPUT, PlayerControlSystem::InputListener));
+    gCoordinator.add_event_listener(METHOD_LISTENER(Events::Window::INPUT, PlayerControlSystem::input_listener));
 }
 
-void PlayerControlSystem::Update(float dt)
+void PlayerControlSystem::update(float dt)
 {
     //for (auto& entity : mEntities)
     //{
@@ -49,7 +49,7 @@ void PlayerControlSystem::Update(float dt)
     //}
 }
 
-void PlayerControlSystem::InputListener(Event& event)
+void PlayerControlSystem::input_listener(Event& event)
 {
-    mButtons = event.get_param<std::bitset<8>>(Events::Window::Input::INPUT);
+    m_buttons = event.get_param<std::bitset<8>>(Events::Window::Input::INPUT);
 }
