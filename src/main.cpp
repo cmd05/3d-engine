@@ -41,22 +41,13 @@ int main()
 {
     gCoordinator.init();
 
-
     WindowManager windowManager;
     windowManager.Init("3D engine", 1920, 1080, 0, 0);
 
-
+    // Quit Handler
     gCoordinator.add_event_listener(FUNCTION_LISTENER(Events::Window::QUIT, QuitHandler));
 
-
-    // gCoordinator.register_component<Camera>();
-    // gCoordinator.register_component<Gravity>();
-    // gCoordinator.register_component<Player>();
-    // gCoordinator.register_component<Renderable>();
-    // gCoordinator.register_component<RigidBody>();
-    // gCoordinator.register_component<Thrust>();
-    // gCoordinator.register_component<Transform>();
-
+    // Register Components
     gCoordinator.register_component<
         Camera,
         Gravity,
@@ -67,70 +58,44 @@ int main()
         Transform
     >();
 
+    // Register Systems
+    
     // register system to our coordinator and set its signature
-    auto& physicsSystem = gCoordinator.register_system<PhysicsSystem>(); // note auto& is necessary. simply auto wil cause a new stack variable can cause copying errors for us
-    // {
-        // Signature signature;
-        // signature.set(gCoordinator.get_component_type<Gravity>());
-        // signature.set(gCoordinator.get_component_type<RigidBody>());
-        // signature.set(gCoordinator.get_component_type<Transform>());
-        
-        // gCoordinator.set_system_signature<PhysicsSystem>(signature);
-        gCoordinator.set_system_signature<
-            PhysicsSystem,
-            Gravity, RigidBody, Transform
-        >();
-    // }
-
+    auto& physicsSystem = gCoordinator.register_system<PhysicsSystem>(); // note auto& is necessary. simply auto wil create a new local variable can cause copying errors
+    gCoordinator.set_system_signature<
+        PhysicsSystem,
+        Gravity, RigidBody, Transform
+    >();
     // initialize the system
-    // physicsSystem.Init(gCoordinator);
     physicsSystem.Init();
 
 
     auto& cameraControlSystem = gCoordinator.register_system<CameraControlSystem>();
-    // {
-        // Signature signature;
-        // signature.set(gCoordinator.get_component_type<Camera>());
-        // signature.set(gCoordinator.get_component_type<Transform>());
-        // gCoordinator.set_system_signature<CameraControlSystem>(signature);
-        gCoordinator.set_system_signature<
-            CameraControlSystem,
-            Camera, Transform
-        >();
-    // }
-    
+    gCoordinator.set_system_signature<
+        CameraControlSystem,
+        Camera, Transform
+    >();
+
     cameraControlSystem.init();
 
-
     auto& playerControlSystem = gCoordinator.register_system<PlayerControlSystem>();
-    // {
-    //     Signature signature;
-    //     signature.set(gCoordinator.get_component_type<Player>());
-    //     signature.set(gCoordinator.get_component_type<Transform>());
-    //     gCoordinator.set_system_signature<PlayerControlSystem>(signature);
-        gCoordinator.set_system_signature<
-            PlayerControlSystem,
-            Player, Transform
-        >();
-    // }
+    gCoordinator.set_system_signature<
+        PlayerControlSystem,
+        Player, Transform
+    >();
 
     playerControlSystem.Init();
 
-
     auto& renderSystem = gCoordinator.register_system<RenderSystem>();
-    // {
-    //     Signature signature;
-    //     signature.set(gCoordinator.get_component_type<Renderable>());
-    //     signature.set(gCoordinator.get_component_type<Transform>());
-        
-        gCoordinator.set_system_signature<
-            RenderSystem,
-            Renderable, Transform
-        >();
-    // }
+    gCoordinator.set_system_signature<
+        RenderSystem,
+        Renderable, Transform
+    >();
 
-    // creates camera entity using CreateEntity()
+    // creates a camera entity using CreateEntity()
     renderSystem.Init();
+
+    // Create entities
 
     // camera entity already exists, so we we can use one less than MAX_ENTITIES number of entities
     std::vector<Entity> entities(MAX_ENTITIES_AFTER_CAMERA); 
@@ -144,24 +109,25 @@ int main()
 
     float scale = randScale(generator);
 
-    // int i = 0;
     for (auto& entity : entities)
     {
-        // std::cout << i << '\n';
         entity = gCoordinator.create_entity();
-        // i++;
         gCoordinator.add_component<Player>(entity, Player{});
 
-        // gCoordinator.add_component<Gravity>(
+        // gCoordinator.add_component( // automatic type deduction for template parameters
         // 	entity,
-        // 	{glm::vec3(0.0f, randGravity(generator), 0.0f)});
+        // 	Gravity {
+        //         .force = glm::vec3(0.0f, randGravity(generator), 0.0f)
+        //     }
+        // );
 
-        gCoordinator.add_component( // automatic type deduction for template parameters
+        gCoordinator.add_component(
             entity,
-            RigidBody{
+            RigidBody {
                 .velocity = glm::vec3(0.0f, 0.0f, 0.0f),
                 .acceleration = glm::vec3(0.0f, 0.0f, 0.0f)
-            });
+            }
+        );
 
         gCoordinator.add_component(
             entity,
@@ -174,14 +140,16 @@ int main()
 
         gCoordinator.add_component(
             entity,
-            Renderable{
+            Renderable {
                 .color = glm::vec3(randColor(generator), randColor(generator), randColor(generator))
-            });
+            }
+        );
     }
 
-    
+    /// Debugging
+    /*
     // destroy some entities
-/* 	auto it = entities.begin() + 1000;
+ 	auto it = entities.begin() + 1000;
 
     for(int i = 0; i < 3000; i++) {
         gCoordinator.DestroyEntity(*it);
@@ -220,11 +188,11 @@ int main()
             });
 
         entities.push_back(entity);
-    } */
+    }
+    */
 
     float lastFrame, currentFrame;
-    lastFrame = currentFrame = windowManager.get_time();
-    // std::cout << currentFrame << std::endl;
+    lastFrame = currentFrame = windowManager.get_time(); // note: windowManager.get_time() is not exactly zero at this call
     float dt = 0.0f;
 
     while (!quit)
