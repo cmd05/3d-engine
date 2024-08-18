@@ -8,13 +8,10 @@ class CameraControlSystem : public System
 {
 public:
     CameraControlSystem(Coordinator& coordinator): System(coordinator) {}
-
-    void Init();
-
-    void Update(float dt);
+    void init();
+    void update(float dt);
 
 private:
-    std::bitset<8> mButtons;
-
-    void InputListener(Event& event);
+    std::bitset<8> m_buttons;
+    void input_listener(Event& event);
 };

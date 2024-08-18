@@ -99,7 +99,7 @@ int main()
         >();
     // }
     
-    cameraControlSystem.Init();
+    cameraControlSystem.init();
 
 
     auto& playerControlSystem = gCoordinator.register_system<PlayerControlSystem>();
@@ -233,7 +233,7 @@ int main()
 
         playerControlSystem.Update(dt);
 
-        cameraControlSystem.Update(dt);
+        cameraControlSystem.update(dt);
 
         physicsSystem.Update(dt);
 
