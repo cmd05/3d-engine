@@ -12,18 +12,18 @@ class RenderSystem : public System
 public:
     RenderSystem(Coordinator& coordinator): System(coordinator) {}
 
-    void Init();
+    void init();
 
-    void Update(float dt);
+    void update(float dt);
 
 private:
-    void WindowSizeListener(Event& event);
+    void window_size_listener(Event& event);
 
     std::unique_ptr<Shader> shader;
 
-    Entity mCamera;
+    Entity m_camera;
 
-    GLuint mVao{};
-    GLuint mVboVertices{};
-    GLuint mVboNormals{};
+    GLuint m_vao{};
+    GLuint m_vbo_vertices{};
+    GLuint m_vbo_normals{};
 };

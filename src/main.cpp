@@ -93,7 +93,7 @@ int main()
     >();
 
     // creates a camera entity using CreateEntity()
-    renderSystem.Init();
+    renderSystem.init();
 
     // Create entities
 
@@ -205,7 +205,7 @@ int main()
 
         physicsSystem.Update(dt);
 
-        renderSystem.Update(dt);
+        renderSystem.update(dt);
 
         windowManager.Update();
 

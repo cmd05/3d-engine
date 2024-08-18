@@ -13,22 +13,22 @@
 
 #include <graphics/Shader.hpp>
 
-void RenderSystem::Init()
+void RenderSystem::init()
 {
-    gCoordinator.add_event_listener(METHOD_LISTENER(Events::Window::RESIZED, RenderSystem::WindowSizeListener));
+    gCoordinator.add_event_listener(METHOD_LISTENER(Events::Window::RESIZED, RenderSystem::window_size_listener));
 
     shader = std::make_unique<Shader>(std::string(FS_SHADERS_DIR) + "vertex.glsl", std::string(FS_SHADERS_DIR) + "fragment.glsl");
 
-    mCamera = gCoordinator.create_entity();
+    m_camera = gCoordinator.create_entity();
 
     gCoordinator.add_component(
-        mCamera,
+        m_camera,
         Transform{
             .position = glm::vec3(0.0f, 0.0f, 500.0f)
         });
 
     gCoordinator.add_component(
-        mCamera,
+        m_camera,
         Camera{
             .projection_transform = Camera::create_projection_transform(45.0f, 0.1f, 1000.0f, 1920, 1080)
         });
@@ -114,19 +114,19 @@ void RenderSystem::Init()
         };
 
 
-    glGenVertexArrays(1, &mVao);
-    glBindVertexArray(mVao);
+    glGenVertexArrays(1, &m_vao);
+    glBindVertexArray(m_vao);
 
     // Vertices
-    glGenBuffers(1, &mVboVertices);
-    glBindBuffer(GL_ARRAY_BUFFER, mVboVertices);
+    glGenBuffers(1, &m_vbo_vertices);
+    glBindBuffer(GL_ARRAY_BUFFER, m_vbo_vertices);
     glBufferData(GL_ARRAY_BUFFER, sizeof(glm::vec3) * vertices.size(), vertices.data(), GL_STATIC_DRAW); // sizeof(glm::vec3) == 12
     glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(glm::vec3), (void*)nullptr);
     glEnableVertexAttribArray(0);
 
     // Surface normal
-    glGenBuffers(1, &mVboNormals);
-    glBindBuffer(GL_ARRAY_BUFFER, mVboNormals);
+    glGenBuffers(1, &m_vbo_normals);
+    glBindBuffer(GL_ARRAY_BUFFER, m_vbo_normals);
     glBufferData(GL_ARRAY_BUFFER, sizeof(glm::vec3) * normals.size(), normals.data(), GL_STATIC_DRAW);
     glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(glm::vec3), (void*)nullptr);
     glEnableVertexAttribArray(1);
@@ -135,17 +135,17 @@ void RenderSystem::Init()
 }
 
 
-void RenderSystem::Update(float dt)
+void RenderSystem::update(float dt)
 {
     glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); // NOLINT (hicpp-signed-bitwise)
 
     shader->Activate();
-    glBindVertexArray(mVao);
+    glBindVertexArray(m_vao);
 
 
-    auto& cameraTransform = gCoordinator.get_component<Transform>(mCamera);
-    auto& camera = gCoordinator.get_component<Camera>(mCamera);
+    auto& cameraTransform = gCoordinator.get_component<Transform>(m_camera);
+    auto& camera = gCoordinator.get_component<Camera>(m_camera);
 
     for (const auto& entity : m_entities)
     {
@@ -227,11 +227,11 @@ void RenderSystem::Update(float dt)
     glBindVertexArray(0);
 }
 
-void RenderSystem::WindowSizeListener(Event& event)
+void RenderSystem::window_size_listener(Event& event)
 {
     auto windowWidth = event.get_param<unsigned int>(Events::Window::Resized::WIDTH);
     auto windowHeight = event.get_param<unsigned int>(Events::Window::Resized::HEIGHT);
 
-    auto& camera = gCoordinator.get_component<Camera>(mCamera);
+    auto& camera = gCoordinator.get_component<Camera>(m_camera);
     camera.projection_transform = Camera::create_projection_transform(45.0f, 0.1f, 1000.0f, windowWidth, windowHeight);
 }
