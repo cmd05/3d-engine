@@ -7,7 +7,7 @@
 void CameraControlSystem::init()
 {
     // macro expands to 
-    // gCoordinator.add_event_listener(Events::Window::INPUT, std::bind(&CameraControlSystem::input_listener, this, std::placeholders::_1));
+    // ref_gcoordinator.add_event_listener(Events::Window::INPUT, std::bind(&CameraControlSystem::input_listener, this, std::placeholders::_1));
     
     // std::placeholders::_1 is bound to the returned function object by std::bind.
     // https://en.cppreference.com/w/cpp/utility/functional/placeholders:
@@ -17,14 +17,14 @@ void CameraControlSystem::init()
     // Ex: In case of `CameraControlSystem::input_listener(Event& event)`,
     // std::placeholders::_1 will bind to Event& which will be sent to the function object of std::bind as the first argument
     
-    gCoordinator.add_event_listener(METHOD_LISTENER(Events::Window::INPUT, CameraControlSystem::input_listener));
+    ref_gcoordinator.add_event_listener(METHOD_LISTENER(Events::Window::INPUT, CameraControlSystem::input_listener));
 }
 
 void CameraControlSystem::update(float dt)
 {
     for (auto& entity : m_entities)
     {
-        auto& transform = gCoordinator.get_component<Transform>(entity);
+        auto& transform = ref_gcoordinator.get_component<Transform>(entity);
 
         float speed = 120.0f;
 
@@ -69,7 +69,7 @@ void CameraControlSystem::input_listener(Event& event)
     // In WindowManager::ProcessEvents(), event has been set to:
         // Event event(Events::Window::INPUT);
         // event.set_param(Events::Window::Input::INPUT, m_buttons);
-        // gCoordinator.send_event(event);
+        // ref_gcoordinator.send_event(event);
     // where m_buttons is a std::bitset<8>. get_param() handles the any_cast in `Event` class 
 
     // update the state of the CameraControlSystem

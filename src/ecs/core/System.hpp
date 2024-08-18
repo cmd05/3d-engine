@@ -16,9 +16,9 @@ public:
     // If trying to erase when it doesn’t exist, it does nothing
 
     // All entities with a certain signature
-    System(Coordinator& coord) : gCoordinator(coord) {}
+    System(Coordinator& coordinator) : ref_gcoordinator(coordinator) {}
     
     std::set<Entity> m_entities;
 protected:
-    Coordinator& gCoordinator;
+    Coordinator& ref_gcoordinator;
 };

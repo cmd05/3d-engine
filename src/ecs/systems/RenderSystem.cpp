@@ -15,19 +15,19 @@
 
 void RenderSystem::init()
 {
-    gCoordinator.add_event_listener(METHOD_LISTENER(Events::Window::RESIZED, RenderSystem::window_size_listener));
+    ref_gcoordinator.add_event_listener(METHOD_LISTENER(Events::Window::RESIZED, RenderSystem::window_size_listener));
 
     shader = std::make_unique<Shader>(std::string(FS_SHADERS_DIR) + "vertex.glsl", std::string(FS_SHADERS_DIR) + "fragment.glsl");
 
-    m_camera = gCoordinator.create_entity();
+    m_camera = ref_gcoordinator.create_entity();
 
-    gCoordinator.add_component(
+    ref_gcoordinator.add_component(
         m_camera,
         Transform{
             .position = glm::vec3(0.0f, 0.0f, 500.0f)
         });
 
-    gCoordinator.add_component(
+    ref_gcoordinator.add_component(
         m_camera,
         Camera{
             .projection_transform = Camera::create_projection_transform(45.0f, 0.1f, 1000.0f, 1920, 1080)
@@ -144,13 +144,13 @@ void RenderSystem::update(float dt)
     glBindVertexArray(m_vao);
 
 
-    auto& cameraTransform = gCoordinator.get_component<Transform>(m_camera);
-    auto& camera = gCoordinator.get_component<Camera>(m_camera);
+    auto& cameraTransform = ref_gcoordinator.get_component<Transform>(m_camera);
+    auto& camera = ref_gcoordinator.get_component<Camera>(m_camera);
 
     for (const auto& entity : m_entities)
     {
-        const auto& transform = gCoordinator.get_component<Transform>(entity);
-        const auto& renderable = gCoordinator.get_component<Renderable>(entity);
+        const auto& transform = ref_gcoordinator.get_component<Transform>(entity);
+        const auto& renderable = ref_gcoordinator.get_component<Renderable>(entity);
 
         // Mat44 view;
         // view.m[0][3] = -cameraTransform.position.x;
@@ -232,6 +232,6 @@ void RenderSystem::window_size_listener(Event& event)
     auto windowWidth = event.get_param<unsigned int>(Events::Window::Resized::WIDTH);
     auto windowHeight = event.get_param<unsigned int>(Events::Window::Resized::HEIGHT);
 
-    auto& camera = gCoordinator.get_component<Camera>(m_camera);
+    auto& camera = ref_gcoordinator.get_component<Camera>(m_camera);
     camera.projection_transform = Camera::create_projection_transform(45.0f, 0.1f, 1000.0f, windowWidth, windowHeight);
 }

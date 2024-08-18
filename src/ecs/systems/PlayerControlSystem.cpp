@@ -5,14 +5,14 @@
 
 void PlayerControlSystem::init()
 {
-    gCoordinator.add_event_listener(METHOD_LISTENER(Events::Window::INPUT, PlayerControlSystem::input_listener));
+    ref_gcoordinator.add_event_listener(METHOD_LISTENER(Events::Window::INPUT, PlayerControlSystem::input_listener));
 }
 
 void PlayerControlSystem::update(float dt)
 {
     //for (auto& entity : mEntities)
     //{
-    //	auto& transform = gCoordinator.Get<Transform>(entity);
+    //	auto& transform = ref_gcoordinator.Get<Transform>(entity);
 
 
     //	if (mButtons.test(static_cast<std::size_t>(InputButtons::W)))
