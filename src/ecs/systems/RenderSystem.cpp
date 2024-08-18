@@ -30,7 +30,7 @@ void RenderSystem::Init()
     gCoordinator.add_component(
         mCamera,
         Camera{
-            .projectionTransform = Camera::MakeProjectionTransform(45.0f, 0.1f, 1000.0f, 1920, 1080)
+            .projection_transform = Camera::create_projection_transform(45.0f, 0.1f, 1000.0f, 1920, 1080)
         });
 
     std::vector<glm::vec3> vertices =
@@ -157,9 +157,13 @@ void RenderSystem::Update(float dt)
         // view.m[1][3] = -cameraTransform.position.y;
         // view.m[2][3] = -cameraTransform.position.z;
 
-        glm::vec3 camFront = glm::vec3(0.0f, 0.0f, -1.0f);
-        glm::vec3 up = glm::vec3(0.0f, 1.0f, 0.0f);
-        glm::mat4 view = glm::lookAt(cameraTransform.position, cameraTransform.position + camFront, up);
+        // glm::vec3 camFront = glm::vec3(0.0f, 0.0f, -1.0f);
+        // glm::vec3 up = glm::vec3(0.0f, 1.0f, 0.0f);
+        // glm::mat4 view = camera.view_matrix;
+        
+        // camera.view_matrix should be created just before rendering,
+        // as camera position keeps changing
+        camera.view_matrix = Camera::create_view_matrix(cameraTransform.position); 
 
         // Mat44 rotY;
 
@@ -212,11 +216,11 @@ void RenderSystem::Update(float dt)
 
         // Mat44 model = translate * scaleMat * rotY;
 
-        glm::mat4 projection = camera.projectionTransform;
+        glm::mat4 projection = camera.projection_transform;
 
         shader->SetUniform<glm::mat4>("uModel", model);
-        shader->SetUniform<glm::mat4>("uView", view);
-        shader->SetUniform<glm::mat4>("uProjection", projection);
+        shader->SetUniform<glm::mat4>("uView", camera.view_matrix);
+        shader->SetUniform<glm::mat4>("uProjection", camera.projection_transform);
         shader->SetUniform<glm::vec3>("uColor", renderable.color);
 
         glDrawArrays(GL_TRIANGLES, 0, 36);
@@ -231,6 +235,5 @@ void RenderSystem::WindowSizeListener(Event& event)
     auto windowHeight = event.get_param<unsigned int>(Events::Window::Resized::HEIGHT);
 
     auto& camera = gCoordinator.get_component<Camera>(mCamera);
-    camera.projectionTransform = Camera::MakeProjectionTransform(45.0f, 0.1f, 1000.0f, windowWidth, windowHeight);
+    camera.projection_transform = Camera::create_projection_transform(45.0f, 0.1f, 1000.0f, windowWidth, windowHeight);
 }
-
