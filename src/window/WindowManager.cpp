@@ -78,6 +78,6 @@ void WindowManager::ProcessEvents()
     
     // always send movement (empty `moves` means no movement)
     Event event(Events::Camera::MOVEMENT);
-    event.set_param(Events::Camera::Movement::MOVES, moves); // set window input parameter to buttons pressed
+    event.set_param(Events::Camera::Movement::MOVES, moves);
     gCoordinator.send_event(event);
 }

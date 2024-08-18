@@ -50,12 +50,12 @@ void CameraControlSystem::input_listener(Event& event)
 {
     // get window buttons input parameter
     // In WindowManager::ProcessEvents(), event has been set to:
-        // Event event(Events::Window::INPUT);
-        // event.set_param(Events::Window::Input::INPUT, moves);
+        // Event event(Events::Camera::MOVEMENT);
+        // event.set_param(Events::Camera::Movement::MOVES, moves);
         // ref_gcoordinator.send_event(event);
     // where moves is a std::bitset<8>. get_param() handles the any_cast in `Event` class 
 
     // update the state of the CameraControlSystem
-    // the updation of camera position is done when CameraControlSystem::udpate() is called
+    // the updation of camera position is done when CameraControlSystem::update() is called
     moves = event.get_param<BasicMoves>(Events::Camera::Movement::MOVES);
 }
