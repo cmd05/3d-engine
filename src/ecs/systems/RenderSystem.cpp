@@ -13,8 +13,6 @@
 
 #include <graphics/Shader.hpp>
 
-extern Coordinator gCoordinator;
-
 void RenderSystem::Init()
 {
     gCoordinator.add_event_listener(METHOD_LISTENER(Events::Window::RESIZED, RenderSystem::WindowSizeListener));

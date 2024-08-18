@@ -3,9 +3,6 @@
 #include <ecs/core/Coordinator.hpp>
 #include <ecs/core/Event.hpp>
 
-extern Coordinator gCoordinator;
-
-
 void PlayerControlSystem::Init()
 {
     gCoordinator.add_event_listener(METHOD_LISTENER(Events::Window::INPUT, PlayerControlSystem::InputListener));

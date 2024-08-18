@@ -102,7 +102,7 @@ ComponentType Coordinator::get_component_type() const {
 // System Methods
 template<typename T>
 T& Coordinator::register_system() {
-    return m_system_manager->register_system<T>();
+    return m_system_manager->register_system<T>(*this); // register system with the coordinator
 }
 
 // template<typename T>

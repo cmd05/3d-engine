@@ -6,6 +6,7 @@
 class PlayerControlSystem : public System
 {
 public:
+    PlayerControlSystem(Coordinator& coordinator): System(coordinator) {}
     void Init();
 
     void Update(float dt);

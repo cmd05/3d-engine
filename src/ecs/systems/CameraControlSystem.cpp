@@ -4,8 +4,6 @@
 #include <ecs/core/Coordinator.hpp>
 #include <ecs/core/Event.hpp>
 
-extern Coordinator gCoordinator;
-
 void CameraControlSystem::Init()
 {
     // macro expands to 

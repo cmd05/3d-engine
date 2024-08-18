@@ -6,9 +6,6 @@
 #include <ecs/components/RigidBody.hpp>
 #include <ecs/components/Transform.hpp>
 
-extern Coordinator gCoordinator;
-
-
 void PhysicsSystem::Init()
 {
 }
