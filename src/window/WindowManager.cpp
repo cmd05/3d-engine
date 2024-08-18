@@ -51,82 +51,33 @@ void WindowManager::ProcessEvents()
     glfwPollEvents();
     
     mButtons.reset(); // reset all bits of the bitset (do not retain previously pressed keys)
-
-    // bool buttonStateChanged = false;
+    
+    BasicMoves moves{};
 
     if (glfwGetKey(mWindow, GLFW_KEY_ESCAPE) == GLFW_PRESS)
-    {
         gCoordinator.send_event(Events::Window::QUIT);
-        // buttonStateChanged = true;
-    }
     
+    // Camera Movement
     if (glfwGetKey(mWindow, GLFW_KEY_W) == GLFW_PRESS)
-    {
-        mButtons.set(static_cast<std::size_t>(InputButtons::W));
-        // buttonStateChanged = true;
-    }
-    // else {
-    //     mButtons.reset(static_cast<std::size_t>(InputButtons::W));
-    // }
+        moves.set(static_cast<std::size_t>(BasicMovement::Forward));
 
     if (glfwGetKey(mWindow, GLFW_KEY_A) == GLFW_PRESS)
-    {
-        mButtons.set(static_cast<std::size_t>(InputButtons::A));
-        // buttonStateChanged = true;
-    } 
-    // else {
-    //     mButtons.reset(static_cast<std::size_t>(InputButtons::A));
-    // }
+        moves.set(static_cast<std::size_t>(BasicMovement::Left));
 
     if (glfwGetKey(mWindow, GLFW_KEY_S) == GLFW_PRESS)
-    {
-        mButtons.set(static_cast<std::size_t>(InputButtons::S));
-        // buttonStateChanged = true;
-    } 
-    // else {
-    //     mButtons.reset(static_cast<std::size_t>(InputButtons::S));
-    // }
+        moves.set(static_cast<std::size_t>(BasicMovement::Backward));
     
     if (glfwGetKey(mWindow, GLFW_KEY_D) == GLFW_PRESS)
-    {
-        mButtons.set(static_cast<std::size_t>(InputButtons::D));
-        // buttonStateChanged = true;
-    } 
-    // else {
-    //     mButtons.reset(static_cast<std::size_t>(InputButtons::D));
-    // }
+        moves.set(static_cast<std::size_t>(BasicMovement::Right));
     
     if (glfwGetKey(mWindow, GLFW_KEY_Q) == GLFW_PRESS)
-    {
-        mButtons.set(static_cast<std::size_t>(InputButtons::Q));
-        // buttonStateChanged = true;
-    } 
-    // else {
-    //     mButtons.reset(static_cast<std::size_t>(InputButtons::Q));
-    // }
+        moves.set(static_cast<std::size_t>(BasicMovement::Up));
 
     if (glfwGetKey(mWindow, GLFW_KEY_E) == GLFW_PRESS)
-    {
-        mButtons.set(static_cast<std::size_t>(InputButtons::E));
-        // buttonStateChanged = true;
-    } 
-    // else {
-    //     mButtons.reset(static_cast<std::size_t>(InputButtons::E));
-    // }
-
-    // else
-    // {
-    //     mButtons.reset();
-    //     // buttonStateChanged = false;
-    // }
-
-    // if(!buttonStateChanged)
-    //     mButtons.reset();
-
-    // if (buttonStateChanged)
-    // {
-        Event event(Events::Window::INPUT);
-        event.set_param(Events::Window::Input::INPUT, mButtons); // set window input parameter to buttons pressed
-        gCoordinator.send_event(event);
-    // }
+        moves.set(static_cast<std::size_t>(BasicMovement::Down));
+    
+    // always send movement (empty `moves` means no movement)
+    Event event(Events::Camera::MOVEMENT);
+    event.set_param(Events::Camera::Movement::MOVES, moves); // set window input parameter to buttons pressed
+    gCoordinator.send_event(event);
 }

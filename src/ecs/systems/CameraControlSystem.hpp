@@ -12,6 +12,6 @@ public:
     void update(float dt);
 
 private:
-    std::bitset<8> m_buttons;
+    BasicMoves moves;
     void input_listener(Event& event);
 };

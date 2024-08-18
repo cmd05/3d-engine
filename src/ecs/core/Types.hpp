@@ -29,6 +29,17 @@ enum class InputButtons
     E
 };
 
+enum class BasicMovement {
+    Forward,
+    Right,
+    Left,
+    Backward,
+    Up,
+    Down
+};
+
+using BasicMoves = std::bitset<8>;
+
 // Events
 using EventId = std::uint32_t;
 using ParamId = std::uint32_t;
@@ -66,4 +77,12 @@ namespace Events::Window::Input {
 namespace Events::Window::Resized {
     const ParamId WIDTH = "Events::Window::Resized::WIDTH"_hash;
     const ParamId HEIGHT = "Events::Window::Resized::HEIGHT"_hash;
+}
+
+namespace Events::Camera {
+    const EventId MOVEMENT = "Events::Camera::MOVEMENT"_hash;
+}
+
+namespace Events::Camera::Movement {
+    const ParamId MOVES = "Events::Camera::Movement::MOVES"_hash;
 }

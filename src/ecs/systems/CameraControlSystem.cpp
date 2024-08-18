@@ -17,7 +17,7 @@ void CameraControlSystem::init()
     // Ex: In case of `CameraControlSystem::input_listener(Event& event)`,
     // std::placeholders::_1 will bind to Event& which will be sent to the function object of std::bind as the first argument
     
-    ref_gcoordinator.add_event_listener(METHOD_LISTENER(Events::Window::INPUT, CameraControlSystem::input_listener));
+    ref_gcoordinator.add_event_listener(METHOD_LISTENER(Events::Camera::MOVEMENT, CameraControlSystem::input_listener));
 }
 
 void CameraControlSystem::update(float dt)
@@ -25,41 +25,24 @@ void CameraControlSystem::update(float dt)
     for (auto& entity : m_entities)
     {
         auto& transform = ref_gcoordinator.get_component<Transform>(entity);
-
         float speed = 120.0f;
 
-
-        if (m_buttons.test(static_cast<std::size_t>(InputButtons::W)))
-        {
+        if (moves.test(static_cast<std::size_t>(BasicMovement::Forward)))
             transform.position.z -= (dt * speed);
-        }
-
-        else if (m_buttons.test(static_cast<std::size_t>(InputButtons::S)))
-        {
+        else if (moves.test(static_cast<std::size_t>(BasicMovement::Backward)))
             transform.position.z += (dt * speed);
-        }
 
 
-        if (m_buttons.test(static_cast<std::size_t>(InputButtons::Q)))
-        {
+        if (moves.test(static_cast<std::size_t>(BasicMovement::Up)))
             transform.position.y += (dt * speed);
-        }
-
-        else if (m_buttons.test(static_cast<std::size_t>(InputButtons::E)))
-        {
+        else if (moves.test(static_cast<std::size_t>(BasicMovement::Down)))
             transform.position.y -= (dt * speed);
-        }
 
 
-        if (m_buttons.test(static_cast<std::size_t>(InputButtons::A)))
-        {
+        if (moves.test(static_cast<std::size_t>(BasicMovement::Left)))
             transform.position.x -= (dt * speed);
-        }
-
-        else if (m_buttons.test(static_cast<std::size_t>(InputButtons::D)))
-        {
+        else if (moves.test(static_cast<std::size_t>(BasicMovement::Right)))
             transform.position.x += (dt * speed);
-        }
     }
 }
 
@@ -68,11 +51,11 @@ void CameraControlSystem::input_listener(Event& event)
     // get window buttons input parameter
     // In WindowManager::ProcessEvents(), event has been set to:
         // Event event(Events::Window::INPUT);
-        // event.set_param(Events::Window::Input::INPUT, m_buttons);
+        // event.set_param(Events::Window::Input::INPUT, moves);
         // ref_gcoordinator.send_event(event);
-    // where m_buttons is a std::bitset<8>. get_param() handles the any_cast in `Event` class 
+    // where moves is a std::bitset<8>. get_param() handles the any_cast in `Event` class 
 
     // update the state of the CameraControlSystem
-    // the updation of camera position is done when CameraControlSystem::Update() is called
-    m_buttons = event.get_param<std::bitset<8>>(Events::Window::Input::INPUT);
+    // the updation of camera position is done when CameraControlSystem::udpate() is called
+    moves = event.get_param<BasicMoves>(Events::Camera::Movement::MOVES);
 }
