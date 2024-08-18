@@ -1,8 +1,8 @@
 /*
-cmake --build build && cd build && ./3dengine.exe && cd ..
-cmake --build build > log.txt && cd build && ./3dengine.exe && cd ..
+cmake --build build && ./build/3dengine.exe
+cmake --build build > log.txt && ./build/3dengine.exe
 
-cmake --build build > log.txt && cd build && ./3dengine.exe; cd .. 
+cmake --build build > log.txt && ./build/3dengine.exe
 */
 
 #include <chrono>
@@ -49,58 +49,85 @@ int main()
     gCoordinator.add_event_listener(FUNCTION_LISTENER(Events::Window::QUIT, QuitHandler));
 
 
-    gCoordinator.register_component<Camera>();
-    gCoordinator.register_component<Gravity>();
-    gCoordinator.register_component<Player>();
-    gCoordinator.register_component<Renderable>();
-    gCoordinator.register_component<RigidBody>();
-    gCoordinator.register_component<Thrust>();
-    gCoordinator.register_component<Transform>();
+    // gCoordinator.register_component<Camera>();
+    // gCoordinator.register_component<Gravity>();
+    // gCoordinator.register_component<Player>();
+    // gCoordinator.register_component<Renderable>();
+    // gCoordinator.register_component<RigidBody>();
+    // gCoordinator.register_component<Thrust>();
+    // gCoordinator.register_component<Transform>();
 
+    gCoordinator.register_component<
+        Camera,
+        Gravity,
+        Player,
+        Renderable,
+        RigidBody,
+        Thrust,
+        Transform
+    >();
 
+    // register system to our coordinator and set its signature
     auto& physicsSystem = gCoordinator.register_system<PhysicsSystem>(); // note auto& is necessary. simply auto wil cause a new stack variable can cause copying errors for us
-    {
-        Signature signature;
-        signature.set(gCoordinator.get_component_type<Gravity>());
-        signature.set(gCoordinator.get_component_type<RigidBody>());
-        signature.set(gCoordinator.get_component_type<Transform>());
+    // {
+        // Signature signature;
+        // signature.set(gCoordinator.get_component_type<Gravity>());
+        // signature.set(gCoordinator.get_component_type<RigidBody>());
+        // signature.set(gCoordinator.get_component_type<Transform>());
         
-        gCoordinator.set_system_signature<PhysicsSystem>(signature);
-    }
+        // gCoordinator.set_system_signature<PhysicsSystem>(signature);
+        gCoordinator.set_system_signature<
+            PhysicsSystem,
+            Gravity, RigidBody, Transform
+        >();
+    // }
 
+    // initialize the system
     // physicsSystem.Init(gCoordinator);
     physicsSystem.Init();
 
 
     auto& cameraControlSystem = gCoordinator.register_system<CameraControlSystem>();
-    {
-        Signature signature;
-        signature.set(gCoordinator.get_component_type<Camera>());
-        signature.set(gCoordinator.get_component_type<Transform>());
-        gCoordinator.set_system_signature<CameraControlSystem>(signature);
-    }
-
+    // {
+        // Signature signature;
+        // signature.set(gCoordinator.get_component_type<Camera>());
+        // signature.set(gCoordinator.get_component_type<Transform>());
+        // gCoordinator.set_system_signature<CameraControlSystem>(signature);
+        gCoordinator.set_system_signature<
+            CameraControlSystem,
+            Camera, Transform
+        >();
+    // }
+    
     cameraControlSystem.Init();
 
 
     auto& playerControlSystem = gCoordinator.register_system<PlayerControlSystem>();
-    {
-        Signature signature;
-        signature.set(gCoordinator.get_component_type<Player>());
-        signature.set(gCoordinator.get_component_type<Transform>());
-        gCoordinator.set_system_signature<PlayerControlSystem>(signature);
-    }
+    // {
+    //     Signature signature;
+    //     signature.set(gCoordinator.get_component_type<Player>());
+    //     signature.set(gCoordinator.get_component_type<Transform>());
+    //     gCoordinator.set_system_signature<PlayerControlSystem>(signature);
+        gCoordinator.set_system_signature<
+            PlayerControlSystem,
+            Player, Transform
+        >();
+    // }
 
     playerControlSystem.Init();
 
 
     auto& renderSystem = gCoordinator.register_system<RenderSystem>();
-    {
-        Signature signature;
-        signature.set(gCoordinator.get_component_type<Renderable>());
-        signature.set(gCoordinator.get_component_type<Transform>());
-        gCoordinator.set_system_signature<RenderSystem>(signature);
-    }
+    // {
+    //     Signature signature;
+    //     signature.set(gCoordinator.get_component_type<Renderable>());
+    //     signature.set(gCoordinator.get_component_type<Transform>());
+        
+        gCoordinator.set_system_signature<
+            RenderSystem,
+            Renderable, Transform
+        >();
+    // }
 
     // creates camera entity using CreateEntity()
     renderSystem.Init();

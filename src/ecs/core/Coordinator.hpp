@@ -20,7 +20,7 @@ public:
     void destroy_entity(Entity entity);
 
     // Component Methods
-    template<typename T>
+    template<typename ...Args>
     void register_component();
 
     template<typename T>
@@ -39,8 +39,8 @@ public:
     template<typename T>
     T& register_system();
 
-    template<typename T>
-    void set_system_signature(Signature signature);
+    template<typename T, typename ...Args>
+    void set_system_signature();
 
     // Event Methods
     void add_event_listener(EventId event_id, const std::function<void(Event&)>& listener); // pass listener by reference
@@ -57,9 +57,14 @@ private:
 };
 
 // Component Methods
-template<typename T>
+// template<typename T>
+// void Coordinator::register_component() {
+//     m_component_manager->register_component<T>();
+// }
+template<typename ...Args>
 void Coordinator::register_component() {
-    m_component_manager->register_component<T>();
+    // m_component_manager->register_component<T>();
+    (m_component_manager->register_component<Args>(), ...);
 }
 
 template<typename T>
@@ -100,7 +105,15 @@ T& Coordinator::register_system() {
     return m_system_manager->register_system<T>();
 }
 
-template<typename T>
-void Coordinator::set_system_signature(Signature signature) {
+// template<typename T>
+// void Coordinator::set_system_signature(Signature signature) {
+//     m_system_manager->set_signature<T>(signature);
+// }
+
+template<typename T, typename ...Args>
+void Coordinator::set_system_signature() {
+    Signature signature;
+    (signature.set(get_component_type<Args>()), ...);
+
     m_system_manager->set_signature<T>(signature);
 }
