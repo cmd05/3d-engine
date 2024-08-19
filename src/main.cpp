@@ -128,7 +128,8 @@ int main()
         g_coordinator.add_component( // automatic type deduction for template parameters
         	entity,
         	Gravity {
-                .force = glm::vec3(0.0f, rand_gravity(generator), 0.0f)
+                .force = glm::vec3(0.0f, -9.8f, 0.0f)
+                // .force = glm::vec3(0.0f, rand_gravity(generator), 0.0f)
             }
         );
 
