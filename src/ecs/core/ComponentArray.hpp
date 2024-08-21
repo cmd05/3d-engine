@@ -88,5 +88,8 @@ void ComponentArray<T>::entity_destroyed(Entity entity) {
 
 template<typename T>
 void ComponentArray<T>::clear() {
+    m_entity_to_index_map.clear();
+    m_index_to_entity_map.clear();
+    
     m_component_vector.clear();
 }
