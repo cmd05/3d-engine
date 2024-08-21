@@ -17,7 +17,7 @@ public:
     // modifiers
     void push_back(T val);
     void reserve(size_type new_alloc);
-    void pop();
+    void pop_back();
     void clear();
 
     // Destructor
@@ -81,7 +81,7 @@ void SimpleVector<T,S,A>::reserve(size_type new_alloc) {
 }
 
 template<typename T, typename S, typename A>
-void SimpleVector<T,S,A>::pop() {
+void SimpleVector<T,S,A>::pop_back() {
     if(sz == 0) return;
     
     alloc.destroy(&elem[--sz]);
