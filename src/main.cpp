@@ -66,40 +66,18 @@ int main()
 
     /// ------------- Register Systems ------------------
     
-    // register system to our coordinator and set its signature
+    // // register system to our coordinator and set its signature
     auto& physics_system = g_coordinator.register_system<PhysicsSystem>(); // note auto& is necessary. simply auto wil create a new local variable can cause copying errors
-    g_coordinator.set_system_signature<
-        PhysicsSystem,
-        Gravity, RigidBody, Transform
-    >();
-    // initialize the system
     physics_system.init();
 
-
     auto& camera_control_system = g_coordinator.register_system<CameraControlSystem>();
-    g_coordinator.set_system_signature<
-        CameraControlSystem,
-        Camera, Transform
-    >();
-
     camera_control_system.init();
 
     auto& player_control_system = g_coordinator.register_system<PlayerControlSystem>();
-    g_coordinator.set_system_signature<
-        PlayerControlSystem,
-        Player, Transform
-    >();
-
     player_control_system.init();
 
     auto& render_system = g_coordinator.register_system<RenderSystem>();
-    g_coordinator.set_system_signature<
-        RenderSystem,
-        Renderable, Transform
-    >();
-
-    // creates a camera entity using CreateEntity()
-    render_system.init();
+    render_system.init(); // render_system::init() creates a camera entity
 
     /// -------------------------------------------------
 

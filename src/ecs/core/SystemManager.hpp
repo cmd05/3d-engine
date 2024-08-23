@@ -6,8 +6,6 @@
 #include <typeindex>
 
 #include <ecs/core/System.hpp>
-
-// #include <ecs/core/Coordinator.hpp>
 #include <ecs/core/Types.hpp>
 
 class Coordinator;
@@ -17,22 +15,12 @@ public:
     // System Modifiers
     template<typename T>
     T& register_system(Coordinator& coordinator);
-
-    template<typename T>
-    void set_signature(Signature signature);
     
-    // System Entities Modifiers
-    void entity_destroyed(Entity entity);
-    void entity_signature_changed(Entity entity, Signature entity_signature);
+    // void entity_destroyed(Entity entity);
+    // void entity_signature_changed(Entity entity, Signature entity_signature);
 
 private:
     system_count_size_type m_system_count = 0;
-
-    // FIX: no need of system signatures (refactor when refactoring systems to be stateless)
-    // map from system type to signature
-    // std::unordered_map<std::type_index, Signature> m_signatures{};
-
-    // map from system type to system pointer
     std::unordered_map<std::type_index, std::unique_ptr<System>> m_systems{};
 };
 
@@ -50,15 +38,4 @@ T& SystemManager::register_system(Coordinator& coordinator) {
     m_system_count++;
 
     return *static_cast<T*>(it->second.get());
-}
-
-template<typename T>
-void SystemManager::set_signature(Signature signature) {
-    std::type_index type = typeid(T);
-
-    assert(m_systems.find(type) != m_systems.end() && "System used before registered");
-
-    // FIX: remove
-    // set the signature for this system
-    // m_signatures.insert({type, signature});
 }

@@ -21,7 +21,7 @@ Entity Coordinator::create_entity() {
 void Coordinator::destroy_entity(Entity entity) {
     m_entity_manager->destroy_entity(entity);
     m_component_manager->entity_destroyed(entity);
-    m_system_manager->entity_destroyed(entity);
+    // m_system_manager->entity_destroyed(entity);
 }
 
 // Event Methods

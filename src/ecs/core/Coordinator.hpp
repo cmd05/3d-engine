@@ -55,9 +55,6 @@ public:
     template<typename T>
     T& register_system();
 
-    template<typename T, typename ...Args>
-    void set_system_signature();
-
 public:
     // Event Methods
     void add_event_listener(EventId event_id, const std::function<void(Event&)>& listener); // pass listener by reference
@@ -91,7 +88,7 @@ void Coordinator::add_component(Entity entity, T component) {
     signature.set(m_component_manager->get_component_type<T>(), true);
     m_entity_manager->set_signature(entity, signature);
 
-    m_system_manager->entity_signature_changed(entity, signature);
+    // m_system_manager->entity_signature_changed(entity, signature);
 }
 
 template<typename T>
@@ -102,7 +99,7 @@ void Coordinator::remove_component(Entity entity) {
     signature.set(m_component_manager->get_component_type<T>(), false);
     m_entity_manager->set_signature(entity, signature);
 
-    m_system_manager->entity_signature_changed(entity, signature);
+    // m_system_manager->entity_signature_changed(entity, signature);
 }
 
 template<typename T>
@@ -115,19 +112,9 @@ ComponentType Coordinator::get_component_type() const {
     return m_component_manager->get_component_type<T>();
 }
 
-// System Methods
 template<typename T>
 T& Coordinator::register_system() {
     return m_system_manager->register_system<T>(*this); // register system with the coordinator
-}
-
-// FIX: remove this method
-template<typename T, typename ...Args>
-void Coordinator::set_system_signature() {
-    Signature signature;
-    (signature.set(get_component_type<Args>()), ...);
-
-    m_system_manager->set_signature<T>(signature);
 }
 
 template<typename ...ComponentTypes>
