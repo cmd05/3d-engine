@@ -1,4 +1,4 @@
-#include <ecs/core/Coordinator.hpp>
+#include <ecs/core/Scene.hpp>
 #include <ecs/core/Types.hpp>
 
 // SceneViewExclude
@@ -14,15 +14,15 @@ public:
     class iterator;
     
     template<typename ...ExcludeTypes>
-    SceneView(Coordinator& coordinator, SceneViewExclude<ExcludeTypes...> exclude);
+    SceneView(Scene& scene, SceneViewExclude<ExcludeTypes...> exclude);
     
-    SceneView(Coordinator& coordinator, bool exclusive = false);
+    SceneView(Scene& scene, bool exclusive = false);
 
     iterator begin() const { return m_begin; }
     iterator end() const { return m_end; }
 
 private:
-    Coordinator& ref_coordinator;
+    Scene& ref_scene;
 
     bool exclusive;
     Signature excluded; // default std::bitset is all zero's
@@ -70,8 +70,8 @@ bool SceneView<ComponentTypes...>::iterator::operator!=(const iterator& other) c
 
 template<typename ...ComponentTypes>
 bool SceneView<ComponentTypes...>::iterator::is_valid_entity(const iterator& it) const {
-    Signature signature_required = scene_view->ref_coordinator.get_components_signature<ComponentTypes...>();
-    Signature signature_entity = scene_view->ref_coordinator.get_entity_signature(*it.vec_iterator);
+    Signature signature_required = scene_view->ref_scene.get_components_signature<ComponentTypes...>();
+    Signature signature_entity = scene_view->ref_scene.get_entity_signature(*it.vec_iterator);
 
     return ( 
         (!scene_view->exclusive &&
@@ -94,13 +94,13 @@ typename SceneView<ComponentTypes...>::iterator& SceneView<ComponentTypes...>::i
 
 template<typename ...ComponentTypes>
 template<typename ...ExcludeTypes>
-SceneView<ComponentTypes...>::SceneView(Coordinator& coordinator, SceneViewExclude<ExcludeTypes...> exclude): SceneView(coordinator) {
-    excluded = ref_coordinator.get_components_signature<ExcludeTypes...>();
+SceneView<ComponentTypes...>::SceneView(Scene& scene, SceneViewExclude<ExcludeTypes...> exclude): SceneView(scene) {
+    excluded = ref_scene.get_components_signature<ExcludeTypes...>();
 }
 
 template<typename ...ComponentTypes>
-SceneView<ComponentTypes...>::SceneView(Coordinator& coordinator, bool exclusive): ref_coordinator{coordinator}, exclusive{exclusive} {
-    auto [begin, end] = ref_coordinator.get_smallest_component_array<ComponentTypes...>();
+SceneView<ComponentTypes...>::SceneView(Scene& scene, bool exclusive): ref_scene{scene}, exclusive{exclusive} {
+    auto [begin, end] = ref_scene.get_smallest_component_array<ComponentTypes...>();
 
     m_begin = iterator{begin, this};
     m_end = iterator{end, this};

@@ -12,7 +12,7 @@
 #include <ecs/core/Types.hpp>
 #include <ecs/core/Event.hpp>
 
-class Coordinator {
+class Scene {
 public:
     void init();
 
@@ -71,17 +71,17 @@ private:
 };
 
 template<typename ...ComponentTypes>
-Signature Coordinator::get_components_signature() const {
+Signature Scene::get_components_signature() const {
     return m_component_manager->get_signature<ComponentTypes...>();
 }
 
 template<typename ...Args>
-void Coordinator::register_component() {
+void Scene::register_component() {
     (m_component_manager->register_component<Args>(), ...);
 }
 
 template<typename T>
-void Coordinator::add_component(Entity entity, T component) {
+void Scene::add_component(Entity entity, T component) {
     m_component_manager->add_component<T>(entity, component);
 
     auto signature = m_entity_manager->get_signature(entity);
@@ -92,7 +92,7 @@ void Coordinator::add_component(Entity entity, T component) {
 }
 
 template<typename T>
-void Coordinator::remove_component(Entity entity) {
+void Scene::remove_component(Entity entity) {
     m_component_manager->remove_component<T>(entity);
 
     auto signature = m_entity_manager->get_signature(entity);
@@ -103,26 +103,26 @@ void Coordinator::remove_component(Entity entity) {
 }
 
 template<typename T>
-T& Coordinator::get_component(Entity entity) {
+T& Scene::get_component(Entity entity) {
     return m_component_manager->get_component<T>(entity);
 }
 
 template<typename T>
-ComponentType Coordinator::get_component_type() const {
+ComponentType Scene::get_component_type() const {
     return m_component_manager->get_component_type<T>();
 }
 
 template<typename T>
-T& Coordinator::register_system() {
-    return m_system_manager->register_system<T>(*this); // register system with the coordinator
+T& Scene::register_system() {
+    return m_system_manager->register_system<T>(*this); // register system with the scene
 }
 
 template<typename ...ComponentTypes>
-std::pair<vector_entity_iterator, vector_entity_iterator> Coordinator::get_smallest_component_array() {
+std::pair<vector_entity_iterator, vector_entity_iterator> Scene::get_smallest_component_array() {
     return m_component_manager->get_smallest_component_array<ComponentTypes...>();
 }
 
 template<typename T>
-bool Coordinator::has_component(Entity entity) const {
+bool Scene::has_component(Entity entity) const {
     return m_component_manager->has_component<T>(entity);
 }

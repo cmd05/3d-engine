@@ -10,7 +10,7 @@
 class RenderSystem : public System
 {
 public:
-    RenderSystem(Coordinator& coordinator): System(coordinator) {}
+    RenderSystem(Scene& scene): System(scene) {}
 
     void init();
     void update(float dt);

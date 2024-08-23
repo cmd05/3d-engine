@@ -11,7 +11,7 @@ cmake --build build > log.txt && ./build/3dengine.exe
 
 #include <glm/glm.hpp>
 
-#include <ecs/core/Coordinator.hpp>
+#include <ecs/core/Scene.hpp>
 
 #include <ecs/systems/CameraControlSystem.hpp>
 #include <ecs/systems/PhysicsSystem.hpp>
@@ -28,7 +28,7 @@ cmake --build build > log.txt && ./build/3dengine.exe
 
 #include <window/WindowManager.hpp>
 
-Coordinator g_coordinator;
+Scene main_scene;
 
 static bool quit = false;
 
@@ -39,19 +39,19 @@ void quit_handler(Event& event)
 
 int main()
 {
-    // initialize coordinator
-    g_coordinator.init();
+    // initialize scene
+    main_scene.init();
 
     // window setup
-    WindowManager window_manager {g_coordinator}; // window manager requires reference to coordinator
+    WindowManager window_manager {main_scene}; // window manager requires reference to scene
     window_manager.init("3D engine", 1920, 1080, 0, 0);
 
     // quit handler
-    g_coordinator.add_event_listener(FUNCTION_LISTENER(Events::Window::QUIT, quit_handler));
+    main_scene.add_event_listener(FUNCTION_LISTENER(Events::Window::QUIT, quit_handler));
 
     /// ------------- Register Components ---------------
     
-    g_coordinator.register_component<
+    main_scene.register_component<
         Camera,
         Gravity,
         Renderable,
@@ -66,17 +66,17 @@ int main()
 
     /// ------------- Register Systems ------------------
     
-    // // register system to our coordinator and set its signature
-    auto& physics_system = g_coordinator.register_system<PhysicsSystem>(); // note auto& is necessary. simply auto wil create a new local variable can cause copying errors
+    // register system to our scene and set its signature
+    auto& physics_system = main_scene.register_system<PhysicsSystem>(); // note auto& is necessary. simply auto wil create a new local variable can cause copying errors
     physics_system.init();
 
-    auto& camera_control_system = g_coordinator.register_system<CameraControlSystem>();
+    auto& camera_control_system = main_scene.register_system<CameraControlSystem>();
     camera_control_system.init();
 
-    auto& player_control_system = g_coordinator.register_system<PlayerControlSystem>();
+    auto& player_control_system = main_scene.register_system<PlayerControlSystem>();
     player_control_system.init();
 
-    auto& render_system = g_coordinator.register_system<RenderSystem>();
+    auto& render_system = main_scene.register_system<RenderSystem>();
     render_system.init(); // render_system::init() creates a camera entity
 
     /// -------------------------------------------------
@@ -99,12 +99,12 @@ int main()
     for (auto& entity : entities)
     {
         // Create entity
-        entity = g_coordinator.create_entity();
+        entity = main_scene.create_entity();
         
         // Add components to entity
-        g_coordinator.add_component<Player>(entity, Player{});
+        main_scene.add_component<Player>(entity, Player{});
 
-        g_coordinator.add_component( // automatic type deduction for template parameters
+        main_scene.add_component( // automatic type deduction for template parameters
         	entity,
         	Gravity {
                 .force = glm::vec3(0.0f, -9.8f, 0.0f)
@@ -112,7 +112,7 @@ int main()
             }
         );
 
-        g_coordinator.add_component(
+        main_scene.add_component(
             entity,
             RigidBody {
                 .velocity = glm::vec3(0.0f, 0.0f, 0.0f),
@@ -120,7 +120,7 @@ int main()
             }
         );
 
-        g_coordinator.add_component(
+        main_scene.add_component(
             entity,
             Transform {
                 .position = glm::vec3(rand_position(generator), rand_position(generator), rand_position(generator)),
@@ -129,7 +129,7 @@ int main()
             }
         );
 
-        g_coordinator.add_component(
+        main_scene.add_component(
             entity,
             Renderable {
                 .color = glm::vec3(rand_color(generator), rand_color(generator), rand_color(generator))
@@ -144,7 +144,7 @@ int main()
  	// auto it = entities.begin() + 1000;
 
     // for(int i = 0; i < 3000; i++) {
-    //     g_coordinator.destroy_entity(*it);
+    //     main_scene.destroy_entity(*it);
     //     it = entities.erase(it);
     // }
     
@@ -152,12 +152,12 @@ int main()
     // for (int i = 0; i < 2000; i++)
     // {
     //     // Create entity
-    //     auto entity = g_coordinator.create_entity();
+    //     auto entity = main_scene.create_entity();
         
     //     // Add components to entity
-    //     g_coordinator.add_component<Player>(entity, Player{});
+    //     main_scene.add_component<Player>(entity, Player{});
 
-    //     g_coordinator.add_component( // automatic type deduction for template parameters
+    //     main_scene.add_component( // automatic type deduction for template parameters
     //     	entity,
     //     	Gravity {
     //             // .force = glm::vec3(0.0f, -9.8f, 0.0f)
@@ -165,7 +165,7 @@ int main()
     //         }
     //     );
 
-    //     g_coordinator.add_component(
+    //     main_scene.add_component(
     //         entity,
     //         RigidBody {
     //             .velocity = glm::vec3(0.0f, 0.0f, 0.0f),
@@ -173,7 +173,7 @@ int main()
     //         }
     //     );
 
-    //     g_coordinator.add_component(
+    //     main_scene.add_component(
     //         entity,
     //         Transform {
     //             .position = glm::vec3(rand_position(generator), rand_position(generator), rand_position(generator)),
@@ -182,7 +182,7 @@ int main()
     //         }
     //     );
 
-    //     g_coordinator.add_component(
+    //     main_scene.add_component(
     //         entity,
     //         Renderable {
     //             .color = glm::vec3(rand_color(generator), rand_color(generator), rand_color(generator))

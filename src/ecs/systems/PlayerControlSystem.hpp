@@ -6,7 +6,7 @@
 class PlayerControlSystem : public System
 {
 public:
-    PlayerControlSystem(Coordinator& coordinator): System(coordinator) {}
+    PlayerControlSystem(Scene& scene): System(scene) {}
     void init();
 
     void update(float dt);

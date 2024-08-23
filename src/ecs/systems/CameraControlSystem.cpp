@@ -1,6 +1,6 @@
 #include <ecs/systems/CameraControlSystem.hpp>
 
-#include <ecs/core/Coordinator.hpp>
+#include <ecs/core/Scene.hpp>
 #include <ecs/core/Event.hpp>
 #include <ecs/core/SceneView.hpp>
 
@@ -10,7 +10,7 @@
 void CameraControlSystem::init()
 {
     // macro expands to 
-    // ref_gcoordinator.add_event_listener(Events::Window::INPUT, std::bind(&CameraControlSystem::input_listener, this, std::placeholders::_1));
+    // ref_scene.add_event_listener(Events::Window::INPUT, std::bind(&CameraControlSystem::input_listener, this, std::placeholders::_1));
     
     // std::placeholders::_1 is bound to the returned function object by std::bind.
     // https://en.cppreference.com/w/cpp/utility/functional/placeholders:
@@ -20,14 +20,14 @@ void CameraControlSystem::init()
     // Ex: In case of `CameraControlSystem::input_listener(Event& event)`,
     // std::placeholders::_1 will bind to Event& which will be sent to the function object of std::bind as the first argument
     
-    ref_gcoordinator.add_event_listener(METHOD_LISTENER(Events::Camera::MOVEMENT, CameraControlSystem::input_listener));
+    ref_scene.add_event_listener(METHOD_LISTENER(Events::Camera::MOVEMENT, CameraControlSystem::input_listener));
 }
 
 void CameraControlSystem::update(float dt)
 {
-    for (Entity entity : SceneView<Camera, Transform>(ref_gcoordinator))
+    for (Entity entity : SceneView<Camera, Transform>(ref_scene))
     {
-        auto& transform = ref_gcoordinator.get_component<Transform>(entity);
+        auto& transform = ref_scene.get_component<Transform>(entity);
         float speed = 120.0f;
 
         if (to_move.test(static_cast<std::size_t>(BasicMovement::Forward)))
@@ -57,7 +57,7 @@ void CameraControlSystem::input_listener(Event& event)
     // In WindowManager::ProcessEvents(), event has been set to:
         // Event event(Events::Camera::MOVEMENT);
         // event.set_param(Events::Camera::Movement::MOVES, moves);
-        // ref_gcoordinator.send_event(event);
+        // ref_scene.send_event(event);
     // where moves is a std::bitset<8>. get_param() handles the any_cast in `Event` class 
 
     // update the state of the CameraControlSystem

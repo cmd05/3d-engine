@@ -6,7 +6,7 @@
 #include <ecs/systems/RenderSystem.hpp>
 
 #include <ecs/core/Event.hpp>
-#include <ecs/core/Coordinator.hpp>
+#include <ecs/core/Scene.hpp>
 #include <ecs/core/SceneView.hpp>
 
 #include <ecs/components/Camera.hpp>
@@ -18,21 +18,21 @@
 void RenderSystem::init()
 {
     // add window resize listener
-    ref_gcoordinator.add_event_listener(METHOD_LISTENER(Events::Window::RESIZED, RenderSystem::window_size_listener));
+    ref_scene.add_event_listener(METHOD_LISTENER(Events::Window::RESIZED, RenderSystem::window_size_listener));
     // create shader uniqueptr
     shader = std::make_unique<Shader>(std::string(FS_SHADERS_DIR) + "vertex.vs", std::string(FS_SHADERS_DIR) + "fragment.fs");
 
     // create camera entity
-    m_camera = ref_gcoordinator.create_entity();
+    m_camera = ref_scene.create_entity();
 
-    ref_gcoordinator.add_component(
+    ref_scene.add_component(
         m_camera,
         Transform {
             .position = glm::vec3(0.0f, 0.0f, 500.0f)
         }
     );
 
-    ref_gcoordinator.add_component(
+    ref_scene.add_component(
         m_camera,
         Camera {
             .projection_transform = Camera::create_projection_transform(45.0f, 0.1f, 1000.0f, 1920, 1080)
@@ -151,14 +151,14 @@ void RenderSystem::update(float dt)
     shader->activate();
     glBindVertexArray(m_vao);
 
-    auto& camera_transform = ref_gcoordinator.get_component<Transform>(m_camera);
-    auto& camera = ref_gcoordinator.get_component<Camera>(m_camera);
+    auto& camera_transform = ref_scene.get_component<Transform>(m_camera);
+    auto& camera = ref_scene.get_component<Camera>(m_camera);
 
     // loop through all entities in RenderSystem
-    for (const auto& entity : SceneView<Renderable, Transform>(ref_gcoordinator))
+    for (const auto& entity : SceneView<Renderable, Transform>(ref_scene))
     {
-        const auto& transform = ref_gcoordinator.get_component<Transform>(entity);
-        const auto& renderable = ref_gcoordinator.get_component<Renderable>(entity);
+        const auto& transform = ref_scene.get_component<Transform>(entity);
+        const auto& renderable = ref_scene.get_component<Renderable>(entity);
         
         glm::mat4 model = glm::mat4(1.0);
 
@@ -191,6 +191,6 @@ void RenderSystem::window_size_listener(Event& event)
     auto window_width = event.get_param<unsigned int>(Events::Window::Resized::WIDTH);
     auto window_height = event.get_param<unsigned int>(Events::Window::Resized::HEIGHT);
 
-    auto& camera = ref_gcoordinator.get_component<Camera>(m_camera);
+    auto& camera = ref_scene.get_component<Camera>(m_camera);
     camera.projection_transform = Camera::create_projection_transform(45.0f, 0.1f, 1000.0f, window_width, window_height);
 }

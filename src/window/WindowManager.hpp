@@ -4,13 +4,13 @@
 #include <bitset>
 #include <string>
 
-class Coordinator;
+class Scene;
 
 class WindowManager
 {
 public:
-    // store coordinator as reference (for send_event())
-    WindowManager(Coordinator& coordinator): ref_gcoordinator{coordinator} {}
+    // store scene as reference (for send_event())
+    WindowManager(Scene& scene): ref_scene{scene} {}
 
     void init(std::string const& window_title, unsigned int window_width,
         unsigned int window_height, unsigned int window_position_x, unsigned int window_position_y);
@@ -22,7 +22,7 @@ public:
     float get_time() const { return glfwGetTime(); }
 private:
     GLFWwindow* m_window;
-    Coordinator& ref_gcoordinator;
+    Scene& ref_scene;
 
     std::bitset<8> m_buttons;
 };

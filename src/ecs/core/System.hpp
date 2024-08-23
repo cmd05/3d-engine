@@ -2,14 +2,14 @@
 
 #include <ecs/core/Types.hpp>
 
-class Coordinator;
+class Scene;
 
 // A system is any functionality that iterates upon a list of entities
 // with a certain signature of components.
 class System
 {
 public:
-    System(Coordinator& coordinator) : ref_gcoordinator(coordinator) {}
+    System(Scene& scene) : ref_scene(scene) {}
 protected:
-    Coordinator& ref_gcoordinator;
+    Scene& ref_scene;
 };

@@ -2,7 +2,7 @@
 
 #include <window/WindowManager.hpp>
 
-#include <ecs/core/Coordinator.hpp>
+#include <ecs/core/Scene.hpp>
 #include <ecs/core/Event.hpp>
 
 // TODO: Return error to caller
@@ -53,7 +53,7 @@ void WindowManager::process_events()
 
     // Window quit
     if (glfwGetKey(m_window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
-        ref_gcoordinator.send_event(Events::Window::QUIT);
+        ref_scene.send_event(Events::Window::QUIT);
     
     // Camera Movement
     if (glfwGetKey(m_window, GLFW_KEY_W) == GLFW_PRESS)
@@ -78,6 +78,6 @@ void WindowManager::process_events()
     if(moves.any()) {
         Event event(Events::Camera::MOVEMENT);
         event.set_param(Events::Camera::Movement::MOVES, moves);
-        ref_gcoordinator.send_event(event);
+        ref_scene.send_event(event);
     }
 }

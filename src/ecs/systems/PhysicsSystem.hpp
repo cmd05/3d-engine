@@ -5,7 +5,7 @@
 class PhysicsSystem : public System
 {
 public:
-    PhysicsSystem(Coordinator& coordinator): System(coordinator) {}
+    PhysicsSystem(Scene& scene): System(scene) {}
 
     void init();
     void update(float dt);

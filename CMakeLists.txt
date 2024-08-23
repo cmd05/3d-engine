@@ -82,7 +82,7 @@ target_sources(
 
     src/ecs/core/ComponentArray.hpp
     src/ecs/core/ComponentManager.cpp
-    src/ecs/core/Coordinator.cpp
+    src/ecs/core/Scene.cpp
     src/ecs/core/EntityManager.cpp
     src/ecs/core/EventManager.cpp
     src/ecs/core/SystemManager.cpp

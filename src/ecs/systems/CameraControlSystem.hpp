@@ -1,13 +1,13 @@
 #pragma once
 
-#include <ecs/core/Coordinator.hpp>
+#include <ecs/core/Scene.hpp>
 #include <ecs/core/System.hpp>
 #include <ecs/core/Event.hpp>
 
 class CameraControlSystem : public System
 {
 public:
-    CameraControlSystem(Coordinator& coordinator): System(coordinator) {}
+    CameraControlSystem(Scene& scene): System(scene) {}
     void init();
     void update(float dt);
 
