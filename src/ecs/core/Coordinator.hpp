@@ -121,11 +121,7 @@ T& Coordinator::register_system() {
     return m_system_manager->register_system<T>(*this); // register system with the coordinator
 }
 
-// template<typename T>
-// void Coordinator::set_system_signature(Signature signature) {
-//     m_system_manager->set_signature<T>(signature);
-// }
-
+// FIX: remove this method
 template<typename T, typename ...Args>
 void Coordinator::set_system_signature() {
     Signature signature;

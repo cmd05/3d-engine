@@ -28,8 +28,9 @@ public:
 private:
     system_count_size_type m_system_count = 0;
 
+    // FIX: no need of system signatures (refactor when refactoring systems to be stateless)
     // map from system type to signature
-    std::unordered_map<std::type_index, Signature> m_signatures{};
+    // std::unordered_map<std::type_index, Signature> m_signatures{};
 
     // map from system type to system pointer
     std::unordered_map<std::type_index, std::unique_ptr<System>> m_systems{};
@@ -57,6 +58,7 @@ void SystemManager::set_signature(Signature signature) {
 
     assert(m_systems.find(type) != m_systems.end() && "System used before registered");
 
+    // FIX: remove
     // set the signature for this system
-    m_signatures.insert({type, signature});
+    // m_signatures.insert({type, signature});
 }
