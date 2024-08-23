@@ -3,14 +3,17 @@
 #include <ecs/core/Coordinator.hpp>
 #include <ecs/core/Event.hpp>
 
+#include <ecs/core/SceneView.hpp>
+
+
 void PlayerControlSystem::init()
 {
-    ref_gcoordinator.add_event_listener(METHOD_LISTENER(Events::Window::INPUT, PlayerControlSystem::input_listener));
+    // ref_gcoordinator.add_event_listener(METHOD_LISTENER(Events::Window::INPUT, PlayerControlSystem::input_listener));
 }
 
 void PlayerControlSystem::update(float dt)
 {
-    //for (auto& entity : mEntities)
+    //for (auto& entity : SceneView<Player, Transform>(ref_gcoordinator))
     //{
     //	auto& transform = ref_gcoordinator.Get<Transform>(entity);
 
@@ -51,5 +54,5 @@ void PlayerControlSystem::update(float dt)
 
 void PlayerControlSystem::input_listener(Event& event)
 {
-    m_buttons = event.get_param<std::bitset<8>>(Events::Window::Input::INPUT);
+    // m_buttons = event.get_param<std::bitset<8>>(Events::Window::Input::INPUT);
 }

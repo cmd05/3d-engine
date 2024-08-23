@@ -5,11 +5,13 @@
 
 #include <ecs/systems/RenderSystem.hpp>
 
+#include <ecs/core/Event.hpp>
+#include <ecs/core/Coordinator.hpp>
+#include <ecs/core/SceneView.hpp>
+
 #include <ecs/components/Camera.hpp>
 #include <ecs/components/Renderable.hpp>
 #include <ecs/components/Transform.hpp>
-#include <ecs/core/Event.hpp>
-#include <ecs/core/Coordinator.hpp>
 
 #include <graphics/Shader.hpp>
 
@@ -153,7 +155,7 @@ void RenderSystem::update(float dt)
     auto& camera = ref_gcoordinator.get_component<Camera>(m_camera);
 
     // loop through all entities in RenderSystem
-    for (const auto& entity : m_entities)
+    for (const auto& entity : SceneView<Renderable, Transform>(ref_gcoordinator))
     {
         const auto& transform = ref_gcoordinator.get_component<Transform>(entity);
         const auto& renderable = ref_gcoordinator.get_component<Renderable>(entity);

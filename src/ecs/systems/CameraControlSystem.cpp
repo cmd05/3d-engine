@@ -1,8 +1,11 @@
 #include <ecs/systems/CameraControlSystem.hpp>
 
-#include <ecs/components/Transform.hpp>
 #include <ecs/core/Coordinator.hpp>
 #include <ecs/core/Event.hpp>
+#include <ecs/core/SceneView.hpp>
+
+#include <ecs/components/Transform.hpp>
+#include <ecs/components/Camera.hpp>
 
 void CameraControlSystem::init()
 {
@@ -22,7 +25,7 @@ void CameraControlSystem::init()
 
 void CameraControlSystem::update(float dt)
 {
-    for (auto& entity : m_entities)
+    for (Entity entity : SceneView<Camera, Transform>(ref_gcoordinator))
     {
         auto& transform = ref_gcoordinator.get_component<Transform>(entity);
         float speed = 120.0f;
