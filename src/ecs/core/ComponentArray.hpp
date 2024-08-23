@@ -10,12 +10,23 @@
 
 #include <ecs/core/Types.hpp>
 
+// change when using `SimpleVector`
+using vector_entity_iterator = std::vector<Entity>::iterator;
+using vector_entity_const_iterator = std::vector<Entity>::const_iterator;
+
 // An interface class (IComponentArray) is needed so that ComponentManager
 // can store a generic ComponentArray
 class IComponentArray {
 public:
     virtual ~IComponentArray() = default;
-    virtual void entity_destroyed(Entity entity) = 0; // must be implemented by ComponentArray
+    virtual void entity_destroyed(Entity entity) = 0; // pure virtual functions
+
+    virtual vector_entity_iterator begin() = 0;
+    virtual vector_entity_iterator end() = 0;
+
+    virtual entity_count_size_type size() const = 0;
+
+    virtual bool has_component(Entity entity) const = 0;
 };
 
 template<typename T>
@@ -30,8 +41,14 @@ public:
     
     void clear();
     
-    T& get_data(Entity entity);
+    entity_count_size_type size() const;
 
+    // provide begin and end iterators
+    vector_entity_iterator begin() { return m_dense_entities.begin(); }
+    vector_entity_iterator end() { return m_dense_entities.end(); }
+    
+    vector_entity_const_iterator cbegin() const { return m_dense_entities.cbegin(); }
+    vector_entity_const_iterator cend() const { return m_dense_entities.cend(); }
 private:
     std::array<Entity, MAX_ENTITIES> m_sparse_array;
     SimpleVector<std::pair<Entity, T>, entity_count_size_type> m_component_vector;
@@ -41,6 +58,11 @@ private:
 template<typename T>
 ComponentArray<T>::ComponentArray() {
     m_sparse_array.fill(NO_COMPONENT_MARKER);
+}
+
+template<typename T>
+entity_count_size_type ComponentArray<T>::size() const {
+    return m_component_vector.size();
 }
 
 template<typename T>
