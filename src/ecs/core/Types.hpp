@@ -12,10 +12,12 @@ using Entity = entity_count_size_type;
 const Entity MAX_ENTITIES = 100;
 const Entity MAX_ENTITIES_AFTER_CAMERA = MAX_ENTITIES - 1; // camera entity created in ecs/systems/RenderSystem.cpp
 
-const entity_count_size_type NO_COMPONENT_MARKER = std::numeric_limits<entity_count_size_type>::max(); // entities: 0 to MAX_ENTITIES-1
+const entity_count_size_type NO_SIGNATURE_MARKER = MAX_ENTITIES;
+const entity_count_size_type NO_COMPONENT_MARKER = MAX_ENTITIES; // entities: 0 to MAX_ENTITIES-1
+                                                                 // valid as long as MAX_ENTITIES is not UINT32_MAX
 
-using components_size_type = std::uint16_t; // MAX_COMPONENTS will fit within 16 bits
-using ComponentType = components_size_type; // MAX_COMPONENTS will fit within 16 bits
+using component_count_size_type = std::uint16_t; // MAX_COMPONENTS will fit within 16 bits
+using ComponentType = component_count_size_type; // MAX_COMPONENTS will fit within 16 bits
 const ComponentType MAX_COMPONENTS = 32;
 
 using system_count_size_type = std::uint16_t; // max number of systems will fit within 16 bits
