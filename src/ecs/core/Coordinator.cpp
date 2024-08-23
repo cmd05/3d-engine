@@ -36,3 +36,11 @@ void Coordinator::send_event(Event& event) {
 void Coordinator::send_event(EventId event_id) {
     m_event_manager->send_event(event_id);
 }
+
+bool Coordinator::has_all_components(Entity entity) const {
+    return m_component_manager->has_all_components(entity);
+}
+
+Signature Coordinator::get_entity_signature(Entity entity) const {
+    return m_entity_manager->get_signature(entity);
+}

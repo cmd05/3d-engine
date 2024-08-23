@@ -91,6 +91,8 @@ target_sources(
     src/ecs/core/System.hpp
     src/ecs/core/Types.hpp
 
+    src/ecs/core/SceneView.hpp
+
     # src/lib/math/Vec2.hpp
     # src/lib/math/Vec3.hpp
     # src/lib/math/Vec4.hpp
