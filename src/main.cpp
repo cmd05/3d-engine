@@ -160,49 +160,59 @@ int main()
     }
 
     /// Debugging
-    /*
+    // ------------------------------------------------------------------------
+    
     // destroy some entities
- 	auto it = entities.begin() + 1000;
+ 	// auto it = entities.begin() + 1000;
 
-    for(int i = 0; i < 3000; i++) {
-        g_coordinator.DestroyEntity(*it);
-        it = entities.erase(it);
-    }
+    // for(int i = 0; i < 3000; i++) {
+    //     g_coordinator.destroy_entity(*it);
+    //     it = entities.erase(it);
+    // }
     
     // add some entities
-    for (int i = 0; i < 2000; i++)
-    {
-        auto entity = g_coordinator.CreateEntity();
-        g_coordinator.AddComponent(entity, Player{});
+    // for (int i = 0; i < 2000; i++)
+    // {
+    //     // Create entity
+    //     auto entity = g_coordinator.create_entity();
+        
+    //     // Add components to entity
+    //     g_coordinator.add_component<Player>(entity, Player{});
 
-        g_coordinator.AddComponent<Gravity>(
-            entity,
-            {Vec3(0.0f, rand_gravity(generator), 0.0f)});
+    //     g_coordinator.add_component( // automatic type deduction for template parameters
+    //     	entity,
+    //     	Gravity {
+    //             // .force = glm::vec3(0.0f, -9.8f, 0.0f)
+    //             // .force = glm::vec3(0.0f, rand_gravity(generator), 0.0f)
+    //         }
+    //     );
 
-        g_coordinator.AddComponent(
-            entity,
-            RigidBody{
-                .velocity = Vec3(0.0f, 0.0f, 0.0f),
-                .acceleration = Vec3(0.0f, 0.0f, 0.0f)
-            });
+    //     g_coordinator.add_component(
+    //         entity,
+    //         RigidBody {
+    //             .velocity = glm::vec3(0.0f, 0.0f, 0.0f),
+    //             .acceleration = glm::vec3(0.0f, 0.0f, 0.0f)
+    //         }
+    //     );
 
-        g_coordinator.AddComponent(
-            entity,
-            Transform{
-                .position = Vec3(rand_position(generator), rand_position(generator), rand_position(generator)),
-                .rotation = Vec3(rand_rotation(generator), rand_rotation(generator), rand_rotation(generator)),
-                .scale = Vec3(scale, scale, scale)
-            });
+    //     g_coordinator.add_component(
+    //         entity,
+    //         Transform {
+    //             .position = glm::vec3(rand_position(generator), rand_position(generator), rand_position(generator)),
+    //             .rotation = glm::vec3(rand_rotation(generator), rand_rotation(generator), rand_rotation(generator)),
+    //             .scale = glm::vec3(scale, scale, scale)
+    //         }
+    //     );
 
-        g_coordinator.AddComponent(
-            entity,
-            Renderable{
-                .color = Vec3(rand_color(generator), rand_color(generator), rand_color(generator))
-            });
-
-        entities.push_back(entity);
-    }
-    */
+    //     g_coordinator.add_component(
+    //         entity,
+    //         Renderable {
+    //             .color = glm::vec3(rand_color(generator), rand_color(generator), rand_color(generator))
+    //         }
+    //     );
+    // }
+   
+    // ------------------------------------------------------------------------
 
     // timing information
     float last_frame, current_frame;
