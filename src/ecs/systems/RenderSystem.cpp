@@ -15,29 +15,14 @@
 
 #include <graphics/Shader.hpp>
 
-void RenderSystem::init()
+void RenderSystem::init(Entity camera)
 {
     // add window resize listener
     ref_scene.add_event_listener(METHOD_LISTENER(Events::Window::RESIZED, RenderSystem::window_size_listener));
     // create shader uniqueptr
     shader = std::make_unique<Shader>(std::string(FS_SHADERS_DIR) + "vertex.vs", std::string(FS_SHADERS_DIR) + "fragment.fs");
 
-    // create camera entity
-    m_camera = ref_scene.create_entity();
-
-    ref_scene.add_component(
-        m_camera,
-        Transform {
-            .position = glm::vec3(0.0f, 0.0f, 500.0f)
-        }
-    );
-
-    ref_scene.add_component(
-        m_camera,
-        Camera {
-            .projection_transform = Camera::create_projection_transform(45.0f, 0.1f, 1000.0f, 1920, 1080)
-        }
-    );
+    m_camera = camera;
 
     // save cube data in m_vao and vbo's
     std::vector<glm::vec3> vertices =

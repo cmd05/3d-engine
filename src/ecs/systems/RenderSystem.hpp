@@ -12,7 +12,7 @@ class RenderSystem : public System
 public:
     RenderSystem(Scene& scene): System(scene) {}
 
-    void init();
+    void init(Entity camera);
     void update(float dt);
 private:
     void window_size_listener(Event& event);

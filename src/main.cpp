@@ -76,11 +76,31 @@ int main()
     auto& player_control_system = main_scene.register_system<PlayerControlSystem>();
     player_control_system.init();
 
+    // create camera entity
+    Entity camera_entity = main_scene.create_entity();
+
+    main_scene.add_component(
+        camera_entity,
+        Transform {
+            .position = glm::vec3(0.0f, 0.0f, 500.0f)
+        }
+    );
+
+    main_scene.add_component(
+        camera_entity,
+        Camera {
+            .projection_transform = Camera::create_projection_transform(45.0f, 0.1f, 1000.0f, 1920, 1080)
+        }
+    );
+
     auto& render_system = main_scene.register_system<RenderSystem>();
-    render_system.init(); // render_system::init() creates a camera entity
+    render_system.init(camera_entity);
 
     /// -------------------------------------------------
 
+
+
+    
     // Create entities
 
     // camera entity already exists, so we we can use one less than MAX_ENTITIES number of entities
