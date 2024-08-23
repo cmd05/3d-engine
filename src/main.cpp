@@ -54,11 +54,12 @@ int main()
     g_coordinator.register_component<
         Camera,
         Gravity,
-        Player,
         Renderable,
         RigidBody,
-        Thrust,
-        Transform
+        Transform,
+        
+        Player,
+        Thrust
     >();
 
     /// -------------------------------------------------
