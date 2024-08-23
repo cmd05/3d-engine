@@ -60,8 +60,8 @@ bool SceneView<ComponentTypes...>::iterator::operator!=(const iterator& other) c
     if(first_check) {
         first_check = false;
     
-        // do not call is_valid_entity when iterators are equal (i.e `this.vec_iterator` is end())
-        // to avoid dereferencing vector end iterator
+        // check that vector iterators are unequal (equal when this->vec_iterator == end()),
+        // before calling is_valid_entity with `*this`
         return (vec_iterator != other.vec_iterator) && is_valid_entity(*this); 
     } else {
         return (vec_iterator != other.vec_iterator);
