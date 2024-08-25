@@ -1,6 +1,6 @@
-#include <ecs/core/SystemManager.hpp>
+#include <engine/core/SystemManager.hpp>
 
-#include <ecs/core/Types.hpp>
+#include <engine/core/Types.hpp>
 
 // void SystemManager::entity_destroyed(Entity entity) {
 //     // some logic can be used here, if systems want to react to destroyed entities

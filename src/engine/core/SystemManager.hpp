@@ -5,8 +5,8 @@
 #include <unordered_map>
 #include <typeindex>
 
-#include <ecs/core/System.hpp>
-#include <ecs/core/Types.hpp>
+#include <engine/core/System.hpp>
+#include <engine/core/Types.hpp>
 
 class Scene;
 

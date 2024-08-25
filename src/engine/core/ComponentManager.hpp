@@ -8,8 +8,8 @@
 #include <utility>
 #include <vector>
 
-#include <ecs/core/ComponentArray.hpp>
-#include <ecs/core/Types.hpp>
+#include <engine/core/ComponentArray.hpp>
+#include <engine/core/Types.hpp>
 
 // #include <lib/utilities/DebugAssert.hpp>
 

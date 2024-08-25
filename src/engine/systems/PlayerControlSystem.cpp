@@ -1,9 +1,9 @@
-#include <ecs/systems/PlayerControlSystem.hpp>
+#include <engine/systems/PlayerControlSystem.hpp>
 
-#include <ecs/core/Scene.hpp>
-#include <ecs/core/Event.hpp>
+#include <engine/core/Scene.hpp>
+#include <engine/core/Event.hpp>
 
-#include <ecs/core/SceneView.hpp>
+#include <engine/core/SceneView.hpp>
 
 
 void PlayerControlSystem::init()

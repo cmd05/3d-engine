@@ -6,7 +6,7 @@
 
 #include <lib/simple-vector/SimpleVector.hpp>
 
-#include <ecs/core/Types.hpp>
+#include <engine/core/Types.hpp>
 
 // change when using `SimpleVector`
 using vector_entity_iterator = std::vector<Entity>::iterator;

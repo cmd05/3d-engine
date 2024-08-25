@@ -1,5 +1,5 @@
-#include <ecs/core/Scene.hpp>
-#include <ecs/core/Types.hpp>
+#include <engine/core/Scene.hpp>
+#include <engine/core/Types.hpp>
 
 // SceneViewExclude
 

@@ -1,7 +1,7 @@
-#include <ecs/core/ComponentManager.hpp>
+#include <engine/core/ComponentManager.hpp>
 
-#include <ecs/core/ComponentArray.hpp>
-#include <ecs/core/Types.hpp>
+#include <engine/core/ComponentArray.hpp>
+#include <engine/core/Types.hpp>
 
 void ComponentManager::entity_destroyed(Entity entity) {
     // Notify each component array that an entity has been destroyed

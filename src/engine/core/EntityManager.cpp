@@ -1,8 +1,8 @@
 #include <cassert>
 
-#include <ecs/core/EntityManager.hpp>
+#include <engine/core/EntityManager.hpp>
 
-#include <ecs/core/Types.hpp>
+#include <engine/core/Types.hpp>
 
 EntityManager::EntityManager() {
     m_sparse_array.fill(NO_SIGNATURE_MARKER);

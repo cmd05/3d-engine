@@ -4,8 +4,8 @@
 #include <vector>
 #include <unordered_map>
 
-#include <ecs/core/Event.hpp>
-#include <ecs/core/Types.hpp>
+#include <engine/core/Event.hpp>
+#include <engine/core/Types.hpp>
 
 class EventManager {
 public:

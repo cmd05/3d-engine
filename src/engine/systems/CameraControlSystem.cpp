@@ -1,11 +1,11 @@
-#include <ecs/systems/CameraControlSystem.hpp>
+#include <engine/systems/CameraControlSystem.hpp>
 
-#include <ecs/core/Scene.hpp>
-#include <ecs/core/Event.hpp>
-#include <ecs/core/SceneView.hpp>
+#include <engine/core/Scene.hpp>
+#include <engine/core/Event.hpp>
+#include <engine/core/SceneView.hpp>
 
-#include <ecs/components/Transform.hpp>
-#include <ecs/components/Camera.hpp>
+#include <engine/components/Transform.hpp>
+#include <engine/components/Camera.hpp>
 
 void CameraControlSystem::init()
 {

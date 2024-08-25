@@ -1,6 +1,6 @@
-#include <ecs/core/Event.hpp>
+#include <engine/core/Event.hpp>
 
-#include <ecs/core/Types.hpp>
+#include <engine/core/Types.hpp>
 
 Event::Event(EventId type): m_type{type} {}
 

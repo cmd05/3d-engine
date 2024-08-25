@@ -11,20 +11,20 @@ cmake --build build > log.txt && ./build/3dengine.exe
 
 #include <glm/glm.hpp>
 
-#include <ecs/core/Scene.hpp>
+#include <engine/core/Scene.hpp>
 
-#include <ecs/systems/CameraControlSystem.hpp>
-#include <ecs/systems/PhysicsSystem.hpp>
-#include <ecs/systems/PlayerControlSystem.hpp>
-#include <ecs/systems/RenderSystem.hpp>
+#include <engine/systems/CameraControlSystem.hpp>
+#include <engine/systems/PhysicsSystem.hpp>
+#include <engine/systems/PlayerControlSystem.hpp>
+#include <engine/systems/RenderSystem.hpp>
 
-#include <ecs/components/Camera.hpp>
-#include <ecs/components/Gravity.hpp>
-#include <ecs/components/Player.hpp>
-#include <ecs/components/Renderable.hpp>
-#include <ecs/components/RigidBody.hpp>
-#include <ecs/components/Thrust.hpp>
-#include <ecs/components/Transform.hpp>
+#include <engine/components/Camera.hpp>
+#include <engine/components/Gravity.hpp>
+#include <engine/components/Player.hpp>
+#include <engine/components/Renderable.hpp>
+#include <engine/components/RigidBody.hpp>
+#include <engine/components/Thrust.hpp>
+#include <engine/components/Transform.hpp>
 
 #include <window/WindowManager.hpp>
 

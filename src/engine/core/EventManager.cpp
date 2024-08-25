@@ -1,7 +1,7 @@
-#include <ecs/core/EventManager.hpp>
+#include <engine/core/EventManager.hpp>
 
-#include <ecs/core/Event.hpp>
-#include <ecs/core/Types.hpp>
+#include <engine/core/Event.hpp>
+#include <engine/core/Types.hpp>
 
 void EventManager::add_listener(EventId event_id, const std::function<void(Event&)>& listener) {
     m_listeners[event_id].push_back(listener);

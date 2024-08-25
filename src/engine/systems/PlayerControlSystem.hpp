@@ -1,7 +1,7 @@
 #pragma once
 
-#include <ecs/core/System.hpp>
-#include <ecs/core/Event.hpp>
+#include <engine/core/System.hpp>
+#include <engine/core/Event.hpp>
 
 class PlayerControlSystem : public System
 {

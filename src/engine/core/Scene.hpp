@@ -4,13 +4,13 @@
 #include <functional>
 #include <utility>
 
-#include <ecs/core/ComponentManager.hpp>
-#include <ecs/core/EntityManager.hpp>
-#include <ecs/core/SystemManager.hpp>
-#include <ecs/core/EventManager.hpp>
+#include <engine/core/ComponentManager.hpp>
+#include <engine/core/EntityManager.hpp>
+#include <engine/core/SystemManager.hpp>
+#include <engine/core/EventManager.hpp>
 
-#include <ecs/core/Types.hpp>
-#include <ecs/core/Event.hpp>
+#include <engine/core/Types.hpp>
+#include <engine/core/Event.hpp>
 
 class Scene {
 public:

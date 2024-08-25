@@ -1,11 +1,11 @@
-#include <ecs/systems/PhysicsSystem.hpp>
+#include <engine/systems/PhysicsSystem.hpp>
 
-#include <ecs/core/Scene.hpp>
-#include <ecs/core/SceneView.hpp>
+#include <engine/core/Scene.hpp>
+#include <engine/core/SceneView.hpp>
 
-#include <ecs/components/Gravity.hpp>
-#include <ecs/components/RigidBody.hpp>
-#include <ecs/components/Transform.hpp>
+#include <engine/components/Gravity.hpp>
+#include <engine/components/RigidBody.hpp>
+#include <engine/components/Transform.hpp>
 
 void PhysicsSystem::init() {}
 

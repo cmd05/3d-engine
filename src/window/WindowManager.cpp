@@ -2,8 +2,8 @@
 
 #include <window/WindowManager.hpp>
 
-#include <ecs/core/Scene.hpp>
-#include <ecs/core/Event.hpp>
+#include <engine/core/Scene.hpp>
+#include <engine/core/Event.hpp>
 
 // TODO: Return error to caller
 void WindowManager::init(std::string const& windowTitle, unsigned int windowWidth,

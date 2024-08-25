@@ -1,8 +1,8 @@
 #pragma once
 
-#include <ecs/core/Scene.hpp>
-#include <ecs/core/System.hpp>
-#include <ecs/core/Event.hpp>
+#include <engine/core/Scene.hpp>
+#include <engine/core/System.hpp>
+#include <engine/core/Event.hpp>
 
 class CameraControlSystem : public System
 {

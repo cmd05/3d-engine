@@ -62,36 +62,36 @@ target_sources(
     src/graphics/Shader.cpp
     src/main.cpp
     
-    src/ecs/systems/CameraControlSystem.cpp
-    src/ecs/systems/PhysicsSystem.cpp
-    src/ecs/systems/PlayerControlSystem.cpp
-    src/ecs/systems/RenderSystem.cpp
+    src/engine/systems/CameraControlSystem.cpp
+    src/engine/systems/PhysicsSystem.cpp
+    src/engine/systems/PlayerControlSystem.cpp
+    src/engine/systems/RenderSystem.cpp
     src/window/WindowManager.cpp
 )
 
 target_sources(
     3dengine
     PRIVATE
-    src/ecs/components/Camera.hpp
-    src/ecs/components/Gravity.hpp
-    src/ecs/components/Player.hpp
-    src/ecs/components/Renderable.hpp
-    src/ecs/components/RigidBody.hpp
-    src/ecs/components/Thrust.hpp
-    src/ecs/components/Transform.hpp
+    src/engine/components/Camera.hpp
+    src/engine/components/Gravity.hpp
+    src/engine/components/Player.hpp
+    src/engine/components/Renderable.hpp
+    src/engine/components/RigidBody.hpp
+    src/engine/components/Thrust.hpp
+    src/engine/components/Transform.hpp
 
-    src/ecs/core/ComponentArray.hpp
-    src/ecs/core/ComponentManager.cpp
-    src/ecs/core/Scene.cpp
-    src/ecs/core/EntityManager.cpp
-    src/ecs/core/EventManager.cpp
-    src/ecs/core/SystemManager.cpp
-    src/ecs/core/Event.cpp
+    src/engine/core/ComponentArray.hpp
+    src/engine/core/ComponentManager.cpp
+    src/engine/core/Scene.cpp
+    src/engine/core/EntityManager.cpp
+    src/engine/core/EventManager.cpp
+    src/engine/core/SystemManager.cpp
+    src/engine/core/Event.cpp
 
-    src/ecs/core/System.hpp
-    src/ecs/core/Types.hpp
+    src/engine/core/System.hpp
+    src/engine/core/Types.hpp
 
-    src/ecs/core/SceneView.hpp
+    src/engine/core/SceneView.hpp
 
     # src/lib/math/Vec2.hpp
     # src/lib/math/Vec3.hpp

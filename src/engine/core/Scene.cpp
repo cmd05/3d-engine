@@ -1,10 +1,10 @@
 #include <memory>
 #include <functional>
 
-#include <ecs/core/Scene.hpp>
+#include <engine/core/Scene.hpp>
 
-#include <ecs/core/Types.hpp>
-#include <ecs/core/Event.hpp>
+#include <engine/core/Types.hpp>
+#include <engine/core/Event.hpp>
 
 // Entity Methods
 void Scene::init() {

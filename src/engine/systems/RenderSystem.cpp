@@ -3,15 +3,15 @@
 
 #include <glm/glm.hpp>
 
-#include <ecs/systems/RenderSystem.hpp>
+#include <engine/systems/RenderSystem.hpp>
 
-#include <ecs/core/Event.hpp>
-#include <ecs/core/Scene.hpp>
-#include <ecs/core/SceneView.hpp>
+#include <engine/core/Event.hpp>
+#include <engine/core/Scene.hpp>
+#include <engine/core/SceneView.hpp>
 
-#include <ecs/components/Camera.hpp>
-#include <ecs/components/Renderable.hpp>
-#include <ecs/components/Transform.hpp>
+#include <engine/components/Camera.hpp>
+#include <engine/components/Renderable.hpp>
+#include <engine/components/Transform.hpp>
 
 #include <graphics/Shader.hpp>
 
