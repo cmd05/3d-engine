@@ -59,39 +59,40 @@ target_compile_options(
 target_sources(
     3dengine
     PRIVATE
-    src/graphics/Shader.cpp
-    src/main.cpp
+    src/engine/graphics/Shader.cpp
+    src/application/main.cpp
     
-    src/engine/systems/CameraControlSystem.cpp
-    src/engine/systems/PhysicsSystem.cpp
-    src/engine/systems/PlayerControlSystem.cpp
-    src/engine/systems/RenderSystem.cpp
-    src/window/WindowManager.cpp
+    src/engine/ecs/systems/CameraControlSystem.cpp
+    src/engine/ecs/systems/PhysicsSystem.cpp
+    src/engine/ecs/systems/PlayerControlSystem.cpp
+    src/engine/ecs/systems/RenderSystem.cpp
+    
+    src/engine/window/WindowManager.cpp
 )
 
 target_sources(
     3dengine
     PRIVATE
-    src/engine/components/Camera.hpp
-    src/engine/components/Gravity.hpp
-    src/engine/components/Player.hpp
-    src/engine/components/Renderable.hpp
-    src/engine/components/RigidBody.hpp
-    src/engine/components/Thrust.hpp
-    src/engine/components/Transform.hpp
+    src/engine/ecs/components/Camera.hpp
+    src/engine/ecs/components/Gravity.hpp
+    src/engine/ecs/components/Player.hpp
+    src/engine/ecs/components/Renderable.hpp
+    src/engine/ecs/components/RigidBody.hpp
+    src/engine/ecs/components/Thrust.hpp
+    src/engine/ecs/components/Transform.hpp
 
-    src/engine/core/ComponentArray.hpp
-    src/engine/core/ComponentManager.cpp
-    src/engine/core/Scene.cpp
-    src/engine/core/EntityManager.cpp
-    src/engine/core/EventManager.cpp
-    src/engine/core/SystemManager.cpp
-    src/engine/core/Event.cpp
+    src/engine/ecs/core/ComponentArray.hpp
+    src/engine/ecs/core/ComponentManager.cpp
+    src/engine/ecs/core/Scene.cpp
+    src/engine/ecs/core/EntityManager.cpp
+    src/engine/ecs/core/EventManager.cpp
+    src/engine/ecs/core/SystemManager.cpp
+    src/engine/ecs/core/Event.cpp
 
-    src/engine/core/System.hpp
-    src/engine/core/Types.hpp
+    src/engine/ecs/core/System.hpp
+    src/engine/ecs/core/Types.hpp
 
-    src/engine/core/SceneView.hpp
+    src/engine/ecs/core/SceneView.hpp
 
     # src/lib/math/Vec2.hpp
     # src/lib/math/Vec3.hpp
@@ -114,4 +115,4 @@ target_link_libraries(
     # ${Boost_LIBRARIES}
 )
 
-target_compile_definitions(3dengine PUBLIC FS_SHADERS_DIR="${CMAKE_CURRENT_SOURCE_DIR}/src/shaders/")
+target_compile_definitions(3dengine PUBLIC FS_SHADERS_DIR="${CMAKE_CURRENT_SOURCE_DIR}/src/engine/shaders/")
