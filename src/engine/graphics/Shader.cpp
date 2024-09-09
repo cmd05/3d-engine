@@ -6,7 +6,6 @@
 
 #include <engine/graphics/Shader.hpp>
 
-
 Shader::Shader(std::string const& vertex_path, std::string const& fragment_path)
 {
     std::string fragment_file_contents;
@@ -89,4 +88,8 @@ Shader::Shader(std::string const& vertex_path, std::string const& fragment_path)
 void Shader::activate()
 {
     glUseProgram(m_id);
+}
+
+GLuint Shader::get_id() const { 
+    return m_id; 
 }

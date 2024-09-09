@@ -15,6 +15,7 @@ public:
     template<typename T>
     void set_uniform(const std::string& name, const T& value);
 
+    GLuint get_id() const;
 private:
     GLuint m_id;
 };
