@@ -7,7 +7,7 @@
 #include <memory>
 
 #include <engine/graphics/Shader.hpp>
-#include <engine/graphics/TextureUtilities.hpp>
+#include <engine/graphics/TextureManager.hpp>
 #include <engine/graphics/ModelProcessor.hpp>
 #include <engine/graphics/MeshProcessor.hpp>
 
@@ -16,11 +16,10 @@
 using mapper_data_map_type = std::unordered_map<std::string, std::string>;
 // using mapper_data_map_iterator = std::unordered_map<std::string, std::string>::iterator;
 
-// store texture paths in binary data with texture type
 class ModelManager {
 public:
-    ModelManager(std::string bin_dir) {
-        // check if mapper file exists in bin_dir else create.
+    ModelManager(TextureManager& tex_manager, std::string bin_dir): ref_tex_manager(tex_manager) {
+        // check if mapper file exists in bin_dir else create
         std::string mapper_file = bin_dir + '/' + BIN_MAP_FNAME;
 
         if(!std::ifstream(mapper_file) && !std::ofstream(mapper_file))
@@ -33,11 +32,12 @@ public:
     }
 
     struct ModelData {
-        unsigned int num_vertices;
+        // keep total number of vertices and indices for debugging purposes
+        unsigned int num_vertices; 
         unsigned int num_indices;
-
-        std::vector<Mesh> meshes;
         
+        std::vector<Mesh> meshes;
+
         bool gamma_correction;
         std::string model_path;
     };
@@ -50,7 +50,7 @@ public:
         unsigned int num_vertices;
         unsigned int num_indices;
 
-        // id, type
+        // texture id, type
         std::vector<std::pair<unsigned int, MeshTextureType>> textures;
     };
 
@@ -59,27 +59,14 @@ public:
     };
 
     // returns model hash id
-    // mapper_data_map_type::iterator 
-    ModelData 
-    create_model_dump(const std::string& model_path) {
-        // 1. call m_model_processor for given `model_path`
-        // 2. use fwrite to dump info into the bin file
-        // 3. hash model_path and store it as [int_hash, model_bin_path] in mapper file 
-        
+    mapper_data_map_type::iterator create_model_dump(const std::string& model_path, std::size_t model_hash) {
         std::string file_name = model_path.substr(model_path.find_last_of("/\\") + 1);
-        std::string model_bin_path = m_bin_dir + '/' + file_name + ".bin";
+        std::string bin_name = std::to_string(model_hash) + '_' + file_name; // prefix model_hash so that names do not collide
+        std::string model_bin_path = m_bin_dir + '/' + bin_name + ".bin";
+        
         std::ofstream ofs {model_bin_path, std::ios::binary};
-
+        // get model data
         ModelProcessor model_processor{model_path};
-        ModelData model_data {
-            .num_vertices = model_processor.m_num_vertices,
-            .num_indices = model_processor.m_num_indices,
-            .meshes = model_processor.m_meshes,
-            .gamma_correction = model_processor.m_gamma_correction,
-            .model_path = model_path
-        };
-
-        return model_data;
 
         /// Dump Data
         // static_assert(std::is_pod_v<std::string> == true);
@@ -89,7 +76,6 @@ public:
         ofs.write(reinterpret_cast<char*>(&model_processor.m_num_indices), sizeof(model_processor.m_num_indices));
 
         // dump meshes
-        // ofs.write(reinterpret_cast<char*>(&model_processor.m_meshes[0]), meshes_sz * sizeof(model_processor.m_meshes[0]));
         
         std::size_t meshes_sz = model_processor.m_meshes.size();
         ofs.write(reinterpret_cast<char*>(&meshes_sz), sizeof(meshes_sz));
@@ -106,16 +92,16 @@ public:
             ofs.write(reinterpret_cast<char*>(&mesh.m_indices[0]), vec_sz * sizeof(mesh.m_indices[0]));
             
             // textures
-            // ofs.write(reinterpret_cast<char*>(&mesh.m_textures[0]), vec_sz * sizeof(mesh.m_textures[0]));
-            
             // write size of `m_textures` vector
             vec_sz = mesh.m_textures.size();
             ofs.write(reinterpret_cast<char*>(&vec_sz), sizeof(vec_sz));
             
             // write data for textures
             for(MeshTexture& mesh_texture : mesh.m_textures) {
+                // write texture type
                 ofs.write(reinterpret_cast<char*>(&mesh_texture.type), sizeof(MeshTextureType));
-                
+
+                // write texture path        
                 std::size_t str_sz = mesh_texture.path.size();
                 ofs.write(reinterpret_cast<char*>(&str_sz), sizeof(str_sz));
                 ofs.write(reinterpret_cast<char*>(&mesh_texture.path[0]), str_sz * sizeof(mesh_texture.path[0]));
@@ -125,18 +111,18 @@ public:
         // dump additional information
         ofs.write(reinterpret_cast<char*>(&model_processor.m_gamma_correction), sizeof(model_processor.m_gamma_correction));
         
+        // dump model path
         std::size_t str_sz = model_processor.m_model_path.size();
         ofs.write(reinterpret_cast<char*>(&str_sz), sizeof(str_sz));
         ofs.write(reinterpret_cast<char*>(&model_processor.m_model_path[0]), str_sz * sizeof(model_processor.m_model_path[0]));
     
         std::ofstream mapper_ofs {m_mapper_file, std::ios::app};
-        // mapper_ofs << hasher(model_path) << '\t' << model_bin_path;
         mapper_ofs << model_path << '\t' << model_bin_path << std::endl;
         
         // update mapper data in unordered_map
         auto pair = m_mapper_data.insert({model_path, model_bin_path});
 
-        // return pair.first;
+        return pair.first;
     }
 
     std::unordered_map<std::string, std::size_t> load_models(mapper_data_map_type models) {
@@ -148,36 +134,20 @@ public:
         return model_id_map;
     }
 
-    ModelData load_model_data(std::string model_bin_path) {
-        // ModelData model_data;
-        // std::ifstream ifs {model_bin_path, std::ios::binary};
-
-        // ifs.read(reinterpret_cast<char*>(&model_data.num_vertices), sizeof(model_data.num_vertices));
-        // ifs.read(reinterpret_cast<char*>(&model_data.num_indices), sizeof(model_data.num_indices));
-
-        // std::size_t meshes_sz;
-        // ifs.read(reinterpret_cast<char*>(&meshes_sz), sizeof(meshes_sz));
-        // model_data.meshes.reserve(meshes_sz);
-        // ifs.read(reinterpret_cast<char*>(model_data.meshes.data()), meshes_sz * sizeof(Mesh));
-        
-        // ifs.read(reinterpret_cast<char*>(&model_data.gamma_correction), sizeof(model_data.gamma_correction));
-        // ifs.read(reinterpret_cast<char*>(&model_data.model_path), sizeof(model_data.model_path));
-        
+    ModelData load_model_data(std::string model_bin_path) {        
         ModelData model_data;
         std::ifstream ifs {model_bin_path, std::ios::binary};
 
         // read counts
         ifs.read(reinterpret_cast<char*>(&model_data.num_vertices), sizeof(model_data.num_vertices));
         ifs.read(reinterpret_cast<char*>(&model_data.num_indices), sizeof(model_data.num_indices));
-
-        // read meshes
         
         // meshes vector size
         std::size_t meshes_sz;
         ifs.read(reinterpret_cast<char*>(&meshes_sz), sizeof(meshes_sz));
-        
         model_data.meshes.resize(meshes_sz);
         
+        // read meshes
         for(Mesh& mesh : model_data.meshes) {
             std::size_t vec_sz;
             
@@ -196,8 +166,10 @@ public:
             mesh.m_textures.resize(vec_sz);
             
             for(MeshTexture& mesh_texture : mesh.m_textures) {
+                // texture type
                 ifs.read(reinterpret_cast<char*>(&mesh_texture.type), sizeof(MeshTextureType));
                 
+                // texture path
                 std::size_t str_sz;
                 ifs.read(reinterpret_cast<char*>(&str_sz), sizeof(str_sz));
                 mesh_texture.path.resize(str_sz);
@@ -208,6 +180,7 @@ public:
         // read additional information
         ifs.read(reinterpret_cast<char*>(&model_data.gamma_correction), sizeof(model_data.gamma_correction));
 
+        // read texture path
         std::size_t str_sz;
         ifs.read(reinterpret_cast<char*>(&str_sz), sizeof(str_sz));
         model_data.model_path.resize(str_sz);
@@ -230,11 +203,6 @@ public:
 
         glBindVertexArray(mesh_draw_data.VAO);
 
-        // A great thing about structs is that their memory layout is sequential for all its items.
-        // The effect is that we can simply pass a pointer to the struct and it translates perfectly to a glm::vec3/2 array which
-        // again translates to 3/2 floats which translates to a byte array.      
-
-        // TODO: check if buffering is ok with ModelData passed by value in add_model
         glBindBuffer(GL_ARRAY_BUFFER, mesh_draw_data.VBO);
         glBufferData(GL_ARRAY_BUFFER, mesh.m_vertices.size() * sizeof(MeshVertex), &mesh.m_vertices[0], GL_STATIC_DRAW);  
 
@@ -244,15 +212,19 @@ public:
         // vertex positions
         glEnableVertexAttribArray(0);	
         glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(MeshVertex), (void*) offsetof(MeshVertex, position));
+
         // vertex normals
         glEnableVertexAttribArray(1);	
         glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(MeshVertex), (void*) offsetof(MeshVertex, normal));
+        
         // vertex texture coords
         glEnableVertexAttribArray(2);	
         glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, sizeof(MeshVertex), (void*) offsetof(MeshVertex, tex_coords));
+        
         // vertex tangent
         glEnableVertexAttribArray(3);
         glVertexAttribPointer(3, 3, GL_FLOAT, GL_FALSE, sizeof(MeshVertex), (void*) offsetof(MeshVertex, tangent));
+        
         // vertex bitangent
         glEnableVertexAttribArray(4);
         glVertexAttribPointer(4, 3, GL_FLOAT, GL_FALSE, sizeof(MeshVertex), (void*) offsetof(MeshVertex, bitangent));
@@ -263,7 +235,8 @@ public:
         std::string model_dir = model_path.substr(0, model_path.find_last_of('/'));
         
         for(MeshTexture& mesh_texture : mesh.m_textures) {
-            unsigned int texture_id = TextureUtilties::texture_from_file(mesh_texture.path, model_dir, gamma_correction);
+            std::string tex_path =  model_dir + '/' + mesh_texture.path;
+            unsigned int texture_id = ref_tex_manager.texture_from_file(tex_path, gamma_correction);
             mesh_draw_data.textures.push_back(std::make_pair(texture_id, mesh_texture.type));
         }
 
@@ -276,31 +249,28 @@ public:
         for(Mesh& mesh : model_data.meshes)
             model_draw_data.meshes.push_back(setup_mesh(model_path, mesh, model_data.gamma_correction));
     
-        m_models[model_hash] = model_draw_data;
+        m_models[model_hash] = model_draw_data; // update list of loaded models
     }
 
     std::size_t load_model(std::string model_path) {
-        // 1. check mapper file if binary object exists for given model path (hash file path and check key in mapper file)
-            // if not call create_model_dump with `model_path`
-        // 2. load the following details from the binary model
-        // 3. convert the data to `ModelData` type by making VAO's, loading textures and storing their id's etc.
+        // 1. check mapper file if binary object exists for given model path
+            // if not create a dump of the model
+        // 2. load data from the binary dump
+        // 3. convert the data to `ModelData`
         // 4. add this model to `m_models`
         
         std::size_t model_hash = hasher(model_path);
 
         // don't load model if already loaded
-        if(m_models.find(model_hash) != m_models.end()) return model_hash;
+        if(m_models.find(model_hash) != m_models.end()) 
+            return model_hash;
         
-        // auto it = m_mapper_data.begin();
-        
-        // create bin file if not exists
-        // if((it = m_mapper_data.find(model_path)) == m_mapper_data.end())
-        //     it = create_model_dump(model_path);
+        auto it = m_mapper_data.begin();
+        if((it = m_mapper_data.find(model_path)) == m_mapper_data.end())
+            it = create_model_dump(model_path, model_hash); // create dump if it doesn't exist
         
         // retrieve model data
-        // ModelData model_data = load_model_data(it->second);
-        
-        ModelData model_data = create_model_dump(model_path);
+        ModelData model_data = load_model_data(it->second);
 
         // add model to m_models
         add_model(model_path, model_hash, model_data);
@@ -316,6 +286,7 @@ public:
             m_mapper_data[model_path] = model_bin_path;
     }
 
+    /// Drawing Logic
     void draw_mesh(std::unique_ptr<Shader>& shader, MeshDrawData& mesh_draw_data) {
         shader->activate();
 
@@ -342,7 +313,6 @@ public:
 
             // set value of texture sampler as the texture unit
             glUniform1i(glGetUniformLocation(shader->get_id(), tex_name.c_str()), i);
-
             glBindTexture(GL_TEXTURE_2D, mesh_draw_data.textures[i].first);
         }
 
@@ -355,7 +325,6 @@ public:
     }
 
     void draw_model(std::unique_ptr<Shader>& shader, std::size_t model_id) {
-        // draw model with model_id using ModelData
         auto it = m_models.begin();
         assert((it = m_models.find(model_id)) != m_models.end() && "Model with given ID does not exist");
 
@@ -365,16 +334,16 @@ public:
             draw_mesh(shader, mesh_draw_data);
     }
 
+private:
     std::size_t hasher(const std::string& model_path) {
         return std::hash<std::string>{}(model_path);
     }
-private:
-    // ModelProcessor m_model_processor;
+
     std::unordered_map<std::size_t, ModelDrawData> m_models;
-    // std::unordered_map<std::string, unsigned int> loaded_textures; // keep track of loaded texture paths
     mapper_data_map_type m_mapper_data;
- 
+    
+    TextureManager& ref_tex_manager;
+
     std::string m_mapper_file;
     std::string m_bin_dir;
-    // unsigned int m_last_model = 0;
 };
