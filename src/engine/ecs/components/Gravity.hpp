@@ -2,7 +2,6 @@
 
 #include <glm/glm.hpp>
 
-struct Gravity
-{
+struct Gravity {
     glm::vec3 force;
 };

@@ -2,7 +2,6 @@
 
 #include <glm/glm.hpp>
 
-struct Thrust
-{
+struct Thrust {
     glm::vec3 force;
 };

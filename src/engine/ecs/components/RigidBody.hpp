@@ -2,8 +2,7 @@
 
 #include <glm/glm.hpp>
 
-struct RigidBody
-{
+struct RigidBody {
     glm::vec3 velocity;
     glm::vec3 acceleration;
 };
