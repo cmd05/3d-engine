@@ -50,6 +50,7 @@ void WindowManager::process_events()
     if (glfwGetKey(m_window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
         ref_scene.send_event(Events::Window::QUIT);
     
+    // FIX: use generic way to transmit pressed keys and send events for them
     // Camera Movement
     if (glfwGetKey(m_window, GLFW_KEY_W) == GLFW_PRESS)
         moves.set(static_cast<std::size_t>(BasicMovement::Forward));
