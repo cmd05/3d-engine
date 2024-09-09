@@ -29,7 +29,15 @@ add_subdirectory(${INCLUDES_DIR}/glad)
 add_subdirectory(${INCLUDES_DIR}/glm)
 
 # assimp
-# add_subdirectory(${INCLUDES_DIR}/assimp)
+SET(ASSIMP_BUILD_ALL_EXPORTERS_BY_DEFAULT OFF CACHE BOOL "Build Assimp Exporters")
+SET(ASSIMP_BUILD_TESTS OFF CACHE BOOL "Build Assimp Tests")
+SET(BUILD_SHARED_LIBS OFF CACHE BOOL "Build Assimp shared library")
+SET(ASSIMP_NO_EXPORT ON CACHE BOOL "Disable Assimp's export functionality.")
+
+add_subdirectory(${INCLUDES_DIR}/assimp)
+
+# stb
+# add_subdirectory(${INCLUDES_DIR}/stb)
 
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_EXTENSIONS OFF)
@@ -45,6 +53,9 @@ target_compile_options(
     -fdiagnostics-color=always
     -Wall
     -Wno-reorder
+    # -Wno-unknown-pragmas
+    # -Wno-error=unknown-pragmas
+    # Wno-unknown-pragmas
 )
 
 # set( Boost_DEBUG ON) 
@@ -68,6 +79,18 @@ target_sources(
     src/engine/ecs/systems/RenderSystem.cpp
     
     src/engine/window/WindowManager.cpp
+
+    # model loading
+    # include stb manually for now
+    ${INCLUDES_DIR}/stb/stb_image.c
+
+    # src/engine/graphics/Mesh.cpp
+    # src/engine/graphics/ModelLoader.cpp
+
+    src/engine/graphics/MeshProcessor.cpp
+    src/engine/graphics/ModelProcessor.cpp
+    src/engine/graphics/ModelManager.cpp
+    src/engine/graphics/TextureManager.cpp
 )
 
 target_sources(
@@ -111,8 +134,9 @@ target_link_libraries(
     glad
     glfw
     glm::glm
-    # assimp
+    assimp
     # ${Boost_LIBRARIES}
 )
 
 target_compile_definitions(3dengine PUBLIC FS_SHADERS_DIR="${CMAKE_CURRENT_SOURCE_DIR}/src/engine/shaders/")
+target_compile_definitions(3dengine PUBLIC FS_RESOURCES_DIR="${CMAKE_CURRENT_SOURCE_DIR}/src/resources/")
