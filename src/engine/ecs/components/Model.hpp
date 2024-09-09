@@ -2,5 +2,5 @@
 #include <string>
 
 struct Model {
-    std::string model_path;
+    std::size_t model_id; // size_t for model hash (id)
 };
