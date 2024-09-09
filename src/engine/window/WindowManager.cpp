@@ -9,8 +9,8 @@
 void WindowManager::init(std::string const& windowTitle, unsigned int windowWidth,
     unsigned int windowHeight, unsigned int windowPositionX, unsigned int windowPositionY)
 {
+    // setup window
     glfwInit();
-
     m_window = glfwCreateWindow(windowWidth, windowHeight, windowTitle.c_str(), NULL, NULL);
 
     // set window hints
@@ -23,11 +23,6 @@ void WindowManager::init(std::string const& windowTitle, unsigned int windowWidt
     // Create OpenGL Context
     glfwMakeContextCurrent(m_window);
     gladLoadGLLoader((GLADloadproc)glfwGetProcAddress);
-    // glfwSwapInterval(2);
-
-    // Configure OpenGL
-    glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
-    glEnable(GL_DEPTH_TEST);
 }
 
 
