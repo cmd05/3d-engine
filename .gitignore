@@ -7,3 +7,4 @@ test.cpp
 /docs-dev
 *.exe
 *.out
+/src/resources
