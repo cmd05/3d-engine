@@ -14,7 +14,7 @@
 #define BIN_MAP_FNAME   "bin_mapper.map"
 
 using mapper_data_map_type = std::unordered_map<std::string, std::string>;
-// using mapper_data_map_iterator = std::unordered_map<std::string, std::string>::iterator;
+using models_interface_type = std::unordered_map<std::string, std::size_t>;
 
 class ModelManager {
 public:
