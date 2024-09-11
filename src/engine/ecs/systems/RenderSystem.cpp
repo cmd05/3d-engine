@@ -19,15 +19,7 @@
 
 RenderSystem::RenderSystem(Scene& scene, Entity camera): 
     System(scene),
-models_interface_type RenderSystem::load_models(std::unordered_map<std::string, std::string> models) {
-    return m_model_manager.load_models(models);
-}
-
-cubemaps_interface_type RenderSystem::load_cubemaps(std::unordered_map<std::string, CubemapFaces> cubemaps) {
-    return m_texture_manager.load_cubemaps(cubemaps);
-}
-
-void RenderSystem::init(Entity camera) {
+    m_model_manager(m_texture_manager, FS_RESOURCES_DIR + std::string(MODEL_BIN_PATH)),
     m_camera_manager(scene, camera) {
     // setup opengl properties
     glClearColor(0.0f, 0.0f, 0.0f, 1.0f);

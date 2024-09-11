@@ -10,6 +10,7 @@
 #include <engine/graphics/CameraManager.hpp>
 #include <engine/graphics/Shader.hpp>
 
+#define MODEL_BIN_PATH "models/bin"
 
 class RenderSystem : public System
 {
