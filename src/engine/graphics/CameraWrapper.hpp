@@ -5,9 +5,9 @@
 #include <engine/ecs/core/Types.hpp>
 #include <engine/ecs/core/Scene.hpp>
 
-class CameraManager {
+class CameraWrapper {
 public:
-    CameraManager(Scene& scene, Entity camera);
+    CameraWrapper(Scene& scene, Entity camera);
 
     void resize_view(unsigned int new_width, unsigned int new_height);
     

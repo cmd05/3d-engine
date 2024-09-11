@@ -7,7 +7,7 @@
 
 #include <engine/graphics/ModelManager.hpp>
 #include <engine/graphics/TextureManager.hpp>
-#include <engine/graphics/CameraManager.hpp>
+#include <engine/graphics/CameraWrapper.hpp>
 #include <engine/graphics/Shader.hpp>
 
 #define MODEL_BIN_PATH "models/bin"
@@ -32,7 +32,7 @@ private:
     std::unique_ptr<Shader> model_shader;
     std::unique_ptr<Shader> cubemap_shader;
     
-    CameraManager m_camera_manager;
+    CameraWrapper m_camera_manager;
 
     ModelManager m_model_manager;
     TextureManager m_texture_manager;
