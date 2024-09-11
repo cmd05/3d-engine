@@ -13,8 +13,8 @@ class Scene;
 class SystemManager {
 public:
     // System Modifiers
-    template<typename T>
-    T& register_system(Scene& scene);
+    template<typename T, typename... Args>
+    T& register_system(Scene& scene, Args&& ...args);
     
     // void entity_destroyed(Entity entity);
     // void entity_signature_changed(Entity entity, Signature entity_signature);
@@ -24,8 +24,8 @@ private:
     std::unordered_map<std::type_index, std::unique_ptr<System>> m_systems{};
 };
 
-template<typename T>
-T& SystemManager::register_system(Scene& scene) {
+template<typename T, typename... Args>
+T& SystemManager::register_system(Scene& scene, Args&& ...args) {
     assert(m_system_count < MAX_SYSTEMS && "Registering systems exceeds MAX_SYSTEMS");
 
     std::type_index type = typeid(T);
@@ -33,7 +33,7 @@ T& SystemManager::register_system(Scene& scene) {
     assert(m_systems.find(type) == m_systems.end() && "Registering system more than once");
 
     // store pointer to the system in unordered_map and return reference to the system
-    auto it = m_systems.emplace(type, std::make_unique<T>(scene)).first; // initialize system with scene
+    auto it = m_systems.emplace(type, std::make_unique<T>(scene, std::forward<Args>(args)...)).first; // initialize system with scene
 
     m_system_count++;
 

@@ -52,8 +52,8 @@ public:
 
 public:
     // System Methods
-    template<typename T>
-    T& register_system();
+    template<typename T, typename... Args>
+    T& register_system(Args&& ...args);
 
 public:
     // Event Methods
@@ -112,9 +112,9 @@ ComponentType Scene::get_component_type() const {
     return m_component_manager->get_component_type<T>();
 }
 
-template<typename T>
-T& Scene::register_system() {
-    return m_system_manager->register_system<T>(*this); // register system with the scene
+template<typename T, typename... Args>
+T& Scene::register_system(Args&& ...args) {
+    return m_system_manager->register_system<T>(*this, std::forward<Args>(args)...); // register system with the scene
 }
 
 template<typename ...ComponentTypes>
