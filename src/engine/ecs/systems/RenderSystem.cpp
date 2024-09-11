@@ -17,6 +17,8 @@
 
 #include <engine/graphics/Shader.hpp>
 
+RenderSystem::RenderSystem(Scene& scene, Entity camera): 
+    System(scene),
 models_interface_type RenderSystem::load_models(std::unordered_map<std::string, std::string> models) {
     return m_model_manager.load_models(models);
 }
@@ -26,6 +28,7 @@ cubemaps_interface_type RenderSystem::load_cubemaps(std::unordered_map<std::stri
 }
 
 void RenderSystem::init(Entity camera) {
+    m_camera_manager(scene, camera) {
     // setup opengl properties
     glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
     glEnable(GL_DEPTH_TEST);
@@ -37,15 +40,20 @@ void RenderSystem::init(Entity camera) {
     shader = std::make_unique<Shader>(std::string(FS_SHADERS_DIR) + "vertex.vs", std::string(FS_SHADERS_DIR) + "fragment.fs");
     model_shader = std::make_unique<Shader>(std::string(FS_SHADERS_DIR) + "shader_model.vs", std::string(FS_SHADERS_DIR) + "shader_model.fs");
     cubemap_shader = std::make_unique<Shader>(std::string(FS_SHADERS_DIR) + "cubemap.vs", std::string(FS_SHADERS_DIR) + "cubemap.fs");
-
-    m_camera = camera;
 }
 
-void RenderSystem::draw_cubemap(unsigned int cubemap_id) {
-    auto& camera_transform = ref_scene.get_component<Transform>(m_camera);
-    auto& camera = ref_scene.get_component<Camera>(m_camera);
+models_interface_type RenderSystem::load_models(std::unordered_map<std::string, std::string> models) {
+    return m_model_manager.load_models(models);
+}
 
-    m_texture_manager.draw_cubemap(cubemap_id, *cubemap_shader.get(), Camera::create_view_matrix(camera_transform.position), camera.projection_transform);
+cubemaps_interface_type RenderSystem::load_cubemaps(std::unordered_map<std::string, CubemapFaces> cubemaps) {
+    return m_texture_manager.load_cubemaps(cubemaps);
+}
+
+void RenderSystem::init() {}
+
+void RenderSystem::draw_cubemap(unsigned int cubemap_id) {
+    m_texture_manager.draw_cubemap(cubemap_id, *cubemap_shader.get(), m_camera_manager.get_view_matrix(), m_camera_manager.get_projection_matrix());
 }
 
 void RenderSystem::update(float dt)
@@ -54,8 +62,8 @@ void RenderSystem::update(float dt)
     glClearColor(0.2f, 0.2f, 0.2f, 1.0f);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); // NOLINT (hicpp-signed-bitwise)
 
-    auto& camera_transform = ref_scene.get_component<Transform>(m_camera);
-    auto& camera = ref_scene.get_component<Camera>(m_camera);
+    // auto& camera_transform = ref_scene.get_component<Transform>(m_camera);
+    // auto& camera = ref_scene.get_component<Camera>(m_camera);
 
     // // loop through all entities in RenderSystem
     // for (const auto& entity : SceneView<Renderable, Transform>(ref_scene))
@@ -114,12 +122,12 @@ void RenderSystem::update(float dt)
 
         // camera.view_matrix should be created just before rendering,
         // as camera position keeps changing
-        camera.view_matrix = Camera::create_view_matrix(camera_transform.position); 
+        // camera.view_matrix = Camera::create_view_matrix(camera_transform.position); 
 
         // set uniforms
         model_shader->set_uniform<glm::mat4>("model", model);
-        model_shader->set_uniform<glm::mat4>("view", camera.view_matrix);
-        model_shader->set_uniform<glm::mat4>("projection", camera.projection_transform);
+        model_shader->set_uniform<glm::mat4>("view", m_camera_manager.get_view_matrix());
+        model_shader->set_uniform<glm::mat4>("projection", m_camera_manager.get_projection_matrix());
         // shader->set_uniform<glm::vec3>("uColor", renderable.color);
 
         m_model_manager.draw_model(model_shader, object_model.model_id);
@@ -137,6 +145,5 @@ void RenderSystem::window_size_listener(Event& event)
     auto window_width = event.get_param<unsigned int>(Events::Window::Resized::WIDTH);
     auto window_height = event.get_param<unsigned int>(Events::Window::Resized::HEIGHT);
 
-    auto& camera = ref_scene.get_component<Camera>(m_camera);
-    camera.projection_transform = Camera::create_projection_transform(45.0f, 0.1f, 1000.0f, window_width, window_height); // TODO: set appropriate far plane without clipping too early
+    m_camera_manager.resize_view(window_width, window_height);
 }

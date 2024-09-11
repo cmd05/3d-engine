@@ -88,13 +88,11 @@ int main() {
 
     main_scene.add_component(
         camera_entity,
-        Camera {
-            .projection_transform = Camera::create_projection_transform(45.0f, 0.1f, 1000.0f, 1920, 1080)
-        }
+        Camera(DEFAULT_SCR_WIDTH, DEFAULT_SCR_HEIGHT)
     );
 
-    auto& render_system = main_scene.register_system<RenderSystem>();
-    render_system.init(camera_entity);
+    auto& render_system = main_scene.register_system<RenderSystem>(camera_entity);
+    // render_system.init();
     
     std::unordered_map<std::string, std::string> models = {
         {"rock", std::string(FS_RESOURCES_DIR) + "models/rock/rock.obj"},
