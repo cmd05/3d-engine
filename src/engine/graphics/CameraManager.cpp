@@ -1,4 +1,9 @@
+#include <glm/gtc/matrix_transform.hpp>
+
 #include <engine/graphics/CameraManager.hpp>
+
+#include <engine/ecs/components/Camera.hpp>
+#include <engine/ecs/components/Transform.hpp>
 
 CameraManager::CameraManager(Scene& scene, Entity camera): 
     ref_scene{scene}, m_camera{camera} {}

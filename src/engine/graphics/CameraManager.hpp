@@ -1,11 +1,8 @@
 #pragma once
 
 #include <glm/glm.hpp>
-#include <glm/gtc/matrix_transform.hpp>
 
 #include <engine/ecs/core/Types.hpp>
-#include <engine/ecs/components/Camera.hpp>
-#include <engine/ecs/components/Transform.hpp>
 #include <engine/ecs/core/Scene.hpp>
 
 class CameraManager {
