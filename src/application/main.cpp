@@ -44,7 +44,7 @@ int main() {
 
     // window setup
     WindowManager window_manager {main_scene}; // window manager requires reference to scene
-    window_manager.init("3D engine", 1920, 1080, 0, 0);
+    window_manager.init("3D engine", DEFAULT_SCR_WIDTH, DEFAULT_SCR_HEIGHT, 0, 0);
 
     // quit handler
     main_scene.add_event_listener(FUNCTION_LISTENER(Events::Window::QUIT, quit_handler));

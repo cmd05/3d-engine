@@ -4,6 +4,9 @@
 #include <bitset>
 #include <string>
 
+#define DEFAULT_SCR_WIDTH 1920
+#define DEFAULT_SCR_HEIGHT 1080
+
 class Scene;
 
 class WindowManager
@@ -15,7 +18,6 @@ public:
     void init(std::string const& window_title, unsigned int window_width,
         unsigned int window_height, unsigned int window_position_x, unsigned int window_position_y);
     
-
     void update();
     void process_events();
     void shutdown();
