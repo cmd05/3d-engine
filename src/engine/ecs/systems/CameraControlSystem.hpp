@@ -7,7 +7,7 @@
 class CameraControlSystem : public System
 {
 public:
-    CameraControlSystem(Scene& scene): System(scene) {}
+    CameraControlSystem(Scene& scene);
     void init();
     void update(float dt);
 

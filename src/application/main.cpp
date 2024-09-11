@@ -69,14 +69,14 @@ int main() {
     /// ------------- Register Systems ------------------
     
     // register system to our scene and set its signature
-    auto& physics_system = main_scene.register_system<PhysicsSystem>(); // note auto& is necessary. simply auto wil create a new local variable can cause copying errors
-    physics_system.init();
+    // auto& physics_system = main_scene.register_system<PhysicsSystem>(); // note auto& is necessary. simply auto wil create a new local variable can cause copying errors
+    // physics_system.init();
 
     auto& camera_control_system = main_scene.register_system<CameraControlSystem>();
-    camera_control_system.init();
+    // camera_control_system.init();
 
     auto& player_control_system = main_scene.register_system<PlayerControlSystem>();
-    player_control_system.init();
+    // player_control_system.init();
 
     // create camera entity
     Entity camera_entity = main_scene.create_entity();

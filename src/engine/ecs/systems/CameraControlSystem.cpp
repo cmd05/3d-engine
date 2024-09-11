@@ -7,8 +7,7 @@
 #include <engine/ecs/components/Transform.hpp>
 #include <engine/ecs/components/Camera.hpp>
 
-void CameraControlSystem::init()
-{
+CameraControlSystem::CameraControlSystem(Scene& scene): System(scene) {
     // macro expands to 
     // ref_scene.add_event_listener(Events::Window::INPUT, std::bind(&CameraControlSystem::input_listener, this, std::placeholders::_1));
     
@@ -23,8 +22,12 @@ void CameraControlSystem::init()
     ref_scene.add_event_listener(METHOD_LISTENER(Events::Camera::MOVEMENT, CameraControlSystem::input_listener));
 }
 
-void CameraControlSystem::update(float dt)
-{
+
+void CameraControlSystem::init() {
+
+}
+
+void CameraControlSystem::update(float dt) {
     for (Entity entity : SceneView<Camera, Transform>(ref_scene))
     {
         auto& transform = ref_scene.get_component<Transform>(entity);
@@ -51,8 +54,7 @@ void CameraControlSystem::update(float dt)
     to_move.reset(); // all movements for current frame have been done
 }
 
-void CameraControlSystem::input_listener(Event& event)
-{
+void CameraControlSystem::input_listener(Event& event) {
     // get window buttons input parameter
     // In WindowManager::ProcessEvents(), event has been set to:
         // Event event(Events::Camera::MOVEMENT);
