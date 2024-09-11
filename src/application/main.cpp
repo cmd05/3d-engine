@@ -103,7 +103,7 @@ int main() {
         {"cyborg", std::string(FS_RESOURCES_DIR) + "models/cyborg/cyborg.obj"},
         {"m4a1", std::string(FS_RESOURCES_DIR) +"models/m4a1/m4a1.obj"},
         {"planet", std::string(FS_RESOURCES_DIR) +"models/planet/planet.obj"},
-        // {"backpack", std::string(FS_RESOURCES_DIR) +"models/backpack/backpack.obj"},
+        {"backpack", std::string(FS_RESOURCES_DIR) +"models/forest-backpack/backpack.obj"},
         // {"low_poly_house", std::string(FS_RESOURCES_DIR) +"models/low_poly_house/low_poly_house.fbx"},
         // {"deccer_cubes", std::string(FS_RESOURCES_DIR) +"models/deccer-cubes/SM_Deccer_Cubes_Textured.fbx"},
         // {"bunny", std::string(FS_RESOURCES_DIR) +"models/stanford_bunny_pbr/scene.gltf"},
