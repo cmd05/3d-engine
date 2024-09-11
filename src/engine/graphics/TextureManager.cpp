@@ -30,9 +30,10 @@ TextureManager::TextureManager() {
 
 // if same texture path already exists return the texture id
 // else create new texture and return its id 
-unsigned int TextureManager::texture_from_file(std::string file_path, bool gamma) {
+unsigned int TextureManager::texture_from_file(std::string file_path, bool gamma, bool vflip_texture) {
     // FIX: allow a `bool flip` parameter to the function. ex: flip backpack.obj texture
-    // stbi_set_flip_vertically_on_load(true);
+    if(vflip_texture)
+        stbi_set_flip_vertically_on_load(true);
     
     // check if texture exists
     auto it = m_loaded_textures.begin();
