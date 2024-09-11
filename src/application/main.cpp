@@ -83,9 +83,7 @@ int main() {
 
     main_scene.add_component(
         camera_entity,
-        Transform {
-            .position = glm::vec3(0.0f, 0.0f, 500.0f)
-        }
+        Transform {.position = glm::vec3(0.0f, 0.0f, 500.0f)}
     );
 
     main_scene.add_component(
