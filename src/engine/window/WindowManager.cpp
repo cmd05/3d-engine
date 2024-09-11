@@ -19,6 +19,7 @@ void WindowManager::init(std::string const& windowTitle, unsigned int windowWidt
     glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
     glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
     glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+    // glfwSetFramebufferSizeCallback(window, framebuffer_size_callback); // TODO: create callback fn which calls Events::Window::RESIZED
 
     // Create OpenGL Context
     glfwMakeContextCurrent(m_window);
