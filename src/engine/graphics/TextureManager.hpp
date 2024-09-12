@@ -4,7 +4,9 @@
 #include <array>
 #include <vector>
 #include <string>
+#include <memory>
 
+#include <engine/graphics/CameraWrapper.hpp>
 #include <engine/graphics/Shader.hpp>
 
 template<typename T>
@@ -24,7 +26,7 @@ public:
     cubemaps_interface_type load_cubemaps(std::unordered_map<std::string, CubemapFaces> cubemaps);
     unsigned int add_cubemap(CubemapFaces faces);
     // FIX: dirty workaround right now for matrices. take Camera& as a reference, for camera class
-    void draw_cubemap(unsigned int cubemap_id, Shader& cubemap_shader, glm::mat4 view_matrix, glm::mat4 projection_matrix);
+    void draw_cubemap(unsigned int cubemap_id, const std::unique_ptr<Shader>& cubemap_shader, const CameraWrapper& camera_wrapper);
 private:
     // full texture path, texture id
     std::unordered_map<std::string, unsigned int> m_loaded_textures;

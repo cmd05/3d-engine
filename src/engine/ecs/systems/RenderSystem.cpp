@@ -44,7 +44,7 @@ cubemaps_interface_type RenderSystem::load_cubemaps(std::unordered_map<std::stri
 void RenderSystem::init() {}
 
 void RenderSystem::draw_cubemap(unsigned int cubemap_id) {
-    m_texture_manager.draw_cubemap(cubemap_id, *cubemap_shader.get(), m_camera_manager.get_view_matrix(), m_camera_manager.get_projection_matrix());
+    m_texture_manager.draw_cubemap(cubemap_id, cubemap_shader, m_camera_wrapper);
 }
 
 void RenderSystem::update(float dt)
