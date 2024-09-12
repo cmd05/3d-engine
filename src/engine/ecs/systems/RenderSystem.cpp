@@ -51,7 +51,7 @@ void RenderSystem::update(float dt)
 {
     // clear screen and buffers
     glClearColor(0.2f, 0.2f, 0.2f, 1.0f);
-    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); // NOLINT (hicpp-signed-bitwise)
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
     // draw all models
     glEnable(GL_DEPTH_TEST);
