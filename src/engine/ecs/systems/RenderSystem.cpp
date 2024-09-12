@@ -53,48 +53,7 @@ void RenderSystem::update(float dt)
     glClearColor(0.2f, 0.2f, 0.2f, 1.0f);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); // NOLINT (hicpp-signed-bitwise)
 
-    // auto& camera_transform = ref_scene.get_component<Transform>(m_camera);
-    // auto& camera = ref_scene.get_component<Camera>(m_camera);
-
-    // // loop through all entities in RenderSystem
-    // for (const auto& entity : SceneView<Renderable, Transform>(ref_scene))
-    // {
-    //     const auto& transform = ref_scene.get_component<Transform>(entity);
-    //     const auto& renderable = ref_scene.get_component<Renderable>(entity);
-        
-    //     glm::mat4 model = glm::mat4(1.0);
-
-    //     model = glm::translate(model, transform.position);
-    //     model = glm::rotate(model, (transform.rotation.x), glm::vec3(1.0f, 0.0f, 0.0f));
-    //     model = glm::rotate(model, (transform.rotation.y), glm::vec3(0.0f, 1.0f, 0.0f));
-    //     model = glm::rotate(model, (transform.rotation.z), glm::vec3(0.0f, 0.0f, 1.0f));
-    //     model = glm::scale(model, transform.scale);
-        
-    //     // camera.view_matrix should be created just before rendering,
-    //     // as camera position keeps changing
-    //     camera.view_matrix = Camera::create_view_matrix(camera_transform.position); 
-
-    //     // set uniforms
-    //     shader->set_uniform<glm::mat4>("uModel", model);
-    //     shader->set_uniform<glm::mat4>("uView", camera.view_matrix);
-    //     shader->set_uniform<glm::mat4>("uProjection", camera.projection_transform);
-    //     shader->set_uniform<glm::vec3>("uColor", renderable.color);
-
-    //     // draw cube to screen
-    //     glDrawArrays(GL_TRIANGLES, 0, 36);
-    // }
-
-    // // // unbind VAO
-    // glBindVertexArray(0);
-
-    // draw cubemap
-    // for(const auto& entity : SceneView<Renderable, Cubemap>(ref_scene)) {
-    //     auto& cubemap = ref_scene.get_component<Cubemap>(entity);
-    //     m_texture_manager.draw_cubemap(cubemap.id);
-    // }
-
-    /// draw all models
-
+    // draw all models
     glEnable(GL_DEPTH_TEST);
     model_shader->activate();
 
