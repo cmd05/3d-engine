@@ -65,9 +65,8 @@ void RenderSystem::update(float dt)
     }
 
     // draw cubemaps
-    for(const auto& entity : SceneView<Renderable, Cubemap>(ref_scene)) {
+    for(const auto& entity : SceneView<Renderable, Cubemap>(ref_scene))
         draw_cubemap(ref_scene.get_component<Cubemap>(entity).id);
-    }
 }
 
 void RenderSystem::window_size_listener(Event& event)
