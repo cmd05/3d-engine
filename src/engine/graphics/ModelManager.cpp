@@ -4,8 +4,12 @@
 #include <utility>
 #include <memory>
 
+#include <glm/glm.hpp>
+#include <glm/gtc/matrix_transform.hpp>
+
 #include <engine/graphics/ModelManager.hpp>
 
+#include <engine/graphics/lib/GraphicsHelper.hpp>
 #include <engine/graphics/TextureManager.hpp>
 #include <engine/graphics/Shader.hpp>
 #include <engine/graphics/ModelProcessor.hpp>
@@ -253,7 +257,8 @@ void ModelManager::load_mapper_data() {
 }
 
 /// Drawing Logic
-void ModelManager::draw_mesh(std::unique_ptr<Shader>& shader, MeshDrawData& mesh_draw_data) {
+
+void ModelManager::draw_mesh(const std::unique_ptr<Shader>& shader, MeshDrawData& mesh_draw_data) {
     shader->activate();
 
     // bind appropriate textures
@@ -290,14 +295,22 @@ void ModelManager::draw_mesh(std::unique_ptr<Shader>& shader, MeshDrawData& mesh
     glActiveTexture(GL_TEXTURE0); // reset active texture
 }
 
-void ModelManager::draw_model(std::unique_ptr<Shader>& shader, std::size_t model_id) {
+
+void ModelManager::draw_model(const std::unique_ptr<Shader>& model_shader, std::size_t model_id, const CameraWrapper& camera_wrapper,
+    const Transform& transform) {    
+    // retrieve model data
     auto it = m_models.begin();
     assert((it = m_models.find(model_id)) != m_models.end() && "Model with given ID does not exist");
-
     ModelDrawData& model_draw_data = it->second;
-
+    
+    // set uniforms
+    model_shader->set_uniform<glm::mat4>("model", GraphicsHelper::create_model_matrix(transform));
+    model_shader->set_uniform<glm::mat4>("view", camera_wrapper.get_view_matrix());
+    model_shader->set_uniform<glm::mat4>("projection", camera_wrapper.get_projection_matrix());
+    
+    // draw meshes
     for(MeshDrawData& mesh_draw_data : model_draw_data.meshes)
-        draw_mesh(shader, mesh_draw_data);
+        draw_mesh(model_shader, mesh_draw_data);
 }
 
 std::size_t ModelManager::hasher(const std::string& model_path) {

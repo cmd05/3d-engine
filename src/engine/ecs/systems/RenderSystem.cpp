@@ -58,30 +58,10 @@ void RenderSystem::update(float dt)
     model_shader->activate();
 
     for(const auto& entity : SceneView<Renderable, Model, Transform>(ref_scene)) {
-        auto& transform = ref_scene.get_component<Transform>(entity);
-        auto& object_model = ref_scene.get_component<Model>(entity);
-        // const auto& renderable = ref_scene.get_component<Renderable>(entity);
-        
-        glm::mat4 model = glm::mat4(1.0);
+        const auto& transform = ref_scene.get_component<Transform>(entity);
+        const auto& object_model = ref_scene.get_component<Model>(entity);
 
-        model = glm::translate(model, transform.position);
-        model = glm::rotate(model, (transform.rotation.x), glm::vec3(1.0f, 0.0f, 0.0f));
-        model = glm::rotate(model, (transform.rotation.y), glm::vec3(0.0f, 1.0f, 0.0f));
-        model = glm::rotate(model, (transform.rotation.z), glm::vec3(0.0f, 0.0f, 1.0f));
-        model = glm::scale(model, transform.scale);
-
-        // camera.view_matrix should be created just before rendering,
-        // as camera position keeps changing
-        // camera.view_matrix = Camera::create_view_matrix(camera_transform.position); 
-
-        // set uniforms
-        model_shader->set_uniform<glm::mat4>("model", model);
-        model_shader->set_uniform<glm::mat4>("view", m_camera_manager.get_view_matrix());
-        model_shader->set_uniform<glm::mat4>("projection", m_camera_manager.get_projection_matrix());
-        // shader->set_uniform<glm::vec3>("uColor", renderable.color);
-
-        m_model_manager.draw_model(model_shader, object_model.model_id);
-        // object_model.model.Draw(model_shader); // modelloader::draw itself must activate shader before drawing
+        m_model_manager.draw_model(model_shader, object_model.model_id, m_camera_wrapper, transform);
     }
 
     // draw cubemaps

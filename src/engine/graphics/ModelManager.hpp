@@ -3,6 +3,9 @@
 #include <engine/graphics/Shader.hpp>
 #include <engine/graphics/TextureManager.hpp>
 #include <engine/graphics/MeshProcessor.hpp>
+#include <engine/graphics/CameraWrapper.hpp>
+
+#include <engine/ecs/components/Transform.hpp>
 
 #define BIN_MAP_FNAME   "bin_mapper.map"
 
@@ -49,8 +52,10 @@ public:
     void add_model(std::string model_path, std::size_t model_hash, ModelData& model_data);
 
     MeshDrawData setup_mesh(std::string model_path, Mesh& mesh, bool gamma_correction);
-    void draw_mesh(std::unique_ptr<Shader>& shader, MeshDrawData& mesh_draw_data);
-    void draw_model(std::unique_ptr<Shader>& shader, std::size_t model_id);
+
+    
+    void draw_mesh(const std::unique_ptr<Shader>& shader, MeshDrawData& mesh_draw_data);
+    void draw_model(const std::unique_ptr<Shader>& model_shader, std::size_t model_id, const CameraWrapper& camera_wrapper, const Transform& transform);
 private:
     std::unordered_map<std::size_t, ModelDrawData> m_models;
     mapper_data_map_type m_mapper_data;
