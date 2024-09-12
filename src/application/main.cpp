@@ -144,7 +144,7 @@ int main() {
 
     auto cubemap_entity = main_scene.create_entity();
     main_scene.add_component(cubemap_entity, Renderable{});
-    main_scene.add_component(cubemap_entity, Cubemap{.id = cubemaps["sky"]});
+    main_scene.add_component(cubemap_entity, Cubemap{.id = cubemaps.at("sky")});
     
     // Create entities
 
