@@ -31,7 +31,7 @@ private:
     std::unique_ptr<Shader> model_shader;
     std::unique_ptr<Shader> cubemap_shader;
     
-    CameraWrapper m_camera_manager;
+    CameraWrapper m_camera_wrapper;
 
     ModelManager m_model_manager;
     TextureManager m_texture_manager;

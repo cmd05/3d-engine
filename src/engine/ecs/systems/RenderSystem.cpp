@@ -20,7 +20,7 @@
 RenderSystem::RenderSystem(Scene& scene, Entity camera): 
     System(scene),
     m_model_manager(m_texture_manager, FS_RESOURCES_DIR + std::string(MODEL_BIN_PATH)),
-    m_camera_manager(scene, camera) {
+    m_camera_wrapper(scene, camera) {
     // setup opengl properties
     glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
     glEnable(GL_DEPTH_TEST);
@@ -69,10 +69,9 @@ void RenderSystem::update(float dt)
         draw_cubemap(ref_scene.get_component<Cubemap>(entity).id);
 }
 
-void RenderSystem::window_size_listener(Event& event)
-{
+void RenderSystem::window_size_listener(Event& event) {
     auto window_width = event.get_param<unsigned int>(Events::Window::Resized::WIDTH);
     auto window_height = event.get_param<unsigned int>(Events::Window::Resized::HEIGHT);
 
-    m_camera_manager.resize_view(window_width, window_height);
+    m_camera_wrapper.resize_view(window_width, window_height);
 }
