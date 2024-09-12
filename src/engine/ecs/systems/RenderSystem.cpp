@@ -29,7 +29,6 @@ RenderSystem::RenderSystem(Scene& scene, Entity camera):
     ref_scene.add_event_listener(METHOD_LISTENER(Events::Window::RESIZED, RenderSystem::window_size_listener));
     
     // initialize shaders
-    shader = std::make_unique<Shader>(std::string(FS_SHADERS_DIR) + "vertex.vs", std::string(FS_SHADERS_DIR) + "fragment.fs");
     model_shader = std::make_unique<Shader>(std::string(FS_SHADERS_DIR) + "shader_model.vs", std::string(FS_SHADERS_DIR) + "shader_model.fs");
     cubemap_shader = std::make_unique<Shader>(std::string(FS_SHADERS_DIR) + "cubemap.vs", std::string(FS_SHADERS_DIR) + "cubemap.fs");
 }

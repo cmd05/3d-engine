@@ -28,7 +28,6 @@ private:
     void window_size_listener(Event& event);
 
     // FIX: prefix shader names by m_
-    std::unique_ptr<Shader> shader;
     std::unique_ptr<Shader> model_shader;
     std::unique_ptr<Shader> cubemap_shader;
     
