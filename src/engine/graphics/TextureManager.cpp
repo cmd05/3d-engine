@@ -118,19 +118,22 @@ unsigned int TextureManager::add_cubemap(CubemapFaces faces) {
     return texture_id;
 }
 
-void TextureManager::draw_cubemap(unsigned int cubemap_id, Shader& cubemap_shader, glm::mat4 view_matrix, glm::mat4 projection_matrix) {
+void TextureManager::draw_cubemap(unsigned int cubemap_id, const std::unique_ptr<Shader>& cubemap_shader, const CameraWrapper& camera_wrapper) {
     // cubemap_shader.activate();
     // glUniform1i(glGetUniformLocation(shader.get_id(), "skybox"), 0);
     
     glDepthFunc(GL_LEQUAL); // change depth function so depth test passes when values are equal to depth buffer's content
     
-    cubemap_shader.activate();
+    cubemap_shader->activate();
+
     // FIX: fix setting texture units and other constant uniforms before render loop (in constructor / rendersystem::init())
-    glUniform1i(glGetUniformLocation(cubemap_shader.get_id(), "skybox"), 0);
+    // this can be fixed by having shaders specific to each class. i.e cubemap_shader is initialized in TextureManager
+    // we can have a ResourceManager to hold all the shader objects in memory and return pointers (and an id) to them
+    glUniform1i(glGetUniformLocation(cubemap_shader->get_id(), "skybox"), 0);
     
-    glm::mat4 view = glm::mat4(glm::mat3(view_matrix)); // remove translation from the view matrix
-    cubemap_shader.set_uniform<glm::mat4>("view", view);
-    cubemap_shader.set_uniform<glm::mat4>("projection", projection_matrix);
+    glm::mat4 view = glm::mat4(glm::mat3(camera_wrapper.get_view_matrix())); // remove translation from the view matrix
+    cubemap_shader->set_uniform<glm::mat4>("view", view);
+    cubemap_shader->set_uniform<glm::mat4>("projection", camera_wrapper.get_projection_matrix());
     
     // skybox cube
     glBindVertexArray(m_cubemap_vao);
