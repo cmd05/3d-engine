@@ -71,6 +71,7 @@ int main() {
     auto& camera_control_system = main_scene.register_system<CameraControlSystem>();
     auto& player_control_system = main_scene.register_system<PlayerControlSystem>();
 
+    // create camera entity
     // primary camera to be used for rendering `main_scene`
     Entity camera_entity = main_scene.create_entity();
 
@@ -85,7 +86,6 @@ int main() {
     );
 
     auto& render_system = main_scene.register_system<RenderSystem>(camera_entity);
-    // render_system.init();
     
     std::unordered_map<std::string, std::string> models = {
         {"rock", std::string(FS_RESOURCES_DIR) + "models/rock/rock.obj"},
