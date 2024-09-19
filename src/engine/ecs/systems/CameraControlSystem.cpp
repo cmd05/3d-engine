@@ -4,65 +4,65 @@
 #include <engine/ecs/core/Event.hpp>
 #include <engine/ecs/core/SceneView.hpp>
 
+#include <engine/window/WindowManager.hpp>
+#include <engine/graphics/CameraWrapper.hpp>
+
 #include <engine/ecs/components/Transform.hpp>
 #include <engine/ecs/components/Camera.hpp>
 
 CameraControlSystem::CameraControlSystem(Scene& scene): System(scene) {
-    // macro expands to 
-    // ref_scene.add_event_listener(Events::Window::INPUT, std::bind(&CameraControlSystem::input_listener, this, std::placeholders::_1));
-    
-    // std::placeholders::_1 is bound to the returned function object by std::bind.
-    // https://en.cppreference.com/w/cpp/utility/functional/placeholders:
-    // When used as an argument in a std::bind expression, the placeholder objects are stored in the generated function object,
-    // and when that function object is invoked with unbound arguments,
-    // each placeholder _N is replaced by the corresponding Nth unbound argument
-    // Ex: In case of `CameraControlSystem::input_listener(Event& event)`,
-    // std::placeholders::_1 will bind to Event& which will be sent to the function object of std::bind as the first argument
-    
-    ref_scene.add_event_listener(METHOD_LISTENER(Events::Camera::MOVEMENT, CameraControlSystem::input_listener));
-}
-
-
-void CameraControlSystem::init() {
-
+    ref_scene.add_event_listener(METHOD_LISTENER(Events::Window::Input::MOUSE, CameraControlSystem::mouse_listener));
+    ref_scene.add_event_listener(METHOD_LISTENER(Events::Window::Input::SCROLL, CameraControlSystem::scroll_listener));
 }
 
 void CameraControlSystem::update(float dt) {
-    for (Entity entity : SceneView<Camera, Transform>(ref_scene))
-    {
-        auto& transform = ref_scene.get_component<Transform>(entity);
-        float speed = 120.0f;
+    for (Entity entity : SceneView<Camera, Transform>(ref_scene)) {
+        CameraWrapper camera_wrapper{ref_scene, entity};
+        float cam_offset = dt * CAMERA_SPEED;
 
-        if (to_move.test(static_cast<std::size_t>(BasicMovement::Forward)))
-            transform.position.z -= (dt * speed);
-        else if (to_move.test(static_cast<std::size_t>(BasicMovement::Backward)))
-            transform.position.z += (dt * speed);
+        // poll camera keys
+        if(ref_scene.input_handler.get_key(GLFW_KEY_W))
+            // no need to reset_key here
+            camera_wrapper.translate_camera(BasicMovement::Forward, cam_offset);
+        else if(ref_scene.input_handler.get_key(GLFW_KEY_S))
+            camera_wrapper.translate_camera(BasicMovement::Backward, cam_offset);
+        if(ref_scene.input_handler.get_key(GLFW_KEY_A))
+            camera_wrapper.translate_camera(BasicMovement::Left, cam_offset);
+        else if(ref_scene.input_handler.get_key(GLFW_KEY_D))
+            camera_wrapper.translate_camera(BasicMovement::Right, cam_offset);
+        if(ref_scene.input_handler.get_key(GLFW_KEY_Q))
+            camera_wrapper.translate_camera(BasicMovement::Up, cam_offset);
+        else if(ref_scene.input_handler.get_key(GLFW_KEY_E))
+            camera_wrapper.translate_camera(BasicMovement::Down, cam_offset);
 
+        // TODO:
+        // ref_scene.input_handler.react_key_noprocess(GLFW_KEY_W, []() {})
 
-        if (to_move.test(static_cast<std::size_t>(BasicMovement::Up)))
-            transform.position.y += (dt * speed);
-        else if (to_move.test(static_cast<std::size_t>(BasicMovement::Down)))
-            transform.position.y -= (dt * speed);
+        // rotate camera
+        if(m_camera_rotation.b_rotate) {
+            camera_wrapper.rotate_camera(m_camera_rotation.rotation.x_offset, m_camera_rotation.rotation.y_offset);
+            m_camera_rotation.b_rotate = false;
+        }
 
-
-        if (to_move.test(static_cast<std::size_t>(BasicMovement::Left)))
-            transform.position.x -= (dt * speed);
-        else if (to_move.test(static_cast<std::size_t>(BasicMovement::Right)))
-            transform.position.x += (dt * speed);
+        // zoom camera
+        if(m_camera_zoom.b_zoom) {
+            camera_wrapper.zoom_camera(m_camera_zoom.zoom_offset);
+            m_camera_zoom.b_zoom = false;
+        }
     }
-
-    to_move.reset(); // all movements for current frame have been done
 }
 
-void CameraControlSystem::input_listener(Event& event) {
-    // get window buttons input parameter
-    // In WindowManager::ProcessEvents(), event has been set to:
-        // Event event(Events::Camera::MOVEMENT);
-        // event.set_param(Events::Camera::Movement::MOVES, moves);
-        // ref_scene.send_event(event);
-    // where moves is a std::bitset<8>. get_param() handles the any_cast in `Event` class 
+void CameraControlSystem::mouse_listener(Event& event) {
+    m_camera_rotation.rotation = event.get_param<WindowManager::MouseData>(Events::Window::Input::Mouse::MOUSE_DATA);
+    m_camera_rotation.rotation.x_offset *= CAMERA_MOUSE_SENSITIVITY;
+    m_camera_rotation.rotation.y_offset *= CAMERA_MOUSE_SENSITIVITY;
 
-    // update the state of the CameraControlSystem
-    // the updation of camera position is done when CameraControlSystem::update() is called
-    to_move = event.get_param<BasicMoves>(Events::Camera::Movement::MOVES);
+    m_camera_rotation.b_rotate = true;
+}
+
+void CameraControlSystem::scroll_listener(Event& event) {
+    WindowManager::ScrollData scroll_data = event.get_param<WindowManager::ScrollData>(Events::Window::Input::Scroll::SCROLL_DATA);
+    m_camera_zoom.zoom_offset = scroll_data.y_offset * CAMERA_SCROLL_SENSITIVITY;
+    
+    m_camera_zoom.b_zoom = true;
 }
