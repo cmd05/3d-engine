@@ -73,7 +73,21 @@ namespace Events::Window {
 }
 
 namespace Events::Window::Input {
-    const ParamId INPUT = "Events::Window::Input::INPUT"_hash;
+    const EventId KEYBOARD = "Events::Window::Input::KEYBOARD"_hash;
+    const EventId MOUSE = "Events::Window::Input::MOUSE"_hash;
+    const EventId SCROLL = "Events::Window::Input::SCROLL"_hash;
+}
+
+namespace Events::Window::Input::Keyboard {
+    const ParamId KEYS = "Events::Window::Input::Keyboard::KEYS"_hash; // implement camera translation
+}
+
+namespace Events::Window::Input::Mouse {
+    const ParamId MOUSE_DATA = "Events::Window::Input::Mouse::MOUSE_DATA"_hash;
+}
+
+namespace Events::Window::Input::Scroll {
+    const ParamId SCROLL_DATA = "Events::Window::Input::Scroll::SCROLL_DATA"_hash;
 }
 
 namespace Events::Window::Resized {
@@ -81,10 +95,7 @@ namespace Events::Window::Resized {
     const ParamId HEIGHT = "Events::Window::Resized::HEIGHT"_hash;
 }
 
-namespace Events::Camera {
-    const EventId MOVEMENT = "Events::Camera::MOVEMENT"_hash;
-}
-
-namespace Events::Camera::Movement {
-    const ParamId MOVES = "Events::Camera::Movement::MOVES"_hash;
-}
+// GLFW Keys information
+constexpr int WIN_INPUT_KEYS_START = 0;
+constexpr int WIN_INPUT_KEYS_END = 1024; // not included
+constexpr int WIN_INPUT_KEYS_LEN = WIN_INPUT_KEYS_END;
