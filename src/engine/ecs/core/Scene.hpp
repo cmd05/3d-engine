@@ -98,8 +98,6 @@ void Scene::add_component(Entity entity, T component) {
     auto signature = m_entity_manager->get_signature(entity);
     signature.set(m_component_manager->get_component_type<T>(), true);
     m_entity_manager->set_signature(entity, signature);
-
-    // m_system_manager->entity_signature_changed(entity, signature);
 }
 
 template<typename T>
@@ -109,8 +107,6 @@ void Scene::remove_component(Entity entity) {
     auto signature = m_entity_manager->get_signature(entity);
     signature.set(m_component_manager->get_component_type<T>(), false);
     m_entity_manager->set_signature(entity, signature);
-
-    // m_system_manager->entity_signature_changed(entity, signature);
 }
 
 template<typename T>
