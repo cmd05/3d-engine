@@ -92,14 +92,13 @@ int main() {
         {"cyborg", std::string(FS_RESOURCES_DIR) + "models/cyborg/cyborg.obj"},
         {"m4a1", std::string(FS_RESOURCES_DIR) +"models/m4a1/m4a1.obj"},
         {"planet", std::string(FS_RESOURCES_DIR) +"models/planet/planet.obj"},
-        {"backpack", std::string(FS_RESOURCES_DIR) +"models/forest-backpack/backpack.obj"},
+        // {"backpack", std::string(FS_RESOURCES_DIR) +"models/forest-backpack/backpack.obj"},
         // {"low_poly_house", std::string(FS_RESOURCES_DIR) +"models/low_poly_house/low_poly_house.fbx"},
         // {"deccer_cubes", std::string(FS_RESOURCES_DIR) +"models/deccer-cubes/SM_Deccer_Cubes_Textured.fbx"},
         // {"bunny", std::string(FS_RESOURCES_DIR) +"models/stanford_bunny_pbr/scene.gltf"},
         // {"teapot", std::string(FS_RESOURCES_DIR) + "models/utah_teapot_pbr/scene.gltf"},
         // {"cat", std::string(FS_RESOURCES_DIR) + "models/cat/12221_Cat_v1_l3.obj"},
         // {"low_poly_tree", std::string(FS_RESOURCES_DIR) + "models/low_poly_tree/Lowpoly_tree_sample.fbx"},
-        
         // {"nanosuit", std::string(FS_RESOURCES_DIR) +"models/nanosuit/nanosuit.obj"},
     };
 
@@ -114,26 +113,9 @@ int main() {
             .front = (std::string(FS_RESOURCES_DIR) + "textures/skybox/front.jpg"),
             .back = (std::string(FS_RESOURCES_DIR) + "textures/skybox/back.jpg"),
         }},
-        // {"landscape", {
-        //     .right = (std::string(FS_RESOURCES_DIR) + "textures/cubemaps/landscape/right.png"),
-        //     .left = (std::string(FS_RESOURCES_DIR) + "textures/cubemaps/landscape/left.png"),
-        //     .top = (std::string(FS_RESOURCES_DIR) + "textures/cubemaps/landscape/top.png"),
-        //     .bottom = (std::string(FS_RESOURCES_DIR) + "textures/cubemaps/landscape/bottom.png"),
-        //     .front = (std::string(FS_RESOURCES_DIR) + "textures/cubemaps/landscape/front.png"),
-        //     .back = (std::string(FS_RESOURCES_DIR) + "textures/cubemaps/landscape/back.png"),
-        // }},
-        // {"space", {
-        //     .right = (std::string(FS_RESOURCES_DIR) + "textures/cubemaps/space/right.png"),
-        //     .left = (std::string(FS_RESOURCES_DIR) + "textures/cubemaps/space/left.png"),
-        //     .top = (std::string(FS_RESOURCES_DIR) + "textures/cubemaps/space/top.png"),
-        //     .bottom = (std::string(FS_RESOURCES_DIR) + "textures/cubemaps/space/bottom.png"),
-        //     .front = (std::string(FS_RESOURCES_DIR) + "textures/cubemaps/space/front.png"),
-        //     .back = (std::string(FS_RESOURCES_DIR) + "textures/cubemaps/space/back.png"),
-        // }},
     });
 
     /// -------------------------------------------------
-
 
     auto cubemap_entity = main_scene.create_entity();
     main_scene.add_component(cubemap_entity, Renderable{});
