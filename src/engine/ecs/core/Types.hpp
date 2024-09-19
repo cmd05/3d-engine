@@ -54,9 +54,6 @@ using ParamId = std::uint32_t;
 #define METHOD_LISTENER(EventType, Listener) EventType, std::bind(&Listener, this, std::placeholders::_1)
 #define FUNCTION_LISTENER(EventType, Listener) EventType, std::bind(&Listener, std::placeholders::_1)
 
-// TODO: Make these easier to define and use (macro?)
-// TODO: Add some kind of enforcement/automation that a SetParam type and a GetParam type match
-
 // Source: https://gist.github.com/Lee-R/3839813
 // static function (non extern)
 static constexpr std::uint32_t fnv1a_32(char const* s, std::size_t count) {
