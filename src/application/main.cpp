@@ -127,17 +127,15 @@ int main() {
     // std::vector<Entity> entities(MAX_ENTITIES_AFTER_CAMERA); 
     std::vector<Entity> entities(10);
 
-
     // generate random values
     std::default_random_engine generator;
     std::uniform_real_distribution<float> rand_position(-100.0f, 100.0f);
-    std::uniform_real_distribution<float> rand_rotation(0.0f, 3.0f);
-    // std::uniform_real_distribution<float> rand_scale(1.0f, 1.5f);
-    std::uniform_real_distribution<float> rand_scale(3.0f, 5.0f);
     std::uniform_real_distribution<float> rand_color(0.0f, 1.0f);
     std::uniform_real_distribution<float> rand_model(0.0f, 1.0f);
     std::uniform_real_distribution<float> rand_gravity(-10.0f, -1.0f); // gravity is negative (downwards force)
 
+    // std::uniform_real_distribution<float> rand_scale(1.0f, 1.5f);
+    std::uniform_real_distribution<float> rand_scale(3.0f, 5.0f);
     float scale = rand_scale(generator);
 
     for (auto& entity : entities)
@@ -168,7 +166,6 @@ int main() {
             entity,
             Transform {
                 .position = glm::vec3(rand_position(generator), rand_position(generator), rand_position(generator)),
-                .rotation = glm::vec3(rand_rotation(generator), rand_rotation(generator), rand_rotation(generator)),
                 .scale = glm::vec3(scale, scale, scale)
                 // .scale = glm::vec3(0.02f)
             }
@@ -189,11 +186,6 @@ int main() {
             Model{.model_id = item->second }
         );
     }
-
-    // auto model_entity = main_scene.create_entity();
-    // main_scene.add_component(model_entity, Transform{.position = glm::vec3(0.0f)});
-    // main_scene.add_component(model_entity, Model{std::string(FS_RESOURCES_DIR) + "models/rock/rock.obj"});
-    // main_scene.add_component(model_entity, Renderable{.color = glm::vec3(1.0f)});
 
     /// Debugging
     // ------------------------------------------------------------------------
@@ -235,7 +227,6 @@ int main() {
     //         entity,
     //         Transform {
     //             .position = glm::vec3(rand_position(generator), rand_position(generator), rand_position(generator)),
-    //             .rotation = glm::vec3(rand_rotation(generator), rand_rotation(generator), rand_rotation(generator)),
     //             .scale = glm::vec3(scale, scale, scale)
     //         }
     //     );
