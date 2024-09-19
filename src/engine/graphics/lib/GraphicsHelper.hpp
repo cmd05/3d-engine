@@ -5,6 +5,12 @@
 
 #include <engine/ecs/components/Transform.hpp>
 
+constexpr glm::vec3 MATH_X_AXIS {1.0f, 0.0f, 0.0f};
+constexpr glm::vec3 MATH_Y_AXIS {0.0f, 1.0f, 0.0f};
+constexpr glm::vec3 MATH_Z_AXIS {0.0f, 0.0f, 1.0f};
+
+constexpr double MATH_PI = 3.1415926535;
+
 class GraphicsHelper {
 public:
     static glm::mat4 create_model_matrix(const Transform& transform) {
