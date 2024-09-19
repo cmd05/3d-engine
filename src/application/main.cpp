@@ -30,6 +30,7 @@ cmake --build build > log.txt && ./build/3dengine.exe
 
 #include <engine/window/WindowManager.hpp>
 
+// main scene
 Scene main_scene;
 
 static bool quit = false;
@@ -46,7 +47,7 @@ int main() {
     WindowManager window_manager {main_scene}; // window manager requires reference to scene
     window_manager.init("3D engine", DEFAULT_SCR_WIDTH, DEFAULT_SCR_HEIGHT, 0, 0);
 
-    // quit handler
+    // quit handler for `Application`
     main_scene.add_event_listener(FUNCTION_LISTENER(Events::Window::QUIT, quit_handler));
 
     /// ------------- Register Components ---------------
@@ -79,6 +80,7 @@ int main() {
     // player_control_system.init();
 
     // create camera entity
+    // primary camera to be used for rendering `main_scene`
     Entity camera_entity = main_scene.create_entity();
 
     main_scene.add_component(
@@ -206,6 +208,7 @@ int main() {
             }
         );
 
+        // select random model from `models_map`
         auto item = models_map.begin();
         std::advance( item, rand() % models_map.size() );
 
@@ -282,17 +285,14 @@ int main() {
     // render loop
     while (!quit)
     {
-        window_manager.process_events();
+        window_manager.process_events(); // first process window events
 
         player_control_system.update(dt);
-
         camera_control_system.update(dt);
-
         // physics_system.update(dt);
-
         render_system.update(dt);
 
-        window_manager.update();
+        window_manager.update(); // window updation happens after windows have been processed
 
         current_frame = window_manager.get_time();
         dt = current_frame - last_frame;
