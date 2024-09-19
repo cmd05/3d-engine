@@ -14,7 +14,8 @@
 
 class Scene {
 public:
-    void init();
+    Scene();
+    // void init();
 
 public:
     // Entity Methods

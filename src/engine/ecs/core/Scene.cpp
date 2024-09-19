@@ -7,7 +7,8 @@
 #include <engine/ecs/core/Event.hpp>
 
 // Entity Methods
-void Scene::init() {
+Scene::Scene() {
+    // TODO: move to constructor
     m_component_manager = std::make_unique<ComponentManager>();
     m_entity_manager = std::make_unique<EntityManager>();
     m_event_manager = std::make_unique<EventManager>();
