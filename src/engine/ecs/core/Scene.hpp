@@ -4,6 +4,8 @@
 #include <functional>
 #include <utility>
 
+#include <engine/ecs/systems/InputHandler.hpp>
+
 #include <engine/ecs/core/ComponentManager.hpp>
 #include <engine/ecs/core/EntityManager.hpp>
 #include <engine/ecs/core/SystemManager.hpp>
@@ -11,6 +13,9 @@
 
 #include <engine/ecs/core/Types.hpp>
 #include <engine/ecs/core/Event.hpp>
+
+// if InputHandler contains Scene& we will need to forward declare InputHandler
+// class InputHandler;
 
 class Scene {
 public:
@@ -63,7 +68,12 @@ public:
     void send_event(Event& event);
 
     void send_event(EventId event_id);
+public:
+    // The Scene and Window class have been intentionally decoupled
+    // Window stores a Scene&, and can send events to the `Scene` and "it's ecosystem i.e systems" via `Event`
+    // However, instead of just events, we use InputHandler for polling. ex: keyboard keys
 
+    InputHandler input_handler; // avoid prefixing with m_ for public members
 private:
     std::unique_ptr<ComponentManager> m_component_manager;
     std::unique_ptr<EntityManager> m_entity_manager;

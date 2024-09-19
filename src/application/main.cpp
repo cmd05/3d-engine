@@ -41,7 +41,7 @@ void quit_handler(Event& event) {
 
 int main() {
     // window setup
-    WindowManager window_manager {main_scene}; // window manager requires reference to scene
+    WindowManager window_manager {main_scene, main_scene.input_handler}; // window manager requires reference to scene and input handler
     window_manager.init("3D engine", DEFAULT_SCR_WIDTH, DEFAULT_SCR_HEIGHT, 0, 0);
 
     // quit handler for `Application`
