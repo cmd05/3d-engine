@@ -10,7 +10,7 @@
 #include <engine/graphics/CameraWrapper.hpp>
 #include <engine/graphics/Shader.hpp>
 
-#define MODEL_BIN_PATH "models/bin"
+constexpr const char* MODEL_BIN_PATH = "models/bin";
 
 class RenderSystem : public System
 {

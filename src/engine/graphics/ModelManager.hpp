@@ -7,7 +7,7 @@
 
 #include <engine/ecs/components/Transform.hpp>
 
-#define BIN_MAP_FNAME   "bin_mapper.map"
+constexpr const char* BIN_MAP_FNAME = "bin_mapper.map";
 
 using mapper_data_map_type = std::unordered_map<std::string, std::string>;
 using models_interface_type = std::unordered_map<std::string, std::size_t>;

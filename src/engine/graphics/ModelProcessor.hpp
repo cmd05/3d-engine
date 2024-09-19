@@ -11,7 +11,7 @@
 
 #include <engine/graphics/MeshProcessor.hpp>
 
-#define ASSIMP_READ_FLAGS (aiProcess_Triangulate | aiProcess_GenSmoothNormals | aiProcess_FlipUVs | aiProcess_CalcTangentSpace | aiProcess_OptimizeMeshes)
+constexpr auto ASSIMP_READ_FLAGS = (aiProcess_Triangulate | aiProcess_GenSmoothNormals | aiProcess_FlipUVs | aiProcess_CalcTangentSpace | aiProcess_OptimizeMeshes);
 
 void copy_assimp_vec3(glm::vec3& to, aiVector3D& from);
 
