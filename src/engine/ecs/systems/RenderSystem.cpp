@@ -70,8 +70,11 @@ void RenderSystem::update(float dt)
 }
 
 void RenderSystem::window_size_listener(Event& event) {
-    auto window_width = event.get_param<unsigned int>(Events::Window::Resized::WIDTH);
-    auto window_height = event.get_param<unsigned int>(Events::Window::Resized::HEIGHT);
+    auto window_width = event.get_param<int>(Events::Window::Resized::WIDTH);
+    auto window_height = event.get_param<int>(Events::Window::Resized::HEIGHT);
+    
+    // resize viewport to match new window dimensions
+    glViewport(0, 0, window_width, window_height);
 
-    m_camera_wrapper.resize_view(window_width, window_height);
+    m_camera_wrapper.resize_view(window_width, window_height); // resize camera aspect ratio
 }

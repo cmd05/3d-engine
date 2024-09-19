@@ -19,7 +19,7 @@ void WindowManager::init(std::string const& windowTitle, unsigned int windowWidt
     glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
     glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
     glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
-    // glfwSetFramebufferSizeCallback(window, framebuffer_size_callback); // TODO: create callback fn which calls Events::Window::RESIZED
+    glfwSetFramebufferSizeCallback(m_window, WindowManager::framebuffer_size_callback);
 
     // Create OpenGL Context
     glfwMakeContextCurrent(m_window);
@@ -32,9 +32,18 @@ void WindowManager::update()
     glfwSwapBuffers(m_window);
 }
 
+void WindowManager::framebuffer_size_callback(GLFWwindow* window, int width, int height) {
+    WindowManager* p_window_manager = reinterpret_cast<WindowManager*>(glfwGetWindowUserPointer(window));
 
-void WindowManager::shutdown()
-{
+    if(!p_window_manager)
+        assert("WindowManager handler not set");
+
+    Event event {Events::Window::RESIZED};
+    event.set_param(Events::Window::Resized::WIDTH, width);
+    event.set_param(Events::Window::Resized::HEIGHT, height);
+    
+    p_window_manager->ref_scene.send_event(event);
+}
     glfwDestroyWindow(m_window);
     glfwTerminate();
 }

@@ -22,6 +22,7 @@ public:
     void process_events();
     void shutdown();
     float get_time() const { return glfwGetTime(); }
+    static void framebuffer_size_callback(GLFWwindow* window, int width, int height);
 private:
     GLFWwindow* m_window;
 
