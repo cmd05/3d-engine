@@ -8,7 +8,6 @@
 
 // Entity Methods
 Scene::Scene() {
-    // TODO: move to constructor
     m_component_manager = std::make_unique<ComponentManager>();
     m_entity_manager = std::make_unique<EntityManager>();
     m_event_manager = std::make_unique<EventManager>();
@@ -22,7 +21,6 @@ Entity Scene::create_entity() {
 void Scene::destroy_entity(Entity entity) {
     m_entity_manager->destroy_entity(entity);
     m_component_manager->entity_destroyed(entity);
-    // m_system_manager->entity_destroyed(entity);
 }
 
 // Event Methods
