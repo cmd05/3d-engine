@@ -6,10 +6,6 @@
 
 #include <engine/window/WindowManager.hpp>
 
-constexpr double CAMERA_MOUSE_SENSITIVITY = 0.05;
-constexpr double CAMERA_SCROLL_SENSITIVITY = 1.0;
-constexpr float CAMERA_SPEED = 90.0f;
-
 class CameraControlSystem : public System {
 public:
     CameraControlSystem(Scene& scene);

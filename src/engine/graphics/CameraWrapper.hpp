@@ -5,10 +5,6 @@
 #include <engine/ecs/core/Types.hpp>
 #include <engine/ecs/core/Scene.hpp>
 
-constexpr float CAMERA_PITCH_LIMIT = glm::radians(89.0f);
-constexpr float CAMERA_VFOV_MIN = glm::radians(1.0f);
-constexpr float CAMERA_VFOV_MAX = glm::radians(45.0f);
-
 class CameraWrapper {
 public:
     CameraWrapper(Scene& scene, Entity camera);

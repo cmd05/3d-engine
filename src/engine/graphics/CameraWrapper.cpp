@@ -6,6 +6,8 @@
 #include <engine/ecs/components/Camera.hpp>
 #include <engine/ecs/components/Transform.hpp>
 
+#include <engine/ecs/configs/CameraConfigs.hpp>
+
 CameraWrapper::CameraWrapper(Scene& scene, Entity camera): 
     ref_scene{scene}, m_camera{camera} {}
 

@@ -10,6 +10,8 @@
 #include <engine/ecs/components/Transform.hpp>
 #include <engine/ecs/components/Camera.hpp>
 
+#include <engine/ecs/configs/CameraConfigs.hpp>
+
 CameraControlSystem::CameraControlSystem(Scene& scene): System(scene) {
     ref_scene.add_event_listener(METHOD_LISTENER(Events::Window::Input::MOUSE, CameraControlSystem::mouse_listener));
     ref_scene.add_event_listener(METHOD_LISTENER(Events::Window::Input::SCROLL, CameraControlSystem::scroll_listener));
