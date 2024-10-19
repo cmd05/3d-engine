@@ -1,3 +1,5 @@
+#pragma once
+
 #include <glm/glm.hpp>
 
 // TODO: create common interface for config values
