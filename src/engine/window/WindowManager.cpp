@@ -104,6 +104,7 @@ void WindowManager::scroll_callback(GLFWwindow* window, double x_offset, double 
     p_window_manager->ref_scene.send_event(event);
 }
 
+// TODO: window manager sends mouse callback data to InputHandler which transmits an `Event`
 void WindowManager::mouse_callback(GLFWwindow* window, double xpos_in, double ypos_in) {
     WindowManager* p_window_manager = reinterpret_cast<WindowManager*>(glfwGetWindowUserPointer(window));
 
