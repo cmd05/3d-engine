@@ -21,7 +21,7 @@ public:
 
 private:
     system_count_size_type m_system_count = 0;
-    std::unordered_map<std::type_index, std::unique_ptr<System>> m_systems{};
+    std::unordered_map<std::type_index, std::unique_ptr<System>> m_systems;
 };
 
 template<typename T, typename... Args>
