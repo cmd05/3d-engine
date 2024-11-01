@@ -22,6 +22,7 @@ public:
     iterator end() const { return m_end; }
 
 private:
+    // TODO: convert reference to pointer
     Scene& ref_scene;
 
     bool exclusive;
