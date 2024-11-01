@@ -19,8 +19,8 @@ public:
     EventId get_type() const;
 
 private:
-    EventId m_type{};
-    std::unordered_map<ParamId, std::any> m_data{};
+    EventId m_type;
+    std::unordered_map<ParamId, std::any> m_data;
 };
 
 template<typename T>
