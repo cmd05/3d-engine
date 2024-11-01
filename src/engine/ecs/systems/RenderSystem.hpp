@@ -9,6 +9,7 @@
 #include <engine/graphics/TextureManager.hpp>
 #include <engine/graphics/CameraWrapper.hpp>
 #include <engine/graphics/Shader.hpp>
+#include <engine/graphics/LightRenderer.hpp>
 
 constexpr const char* MODEL_BIN_PATH = "models/bin";
 
@@ -35,4 +36,5 @@ private:
 
     ModelManager m_model_manager;
     TextureManager m_texture_manager;
+    std::unique_ptr<LightRenderer> m_light_renderer;
 };

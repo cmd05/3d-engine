@@ -31,6 +31,9 @@ RenderSystem::RenderSystem(Scene& scene, Entity camera):
     // initialize shaders
     model_shader = std::make_unique<Shader>(std::string(FS_SHADERS_DIR) + "shader_model.vs", std::string(FS_SHADERS_DIR) + "shader_model.fs");
     cubemap_shader = std::make_unique<Shader>(std::string(FS_SHADERS_DIR) + "cubemap.vs", std::string(FS_SHADERS_DIR) + "cubemap.fs");
+
+    // initialize members (which depend on graphics objects)
+    m_light_renderer = std::make_unique<LightRenderer>();
 }
 
 models_interface_type RenderSystem::load_models(std::unordered_map<std::string, std::string> models) {
