@@ -118,7 +118,7 @@ target_sources(
 
     src/engine/ecs/core/SceneView.hpp
 
-    src/engine/ecs/systems/InputHandler.cpp
+    src/engine/input/InputHandler.cpp
 
     # src/lib/math/Vec2.hpp
     # src/lib/math/Vec3.hpp

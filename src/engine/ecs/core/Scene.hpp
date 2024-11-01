@@ -4,7 +4,7 @@
 #include <functional>
 #include <utility>
 
-#include <engine/ecs/systems/InputHandler.hpp>
+#include <engine/input/InputHandler.hpp>
 
 #include <engine/ecs/core/ComponentManager.hpp>
 #include <engine/ecs/core/EntityManager.hpp>

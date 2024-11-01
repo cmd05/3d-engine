@@ -5,7 +5,7 @@
 #include <bitset>
 #include <string>
 
-#include <engine/ecs/systems/InputHandler.hpp>
+#include <engine/input/InputHandler.hpp>
 
 constexpr int DEFAULT_SCR_WIDTH = 1920;
 constexpr int DEFAULT_SCR_HEIGHT = 1080;
