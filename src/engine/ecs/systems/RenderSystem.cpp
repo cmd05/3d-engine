@@ -28,6 +28,7 @@ RenderSystem::RenderSystem(Scene& scene, Entity camera):
     glEnable(GL_DEPTH_TEST);
 
     // add window resize listener
+    ref_scene.add_event_listener(METHOD_LISTENER(Events::Window::RESIZED, RenderSystem::window_size_listener));
     
     // build default objects and their VBO's
     // this should happen only after opengl context is setup
