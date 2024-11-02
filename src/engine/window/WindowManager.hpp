@@ -12,6 +12,7 @@ constexpr int DEFAULT_SCR_HEIGHT = 1080;
 
 class Scene;
 
+// Handle main window and GLFW window contexts
 class WindowManager
 {
 public:
@@ -31,8 +32,12 @@ public:
     static void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods);
     static void scroll_callback(GLFWwindow* window, double x_offset, double y_offset);
     static void framebuffer_size_callback(GLFWwindow* window, int width, int height);
-
+    
     // void update_keys();
+
+    GLFWwindow* get_window() { return m_window; }
+    GLFWwindow* get_current_context() { return glfwGetCurrentContext(); }
+    void set_current_context(GLFWwindow* window) { glfwMakeContextCurrent(window); }
 
     struct MouseData {
         bool first_mouse = true;
