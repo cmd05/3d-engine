@@ -124,7 +124,8 @@ Mesh ModelProcessor::process_mesh(aiMesh* mesh, const aiScene* scene) {
     textures.insert(textures.end(), specular_maps.begin(), specular_maps.end());
     
     // normal maps
-    std::vector<MeshTexture> normal_maps = load_material_textures(material, aiTextureType_HEIGHT, MeshTextureType::NORMAL);
+    // assimp: "The texture is a (tangent space) normal-map"
+    std::vector<MeshTexture> normal_maps = load_material_textures(material, aiTextureType_NORMALS, MeshTextureType::NORMAL);
     textures.insert(textures.end(), normal_maps.begin(), normal_maps.end());
     
     // height maps
