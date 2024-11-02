@@ -92,6 +92,7 @@ target_sources(
     src/engine/graphics/ModelManager.cpp
     src/engine/graphics/TextureManager.cpp
     src/engine/graphics/CameraWrapper.cpp
+    src/engine/graphics/LightRenderer.cpp
 )
 
 target_sources(
