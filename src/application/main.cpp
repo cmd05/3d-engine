@@ -44,6 +44,10 @@ int main() {
     WindowManager window_manager {main_scene, main_scene.input_handler}; // window manager requires reference to scene and input handler
     window_manager.init("3D engine", DEFAULT_SCR_WIDTH, DEFAULT_SCR_HEIGHT, 0, 0);
 
+    // gui setup
+    const char *glsl_version = "#version 130";
+    GUIMain gui_main {window_manager, glsl_version};
+
     // quit handler for `Application`
     main_scene.add_event_listener(FUNCTION_LISTENER(Events::Window::QUIT, quit_handler));
 
@@ -255,6 +259,11 @@ int main() {
         camera_control_system.update(dt);
         // physics_system.update(dt);
         render_system.update(dt);
+
+        gui_main.new_frame();
+        gui_main.update();
+        gui_main.render();
+        gui_main.update_platform_windows();
 
         window_manager.update(); // window updation happens after windows have been processed
 
