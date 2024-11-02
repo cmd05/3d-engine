@@ -82,7 +82,7 @@ void main() {
 
         vec3 component = (ambient + diffuse + specular) * fs_in.TangentPointLights[i].color;
 
-        result += diffuse;
+        result += component;
     }
 
     result = pow(result, vec3(1.0/2.2)); // do gamma correction
