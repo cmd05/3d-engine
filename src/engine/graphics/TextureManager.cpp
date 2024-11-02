@@ -69,7 +69,7 @@ unsigned int TextureManager::texture_from_file(std::string file_path, bool gamma
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
     } else {
-        ASSERT(false, "Texture data could not be loaded: " << file_path);
+        ASSERT_MESSAGE("Texture data could not be loaded: " << file_path);
     }
     
     stbi_image_free(img_data);
@@ -105,7 +105,7 @@ unsigned int TextureManager::add_cubemap(CubemapFaces faces) {
         if (img_data)
             glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, img_data);
         else
-            ASSERT(false, "Cubemap texture failed to load at path: " << faces_ordered[i]);
+            ASSERT_MESSAGE("Cubemap texture failed to load at path: " << faces_ordered[i]);
         
         stbi_image_free(img_data);
     }
