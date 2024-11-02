@@ -57,14 +57,23 @@ add_subdirectory(${INCLUDES_DIR}/assimp)
 # stb
 # add_subdirectory(${INCLUDES_DIR}/stb)
 
-set(CMAKE_CXX_STANDARD 17)
-set(CMAKE_CXX_EXTENSIONS OFF)
-set(CMAKE_CXX_STANDARD_REQUIRED ON)
+# imgui
+# target_sources(
+#     3dengine
+#     PRIVATE
+#     includes/imgui/imgui.cpp
+#     includes/imgui/imgui_demo.cpp
+#     includes/imgui/imgui_draw.cpp
+#     includes/imgui/imgui_impl_glfw.cpp
+#     includes/imgui/imgui_impl_opengl3.cpp
+#     includes/imgui/imgui_stdlib.cpp
+#     includes/imgui/imgui_tables.cpp
+#     includes/imgui/imgui_widgets.cpp
+# )
 
+# Add the imgui subdirectory
+add_subdirectory(${INCLUDES_DIR}/imgui)
 
-add_executable(3dengine)
-
-target_compile_options(
     3dengine
     PRIVATE
     # -fno-exceptions
@@ -156,7 +165,7 @@ target_link_libraries(
     glfw
     glm::glm
     assimp
-    # ${Boost_LIBRARIES}
+    imgui
 )
 
 target_compile_definitions(3dengine PUBLIC FS_SHADERS_DIR="${CMAKE_CURRENT_SOURCE_DIR}/src/engine/shaders/")
