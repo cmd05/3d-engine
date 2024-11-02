@@ -45,7 +45,7 @@ void WindowManager::framebuffer_size_callback(GLFWwindow* window, int width, int
     WindowManager* p_window_manager = reinterpret_cast<WindowManager*>(glfwGetWindowUserPointer(window));
 
     if(!p_window_manager)
-        assert("WindowManager handler not set");
+        ASSERT_MESSAGE("WindowManager handler not set");
 
     Event event {Events::Window::RESIZED};
     event.set_param(Events::Window::Resized::WIDTH, width);
@@ -58,7 +58,7 @@ void WindowManager::key_callback(GLFWwindow* window, int key, int scancode, int 
     WindowManager* p_window_manager = reinterpret_cast<WindowManager*>(glfwGetWindowUserPointer(window));
 
     if(!p_window_manager)
-        assert("WindowManager handler not set");
+        ASSERT_MESSAGE("WindowManager handler not set");
         
     if(key >= WIN_INPUT_KEYS_START && key < WIN_INPUT_KEYS_END) {
         if(action == GLFW_PRESS)
@@ -99,7 +99,7 @@ void WindowManager::scroll_callback(GLFWwindow* window, double x_offset, double 
     WindowManager* p_window_manager = reinterpret_cast<WindowManager*>(glfwGetWindowUserPointer(window));
 
     if(!p_window_manager)
-        assert("WindowManager handler not set");
+        ASSERT_MESSAGE("WindowManager handler not set");
 
     p_window_manager->m_scroll_data.x_offset = x_offset;
     p_window_manager->m_scroll_data.y_offset = y_offset;
@@ -114,7 +114,7 @@ void WindowManager::mouse_callback(GLFWwindow* window, double xpos_in, double yp
     WindowManager* p_window_manager = reinterpret_cast<WindowManager*>(glfwGetWindowUserPointer(window));
 
     if(!p_window_manager)
-        assert("WindowManager handler not set");
+        ASSERT_MESSAGE("WindowManager handler not set");
 
     if(p_window_manager->m_mouse_data.first_mouse) {
         p_window_manager->m_mouse_data.mouse_last_x = xpos_in;

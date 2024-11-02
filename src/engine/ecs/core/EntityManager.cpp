@@ -2,6 +2,7 @@
 
 #include <engine/ecs/core/EntityManager.hpp>
 
+#include <lib/utilities/DebugAssert.hpp>
 #include <engine/ecs/core/Types.hpp>
 
 EntityManager::EntityManager() {
@@ -17,7 +18,7 @@ Entity EntityManager::create_entity() {
         entity = destroyed_entities.front();
         destroyed_entities.pop();
     } else
-        assert("Too many entities");
+        ASSERT_MESSAGE("Too many entities");
 
     // add zero initialized Signature for new entity
     set_signature(entity, {});

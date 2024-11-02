@@ -23,7 +23,7 @@ ModelManager::ModelManager(TextureManager& tex_manager, std::string bin_dir): re
     std::string mapper_file = bin_dir + '/' + BIN_MAP_FNAME;
 
     if(!std::ifstream(mapper_file) && !std::ofstream(mapper_file))
-        assert("Could not create mapper file");
+        ASSERT_MESSAGE("Could not create mapper file");
 
     m_bin_dir = bin_dir;
     m_mapper_file = mapper_file;
