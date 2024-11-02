@@ -8,8 +8,8 @@
 
 #include <engine/window/WindowManager.hpp>
 
-#include <engine/GUI/windows/CameraControlWindow.hpp>
-#include <engine/GUI/windows/LightControlWindow.hpp>
+#include <engine/gui/windows/CameraControlWindow.hpp>
+#include <engine/gui/windows/LightControlWindow.hpp>
 
 constexpr auto IMGUI_CONFIG_FLAGS = (ImGuiConfigFlags_NavEnableKeyboard | ImGuiConfigFlags_ViewportsEnable | ImGuiConfigFlags_NavEnableGamepad | ImGuiConfigFlags_DockingEnable);
 

@@ -1,6 +1,6 @@
 #pragma once
 
-#include <engine/GUI/GUIWindow.hpp>
+#include <engine/gui/GUIWindow.hpp>
 
 class LightControlWindow : public GUIWindow {
 public:

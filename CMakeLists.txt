@@ -121,8 +121,8 @@ target_sources(
 
     src/engine/input/InputHandler.cpp
 
-    src/engine/GUI/GUIMain.cpp
-    src/engine/GUI/GUIWindow.cpp
+    src/engine/gui/GUIMain.cpp
+    src/engine/gui/GUIWindow.cpp
 
     src/engine/graphics/objects/GraphicsObjects.cpp
 

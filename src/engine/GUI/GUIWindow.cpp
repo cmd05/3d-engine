@@ -1,4 +1,4 @@
-#include <engine/GUI/GUIWindow.hpp>
+#include <engine/gui/GUIWindow.hpp>
 
 GUIWindow::GUIWindow(WindowManager& window_manager, ImVec2 window_pos) {
     m_window_manager = &window_manager;

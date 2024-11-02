@@ -1,6 +1,6 @@
 #include <engine/ecs/core/Scene.hpp>
 #include <engine/window/WindowManager.hpp>
-#include <engine/GUI/GUIMain.hpp>
+#include <engine/gui/GUIMain.hpp>
 
 // TODO: create an application class
 // Application::init()

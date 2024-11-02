@@ -1,4 +1,4 @@
-#include <engine/GUI/GUIMain.hpp>
+#include <engine/gui/GUIMain.hpp>
 #include "GUIMain.hpp"
 
 GUIMain::GUIMain(WindowManager& window_manager, const char* glsl_version) {
