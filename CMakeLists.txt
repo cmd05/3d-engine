@@ -120,6 +120,10 @@ target_sources(
 
     src/engine/input/InputHandler.cpp
 
+    src/engine/GUI/GUIMain.cpp
+    src/engine/GUI/GUIWindow.cpp
+
+
     # src/lib/math/Vec2.hpp
     # src/lib/math/Vec3.hpp
     # src/lib/math/Vec4.hpp
