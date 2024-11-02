@@ -55,7 +55,7 @@ SET(ASSIMP_NO_EXPORT ON CACHE BOOL "Disable Assimp's export functionality.")
 add_subdirectory(${INCLUDES_DIR}/assimp)
 
 # stb
-# add_subdirectory(${INCLUDES_DIR}/stb)
+add_subdirectory(${INCLUDES_DIR}/stb)
 
 # imgui
 # target_sources(
@@ -106,13 +106,6 @@ target_sources(
     src/engine/ecs/systems/RenderSystem.cpp
     
     src/engine/window/WindowManager.cpp
-
-    # model loading
-    # include stb manually for now
-    ${INCLUDES_DIR}/stb/stb_image.c
-
-    # src/engine/graphics/Mesh.cpp
-    # src/engine/graphics/ModelLoader.cpp
 
     src/engine/graphics/MeshProcessor.cpp
     src/engine/graphics/ModelProcessor.cpp
@@ -165,6 +158,7 @@ target_link_libraries(
     glfw
     glm::glm
     assimp
+    stb_image
     imgui
 )
 
