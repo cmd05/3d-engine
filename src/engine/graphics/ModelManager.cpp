@@ -332,6 +332,8 @@ void ModelManager::draw_model(const std::unique_ptr<Shader>& model_shader, std::
     assert((it = m_models.find(model_id)) != m_models.end() && "Model with given ID does not exist");
     ModelDrawData& model_draw_data = it->second;
     
+    model_shader->activate();
+    
     // set uniforms
     model_shader->set_uniform<glm::mat4>("model", GraphicsHelper::create_model_matrix(transform));
     model_shader->set_uniform<glm::mat4>("view", camera_wrapper.get_view_matrix());
