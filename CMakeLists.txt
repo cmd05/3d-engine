@@ -123,6 +123,7 @@ target_sources(
     src/engine/GUI/GUIMain.cpp
     src/engine/GUI/GUIWindow.cpp
 
+    src/engine/graphics/objects/GraphicsObjects.cpp
 
     # src/lib/math/Vec2.hpp
     # src/lib/math/Vec3.hpp
