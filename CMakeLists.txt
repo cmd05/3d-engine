@@ -4,6 +4,24 @@ project(3dengine)
 # C:/msys64/ucrt64/bin/c++.exe
 # message (${CMAKE_CXX_COMPILER})
 
+set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_EXTENSIONS OFF)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+
+add_executable(3dengine)
+
+target_compile_options(
+    3dengine
+    PRIVATE
+    # -fno-exceptions
+    -fdiagnostics-color=always
+    -Wall
+    -Wno-reorder
+    # -Wno-unknown-pragmas
+    # -Wno-error=unknown-pragmas
+    # Wno-unknown-pragmas
+)
+
 ###########################################################
 # DIRECTORIES
 ###########################################################
