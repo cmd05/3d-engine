@@ -74,26 +74,6 @@ add_subdirectory(${INCLUDES_DIR}/stb)
 # Add the imgui subdirectory
 add_subdirectory(${INCLUDES_DIR}/imgui)
 
-    3dengine
-    PRIVATE
-    # -fno-exceptions
-    -fdiagnostics-color=always
-    -Wall
-    -Wno-reorder
-    # -Wno-unknown-pragmas
-    # -Wno-error=unknown-pragmas
-    # Wno-unknown-pragmas
-)
-
-# set( Boost_DEBUG ON) 
-# set(Boost_USE_STATIC_LIBS ON)
-# set(Boost_USE_MULTITHREADED ON)
-# message("Boost_INCLUDE_DIRS: ${Boost_INCLUDE_DIRS}")
-# message("Boost_LIBRARY_DIRS: ${Boost_LIBRARY_DIRS}")
-# include_directories( ${Boost_INCLUDE_DIRS} )
-# find_package( Boost REQUIRED COMPONENTS json )
-# find_package(assimp)
-
 target_sources(
     3dengine
     PRIVATE
