@@ -179,23 +179,23 @@ ModelManager::MeshDrawData ModelManager::setup_mesh(std::string model_path, Mesh
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, mesh_draw_data.EBO);
     glBufferData(GL_ELEMENT_ARRAY_BUFFER, mesh.m_indices.size() * sizeof(unsigned int), &mesh.m_indices[0], GL_STATIC_DRAW);
 
-    // vertex positions
+    // vertex positions (location = 0)
     glEnableVertexAttribArray(0);	
     glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(MeshVertex), (void*) offsetof(MeshVertex, position));
 
-    // vertex normals
+    // vertex normals (location = 1)
     glEnableVertexAttribArray(1);	
     glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(MeshVertex), (void*) offsetof(MeshVertex, normal));
     
-    // vertex texture coords
+    // vertex texture coords (location = 2)
     glEnableVertexAttribArray(2);	
     glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, sizeof(MeshVertex), (void*) offsetof(MeshVertex, tex_coords));
     
-    // vertex tangent
+    // vertex tangent (location = 3)
     glEnableVertexAttribArray(3);
     glVertexAttribPointer(3, 3, GL_FLOAT, GL_FALSE, sizeof(MeshVertex), (void*) offsetof(MeshVertex, tangent));
     
-    // vertex bitangent
+    // vertex bitangent (location = 4)
     glEnableVertexAttribArray(4);
     glVertexAttribPointer(4, 3, GL_FLOAT, GL_FALSE, sizeof(MeshVertex), (void*) offsetof(MeshVertex, bitangent));
 
