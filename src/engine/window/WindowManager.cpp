@@ -4,6 +4,8 @@
 #include <engine/ecs/core/Scene.hpp>
 #include <engine/ecs/core/Event.hpp>
 
+#include <lib/utilities/DebugAssert.hpp>
+
 void WindowManager::init(std::string const& window_title, unsigned int window_width,
     unsigned int window_height, unsigned int window_position_x, unsigned int window_position_y) {
     // setup window
@@ -24,12 +26,15 @@ void WindowManager::init(std::string const& window_title, unsigned int window_wi
     
     glfwSetFramebufferSizeCallback(m_window, WindowManager::framebuffer_size_callback);
 
-    // // tell GLFW to capture our mouse
+    // tell GLFW to capture our mouse
     glfwSetInputMode(m_window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 
     // Create OpenGL Context
     glfwMakeContextCurrent(m_window);
-    gladLoadGLLoader((GLADloadproc)glfwGetProcAddress);
+
+    if(!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress)) {
+        ASSERT_MESSAGE("Failed to load glad");
+    }
 }
 
 void WindowManager::update() {
