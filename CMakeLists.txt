@@ -129,6 +129,7 @@ target_include_directories(
     3dengine
     PRIVATE
     src
+    includes
 )
 
 target_link_libraries(
