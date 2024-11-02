@@ -31,6 +31,8 @@ cmake --build build > log.txt && ./build/3dengine.exe
 
 #include <engine/window/WindowManager.hpp>
 
+#include <engine/GUI/GUIMain.hpp>
+
 // main scene
 Scene main_scene;
 
