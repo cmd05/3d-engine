@@ -30,5 +30,4 @@ public:
 private:
     std::unordered_map<std::string, unsigned int> m_loaded_textures; // absolute texture path, texture id
     std::vector<unsigned int> m_cubemaps;
-    unsigned int m_cubemap_vao;
 };

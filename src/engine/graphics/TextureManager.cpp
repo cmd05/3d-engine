@@ -5,27 +5,14 @@
 #include <unordered_map>
 #include <string>
 
-#include <engine/graphics/Shader.hpp>
-#include <engine/graphics/simple-objects/SkyboxVertices.hpp>
-#include <lib/utilities/DebugAssert.hpp>
 #include <engine/graphics/TextureManager.hpp>
+#include <engine/graphics/Shader.hpp>
+#include <engine/graphics/objects/GraphicsObjects.hpp>
+
+#include <lib/utilities/DebugAssert.hpp>
 
 TextureManager::TextureManager() {
-    // setup cubemap vao
-    unsigned int cubemap_vbo;
 
-    glGenVertexArrays(1, &m_cubemap_vao);
-    glGenBuffers(1, &cubemap_vbo);
-    
-    glBindVertexArray(m_cubemap_vao);
-    
-    glBindBuffer(GL_ARRAY_BUFFER, cubemap_vbo);
-    glBufferData(GL_ARRAY_BUFFER, sizeof(SKYBOX_VERTICES), &SKYBOX_VERTICES, GL_STATIC_DRAW);
-    
-    glEnableVertexAttribArray(0);
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*) 0);
-
-    glBindVertexArray(0);
 }
 
 // if same texture path already exists return the texture id
@@ -124,9 +111,6 @@ unsigned int TextureManager::add_cubemap(CubemapFaces faces) {
 }
 
 void TextureManager::draw_cubemap(unsigned int cubemap_id, const std::unique_ptr<Shader>& cubemap_shader, const CameraWrapper& camera_wrapper) {
-    // cubemap_shader.activate();
-    // glUniform1i(glGetUniformLocation(shader.get_id(), "skybox"), 0);
-    
     glDepthFunc(GL_LEQUAL); // change depth function so depth test passes when values are equal to depth buffer's content
     
     cubemap_shader->activate();
@@ -140,11 +124,14 @@ void TextureManager::draw_cubemap(unsigned int cubemap_id, const std::unique_ptr
     cubemap_shader->set_uniform<glm::mat4>("view", view);
     cubemap_shader->set_uniform<glm::mat4>("projection", camera_wrapper.get_projection_matrix());
     
-    // skybox cube
-    glBindVertexArray(m_cubemap_vao);
+    glBindVertexArray(g_graphics_objects.cube.VAO);
+    
     glActiveTexture(GL_TEXTURE0);
     glBindTexture(GL_TEXTURE_CUBE_MAP, cubemap_id);
-    glDrawArrays(GL_TRIANGLES, 0, SKYBOX_NUM_VERTICES);
+    
+    // draw cubemap
+    glDrawArrays(GL_TRIANGLES, 0, g_graphics_objects.cube.num_vertices);
+    
     glBindVertexArray(0);
     glDepthFunc(GL_LESS); // set depth function back to default
 }
