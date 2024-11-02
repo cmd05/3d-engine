@@ -10,7 +10,7 @@
             } \
         } while (false)
 
-#define ASSERT_MESSAGE(message) assert(false && message)
+#define ASSERT_MESSAGE(message) ASSERT(false, message)
 
 #else
 #define ASSERT(condition, message) do { } while (false)
