@@ -1,1 +1,12 @@
-https://github.com/user-attachments/assets/40ef8b47-2538-4c63-adeb-5183e115d144
+# 3D Engine
+
+## Current Status
+
+![](./docs/assets/render-sponza-1.png)
+![](./docs/assets/render-sponza-2.png)
+
+- Blinn Phong Lighting
+- Multiple Lights
+- Normal mapping
+- ImGui Integration
+- Gamma Correction
