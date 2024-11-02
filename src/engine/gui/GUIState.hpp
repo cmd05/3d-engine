@@ -4,7 +4,7 @@
 
 class GUIState {
 public:
-    // lighting strenghts (same for all lights)
+    // lighting strengths (same for all lights)
     float ambient_strength;
     float diffuse_strength;
     float specular_strength;
