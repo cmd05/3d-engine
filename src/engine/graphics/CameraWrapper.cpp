@@ -3,9 +3,6 @@
 #include <engine/graphics/CameraWrapper.hpp>
 #include <engine/graphics/lib/GraphicsHelper.hpp>
 
-#include <engine/ecs/components/Camera.hpp>
-#include <engine/ecs/components/Transform.hpp>
-
 #include <engine/ecs/configs/CameraConfigs.hpp>
 
 CameraWrapper::CameraWrapper(Scene& scene, Entity camera): 
@@ -28,8 +25,15 @@ glm::mat4 CameraWrapper::get_view_matrix() const {
     const auto& camera_transform = ref_scene.get_component<Transform>(m_camera);
     auto& camera = ref_scene.get_component<Camera>(m_camera);
     
-    return glm::lookAt(camera_transform.position, camera_transform.position + camera.cam_front, camera.cam_up); 
-    
+    return glm::lookAt(camera_transform.position, camera_transform.position + camera.cam_front, camera.cam_up);
+}
+
+const Transform& CameraWrapper::get_transform_component() const {
+    return ref_scene.get_component<Transform>(m_camera);
+}
+
+const Camera& CameraWrapper::get_camera_component() const {
+    return ref_scene.get_component<Camera>(m_camera);
 }
 
 glm::mat4 CameraWrapper::get_projection_matrix() const {

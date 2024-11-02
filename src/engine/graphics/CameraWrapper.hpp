@@ -5,6 +5,9 @@
 #include <engine/ecs/core/Types.hpp>
 #include <engine/ecs/core/Scene.hpp>
 
+#include <engine/ecs/components/Camera.hpp>
+#include <engine/ecs/components/Transform.hpp>
+
 class CameraWrapper {
 public:
     CameraWrapper(Scene& scene, Entity camera);
@@ -17,6 +20,9 @@ public:
     void translate_camera(BasicMovement direction, float distance);
     void rotate_camera(double x_offset, double y_offset);
     void zoom_camera(double offset);
+    
+    const Transform& get_transform_component() const;
+    const Camera& get_camera_component() const;
 private:
     // TODO: perhaps we can have a `Camera&` and `Transform&` instead of retrieving them each time
     // to consider: if a camera entity uses a different Transform component in memory (unlikely occurence) 
