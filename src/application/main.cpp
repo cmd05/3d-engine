@@ -27,6 +27,7 @@ cmake --build build > log.txt && ./build/3dengine.exe
 #include <engine/ecs/components/Thrust.hpp>
 #include <engine/ecs/components/Transform.hpp>
 #include <engine/ecs/components/Model.hpp>
+#include <engine/ecs/components/PointLightComponent.hpp>
 
 #include <engine/window/WindowManager.hpp>
 
@@ -61,6 +62,7 @@ int main() {
         Transform,
         Model,
         Cubemap,
+        PointLightComponent,
         
         Player,
         Thrust
@@ -141,6 +143,22 @@ int main() {
     // std::uniform_real_distribution<float> rand_scale(1.0f, 1.5f);
     std::uniform_real_distribution<float> rand_scale(3.0f, 5.0f);
     float scale = rand_scale(generator);
+    
+    const int NR_LIGHTS = 1;
+    for(int i = 0; i < NR_LIGHTS; i++) {
+        auto light_entity = main_scene.create_entity();
+
+        main_scene.add_component(light_entity, Transform{
+            // .position = glm::vec3(rand_position(generator), rand_position(generator), rand_position(generator)),
+            .position = glm::vec3(10.0f, 50.0f, 10.0f),
+            .scale = glm::vec3(5.0f)
+        });
+        
+        main_scene.add_component(light_entity, PointLightComponent{
+            // .light_color = glm::vec3(rand_color(generator), rand_color(generator), rand_color(generator))
+            .light_color = glm::vec3(1.0f)
+        });
+    }
 
     for (auto& entity : entities)
     {
