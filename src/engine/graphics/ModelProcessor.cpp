@@ -132,6 +132,10 @@ Mesh ModelProcessor::process_mesh(aiMesh* mesh, const aiScene* scene) {
     std::vector<MeshTexture> height_maps = load_material_textures(material, aiTextureType_AMBIENT, MeshTextureType::AMBIENT);
     textures.insert(textures.end(), height_maps.begin(), height_maps.end());
     
+    // ambient maps
+    std::vector<MeshTexture> ambient_maps = load_material_textures(material, aiTextureType_AMBIENT, MeshTextureType::AMBIENT);
+    textures.insert(textures.end(), ambient_maps.begin(), ambient_maps.end());
+    
     /// DEBUGGING
     // height maps 
     // assimp: "The texture is a height map."
