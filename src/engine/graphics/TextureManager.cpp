@@ -1,5 +1,5 @@
 #include <glad/glad.h> 
-#include "../../../includes/stb/stb_image.h"
+#include <stb/stb_image.h>
 
 #include <array>
 #include <unordered_map>
