@@ -75,7 +75,7 @@ int main() {
     /// ------------- Register Systems ------------------
     
     // register system to our scene and set its signature
-    // auto& physics_system = main_scene.register_system<PhysicsSystem>();
+    auto& physics_system = main_scene.register_system<PhysicsSystem>();
     auto& camera_control_system = main_scene.register_system<CameraControlSystem>();
     auto& player_control_system = main_scene.register_system<PlayerControlSystem>();
 
@@ -95,12 +95,18 @@ int main() {
 
     auto& render_system = main_scene.register_system<RenderSystem>(camera_entity);
     
+    const int MODELS_TO_RENDER = 1;
+    // const int MODELS_TO_RENDER = 8;
+
     std::unordered_map<std::string, std::string> models = {
-        {"rock", std::string(FS_RESOURCES_DIR) + "models/rock/rock.obj"},
-        {"cyborg", std::string(FS_RESOURCES_DIR) + "models/cyborg/cyborg.obj"},
-        {"m4a1", std::string(FS_RESOURCES_DIR) +"models/m4a1/m4a1.obj"},
-        {"planet", std::string(FS_RESOURCES_DIR) +"models/planet/planet.obj"},
+        // {"rock", std::string(FS_RESOURCES_DIR) + "models/rock/rock.obj"},
+        // {"m4a1", std::string(FS_RESOURCES_DIR) +"models/m4a1/m4a1.obj"},
+        // {"planet", std::string(FS_RESOURCES_DIR) +"models/planet/planet.obj"},
+        // {"cyborg", std::string(FS_RESOURCES_DIR) + "models/cyborg/cyborg.obj"},
         // {"backpack", std::string(FS_RESOURCES_DIR) +"models/forest-backpack/backpack.obj"},
+        {"sponza", std::string(FS_RESOURCES_DIR) + "models/sponza-gltf/scene.gltf"},
+
+        // {"sponza", std::string(FS_RESOURCES_DIR) + "models/sponza2/sponza.obj"},
         // {"low_poly_house", std::string(FS_RESOURCES_DIR) +"models/low_poly_house/low_poly_house.fbx"},
         // {"deccer_cubes", std::string(FS_RESOURCES_DIR) +"models/deccer-cubes/SM_Deccer_Cubes_Textured.fbx"},
         // {"bunny", std::string(FS_RESOURCES_DIR) +"models/stanford_bunny_pbr/scene.gltf"},
@@ -125,19 +131,22 @@ int main() {
 
     /// -------------------------------------------------
 
-    auto cubemap_entity = main_scene.create_entity();
-    main_scene.add_component(cubemap_entity, Renderable{});
-    main_scene.add_component(cubemap_entity, Cubemap{.id = cubemaps.at("sky")});
+    // auto cubemap_entity = main_scene.create_entity();
+    // main_scene.add_component(cubemap_entity, Renderable{});
+    // main_scene.add_component(cubemap_entity, Cubemap{.id = cubemaps.at("sky")});
     
     // Create entities
 
     // camera entity already exists, so we we can use one less than MAX_ENTITIES number of entities
     // std::vector<Entity> entities(MAX_ENTITIES_AFTER_CAMERA); 
-    std::vector<Entity> entities(10);
+
+    std::vector<Entity> entities(MODELS_TO_RENDER);
 
     // generate random values
     std::default_random_engine generator;
-    std::uniform_real_distribution<float> rand_position(-100.0f, 100.0f);
+    generator.seed(std::chrono::system_clock::now().time_since_epoch().count());
+
+    std::uniform_real_distribution<float> rand_position(-300.0f, 300.0f);
     std::uniform_real_distribution<float> rand_color(0.0f, 1.0f);
     std::uniform_real_distribution<float> rand_model(0.0f, 1.0f);
     std::uniform_real_distribution<float> rand_gravity(-10.0f, -1.0f); // gravity is negative (downwards force)
@@ -168,7 +177,7 @@ int main() {
         entity = main_scene.create_entity();
         
         // Add components to entity
-        main_scene.add_component<Player>(entity, Player{});
+        // main_scene.add_component<Player>(entity, Player{});
 
         main_scene.add_component( // automatic type deduction for template parameters
         	entity,
@@ -189,9 +198,10 @@ int main() {
         main_scene.add_component(
             entity,
             Transform {
-                .position = glm::vec3(rand_position(generator), rand_position(generator), rand_position(generator)),
-                .scale = glm::vec3(scale, scale, scale)
-                // .scale = glm::vec3(0.02f)
+                // .position = glm::vec3(rand_position(generator), rand_position(generator), rand_position(generator)),
+                // .scale = glm::vec3(scale, scale, scale),
+                .position = glm::vec3(0.0f),
+                .scale = glm::vec3(0.2f)
             }
         );
 
