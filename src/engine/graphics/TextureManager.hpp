@@ -28,9 +28,7 @@ public:
     // FIX: dirty workaround right now for matrices. take Camera& as a reference, for camera class
     void draw_cubemap(unsigned int cubemap_id, const std::unique_ptr<Shader>& cubemap_shader, const CameraWrapper& camera_wrapper);
 private:
-    // full texture path, texture id
-    std::unordered_map<std::string, unsigned int> m_loaded_textures;
-    
+    std::unordered_map<std::string, unsigned int> m_loaded_textures; // absolute texture path, texture id
     std::vector<unsigned int> m_cubemaps;
     unsigned int m_cubemap_vao;
 };
