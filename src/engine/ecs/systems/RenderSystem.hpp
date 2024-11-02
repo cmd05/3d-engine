@@ -9,6 +9,8 @@
 #include <engine/graphics/TextureManager.hpp>
 #include <engine/graphics/CameraWrapper.hpp>
 #include <engine/graphics/Shader.hpp>
+
+#include <engine/graphics/objects/GraphicsObjects.hpp>
 #include <engine/graphics/LightRenderer.hpp>
 
 constexpr const char* MODEL_BIN_PATH = "models/bin";
