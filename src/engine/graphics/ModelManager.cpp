@@ -15,6 +15,9 @@
 #include <engine/graphics/ModelProcessor.hpp>
 #include <engine/graphics/MeshProcessor.hpp>
 
+#include <iostream> // DEBUG: _
+#include <lib/utilities/DebugAssert.hpp>
+
 ModelManager::ModelManager(TextureManager& tex_manager, std::string bin_dir): ref_tex_manager(tex_manager) {
     // check if mapper file exists in bin_dir else create
     std::string mapper_file = bin_dir + '/' + BIN_MAP_FNAME;
@@ -271,6 +274,27 @@ void ModelManager::draw_mesh(const std::unique_ptr<Shader>& shader, MeshDrawData
     unsigned int specular_nr = 1;
     unsigned int normal_nr = 1;
     unsigned int ambient_nr = 1;
+
+    // TODO: store this information in model dump
+    // bool has_amb_tex = std::find_if(mesh_draw_data.textures.begin(), mesh_draw_data.textures.end(),
+    //     [](const auto& pair) { return pair.second == MeshTextureType::AMBIENT; }) != mesh_draw_data.textures.end();
+    // bool has_diff_tex = std::find_if(mesh_draw_data.textures.begin(), mesh_draw_data.textures.end(),
+    //     [](const auto& pair) { return pair.second == MeshTextureType::DIFFUSE; }) != mesh_draw_data.textures.end();
+    // bool has_normal_tex = std::find_if(mesh_draw_data.textures.begin(), mesh_draw_data.textures.end(),
+    //     [](const auto& pair) { return pair.second == MeshTextureType::NORMAL; }) != mesh_draw_data.textures.end();
+    bool has_spec_tex = std::find_if(mesh_draw_data.textures.begin(), mesh_draw_data.textures.end(),
+        [](const auto& pair) { return pair.second == MeshTextureType::SPECULAR; }) != mesh_draw_data.textures.end();
+
+    // if(has_spec_tex)
+    //     ASSERT_MESSAGE("has spec");
+    // if(has_diff_tex)
+    //     ASSERT_MESSAGE("has diff");
+    // if(has_normal_tex)
+    //     ASSERT_MESSAGE("has normal");
+
+
+    // std::cout << has_diff_tex << " " << has_diff_tex << " " << has_spec_tex << '\n';
+    glUniform1i(glGetUniformLocation(shader->get_id(), "specular_tex_exists"), has_spec_tex);
 
     for(unsigned int i = 0; i < mesh_draw_data.textures.size(); i++) {
         glActiveTexture(GL_TEXTURE0 + i);
