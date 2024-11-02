@@ -30,7 +30,7 @@ TextureManager::TextureManager() {
 
 // if same texture path already exists return the texture id
 // else create new texture and return its id 
-unsigned int TextureManager::texture_from_file(std::string file_path, bool gamma, bool vflip_texture) {
+unsigned int TextureManager::texture_from_file(std::string file_path, bool gamma_correction, bool vflip_texture) {
     if(vflip_texture)
         stbi_set_flip_vertically_on_load(true);
     
@@ -47,16 +47,21 @@ unsigned int TextureManager::texture_from_file(std::string file_path, bool gamma
     unsigned char *img_data = stbi_load(file_path.c_str(), &width, &height, &num_components, 0);
     
     if (img_data) {
-        GLenum format;
-        if (num_components == 1)
-            format = GL_RED;
-        else if (num_components == 3)
-            format = GL_RGB;
-        else if (num_components == 4)
-            format = GL_RGBA;
+        GLenum internal_format, data_format;
+
+        if (num_components == 1) {
+            internal_format = GL_RED;
+            data_format = GL_RED;
+        } else if (num_components == 3) {
+            internal_format = gamma_correction ? GL_SRGB : GL_RGB;
+            data_format = GL_RGB;
+        } else if (num_components == 4) {
+            internal_format = gamma_correction ? GL_SRGB_ALPHA : GL_RGBA;
+            data_format = GL_RGBA;
+        }
 
         glBindTexture(GL_TEXTURE_2D, texture_id);
-        glTexImage2D(GL_TEXTURE_2D, 0, format, width, height, 0, format, GL_UNSIGNED_BYTE, img_data);
+        glTexImage2D(GL_TEXTURE_2D, 0, internal_format, width, height, 0, data_format, GL_UNSIGNED_BYTE, img_data);
         glGenerateMipmap(GL_TEXTURE_2D);
 
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);

@@ -207,5 +207,5 @@ void ModelProcessor::clear() {
     m_textures_loaded.clear();
     m_meshes.clear();
     m_model_path.clear();
-    m_gamma_correction = false;
+    m_gamma_correction = ENABLE_GAMMA_CORRECTION;
 }

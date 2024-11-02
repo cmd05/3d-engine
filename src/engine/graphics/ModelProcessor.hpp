@@ -12,6 +12,7 @@
 #include <engine/graphics/MeshProcessor.hpp>
 
 constexpr auto ASSIMP_READ_FLAGS = (aiProcess_Triangulate | aiProcess_GenSmoothNormals | aiProcess_FlipUVs | aiProcess_CalcTangentSpace | aiProcess_OptimizeMeshes);
+constexpr bool ENABLE_GAMMA_CORRECTION = true;
 
 void copy_assimp_vec3(glm::vec3& to, aiVector3D& from);
 
@@ -21,7 +22,7 @@ class ModelProcessor {
     friend class ModelManager;
 
     ModelProcessor();
-    ModelProcessor(const std::string& path, bool gamma = false);
+    ModelProcessor(const std::string& path, bool gamma = ENABLE_GAMMA_CORRECTION);
     
     void clear(); // clear data so that same model can be reused for different model
 private:

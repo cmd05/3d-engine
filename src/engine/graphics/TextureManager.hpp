@@ -21,7 +21,7 @@ struct CubemapFaces {
 class TextureManager {
 public:
     TextureManager();
-    unsigned int texture_from_file(std::string file_path, bool gamma = false, bool vflip_texture = false);
+    unsigned int texture_from_file(std::string file_path, bool gamma_correction = false, bool vflip_texture = false);
 
     cubemaps_interface_type load_cubemaps(std::unordered_map<std::string, CubemapFaces> cubemaps);
     unsigned int add_cubemap(CubemapFaces faces);
