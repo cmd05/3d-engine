@@ -127,9 +127,10 @@ Mesh ModelProcessor::process_mesh(aiMesh* mesh, const aiScene* scene) {
     // assimp: "The texture is a (tangent space) normal-map"
     std::vector<MeshTexture> normal_maps = load_material_textures(material, aiTextureType_NORMALS, MeshTextureType::NORMAL);
     textures.insert(textures.end(), normal_maps.begin(), normal_maps.end());
-    
-    // ambient maps
-    std::vector<MeshTexture> height_maps = load_material_textures(material, aiTextureType_AMBIENT, MeshTextureType::AMBIENT);
+
+    // TODO: Fix height maps to parallax mapping?
+    // USE HEIGHT MAPS AS MeshTextureType::NORMAL FOR NOW
+    std::vector<MeshTexture> height_maps = load_material_textures(material, aiTextureType_HEIGHT, MeshTextureType::NORMAL);
     textures.insert(textures.end(), height_maps.begin(), height_maps.end());
     
     // ambient maps
