@@ -130,6 +130,33 @@ Mesh ModelProcessor::process_mesh(aiMesh* mesh, const aiScene* scene) {
     // height maps
     std::vector<MeshTexture> height_maps = load_material_textures(material, aiTextureType_AMBIENT, MeshTextureType::AMBIENT);
     textures.insert(textures.end(), height_maps.begin(), height_maps.end());
+    
+    /// DEBUGGING
+    // height maps 
+    // assimp: "The texture is a height map."
+    // std::vector<MeshTexture> normal_maps = load_material_textures(material, aiTextureType_NORMALS, MeshTextureType::HEIGHT);
+    // textures.insert(textures.end(), normal_maps.begin(), normal_maps.end());
+    
+    // for(unsigned int i = 0; i < material->GetTextureCount(AI_MATKEY_METALLIC_TEXTURE); i++) {
+        // aiString str;
+        // material->GetTexture(AI_MATKEY_METALLIC_TEXTURE, &str); // aiTextureType_METALNESS
+        // std::cout << "metallic: " << str.C_Str() << '\n';
+
+        // material->GetTexture(AI_MATKEY_ROUGHNESS_TEXTURE, &str); // aiTextureType_DIFFUSE_ROUGHNESS
+        // std::cout << "roughness: " << str.C_Str() << '\n';
+
+        // material->GetTexture(aiTextureType_UNKNOWN, 0, &str);
+        // std::cout << "unknown: " << str.C_Str() << '\n';
+
+        // material->GetTexture(AI_MATKEY_SHEEN_COLOR_TEXTURE, &str);
+        // std::cout << "unknown: " << str.C_Str() << '\n';
+    // }
+    
+
+    // TODO: roughness map, metalness map, 
+    // TODO: create a struct in Mesh, like Mesh::textures, which keeps track of which textures are present
+    // enum textures { bool specular; }
+    // each model can have multiple textures of the same type. ex: door normals, window normals, floor normals etc.
 
     return Mesh(std::move(vertices), std::move(indices), std::move(textures));
 }

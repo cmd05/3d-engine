@@ -22,6 +22,10 @@ enum MeshTextureType {
     SPECULAR,
     NORMAL,
     AMBIENT
+    // METALLIC,
+    // ROUGHNESS,
+    // METALLICROUGHNESS,
+    // UNKNOWN // does not match any of the above types only then
 };
 
 struct MeshTexture {
