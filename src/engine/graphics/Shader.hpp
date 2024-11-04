@@ -1,6 +1,7 @@
 #pragma once
 
 #include <string>
+#include <type_traits>
 
 #include <glad/glad.h>
 #include <glm/glm.hpp>
@@ -13,7 +14,7 @@ public:
     void activate();
 
     template<typename T>
-    void set_uniform(const std::string& name, const T& value);
+    void set_uniform(const std::string& name, const std::type_identity_t<T>& value);
 
     GLuint get_id() const;
 private:
@@ -21,7 +22,7 @@ private:
 };
 
 template<typename T>
-void Shader::set_uniform(const std::string& name, const T& value)
+void Shader::set_uniform(const std::string& name, const std::type_identity_t<T>& value)
 {
     if constexpr (std::is_same_v<T, glm::mat4>)
     {
@@ -30,6 +31,14 @@ void Shader::set_uniform(const std::string& name, const T& value)
     if constexpr (std::is_same_v<T, glm::vec3>)
     {
         glUniform3fv(glGetUniformLocation(m_id, name.c_str()), 1, &value[0]); 
+    }
+    if constexpr (std::is_same_v<T, float>)
+    {
+        glUniform1f(glGetUniformLocation(m_id, name.c_str()), value); 
+    }
+    if constexpr (std::is_same_v<T, int>)
+    {
+        glUniform1i(glGetUniformLocation(m_id, name.c_str()), value); 
     }
     
     // use with old math lib

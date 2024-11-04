@@ -10,7 +10,7 @@ void LightRenderer::draw_light_cube(Transform& transform, const CameraWrapper& c
     GraphicsHelper::set_mvp(m_light_cube_shader, transform, camera_wrapper);
 
     m_light_cube_shader->activate();
-    m_light_cube_shader->set_uniform("lightColor", light_color);
+    m_light_cube_shader->set_uniform<glm::vec3>("lightColor", light_color);
     // m_light_cube_shader->set_uniform("lightPosition", transform.position);
 
     glBindVertexArray(g_graphics_objects.cube.VAO);
