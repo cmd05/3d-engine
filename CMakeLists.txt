@@ -4,7 +4,7 @@ project(3dengine)
 # C:/msys64/ucrt64/bin/c++.exe
 # message (${CMAKE_CXX_COMPILER})
 
-set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_EXTENSIONS OFF)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
