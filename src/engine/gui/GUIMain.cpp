@@ -1,10 +1,12 @@
 #include <engine/gui/GUIMain.hpp>
 #include "GUIMain.hpp"
 
-GUIMain::GUIMain(WindowManager& window_manager, const char* glsl_version) {
+GUIMain::GUIMain(WindowManager& window_manager, GUIState& gui_state, const char* glsl_version) {
 	m_window_manager = &window_manager;
+	m_gui_state = &gui_state;
 	m_window = window_manager.get_window();
-    init_gui(glsl_version);
+    
+	init_gui(glsl_version);
 	init_windows();
 }
 
@@ -29,8 +31,8 @@ void GUIMain::init_gui(const char* glsl_version) {
 }
 
 void GUIMain::init_windows() {
-	m_camera_control_window = std::make_unique<CameraControlWindow>(*m_window_manager, ImVec2{0, 0});
-	m_light_control_window = std::make_unique<LightControlWindow>(*m_window_manager, ImVec2{0, 0});
+	m_camera_control_window = std::make_unique<CameraControlWindow>(*m_window_manager, *m_gui_state, ImVec2{0, 0});
+	m_light_control_window = std::make_unique<LightControlWindow>(*m_window_manager, *m_gui_state, ImVec2{0, 0});
 }
 
 void GUIMain::new_frame() {

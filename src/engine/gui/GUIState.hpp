@@ -4,8 +4,10 @@
 
 class GUIState {
 public:
+    // ---------- BLINN PHONG SETTINGS -----------
+
     // lighting strengths (same for all lights)
-    float ambient_strength;
+    float ambient_strength = 0.05;
     float diffuse_strength;
     float specular_strength;
     float specular_highlight = 32.0f;
@@ -20,4 +22,11 @@ public:
     bool normal_mapping = true;
 
     bool gamma_correction = true;
+
+    int scene_num; // (1) sponza; (2) cyborg, backpack; 
+    int num_point_lights;
+
+    // -------------------------------------------
+
+    // PBR Settings
 };

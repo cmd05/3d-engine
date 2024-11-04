@@ -13,12 +13,14 @@
 #include <engine/graphics/objects/GraphicsObjects.hpp>
 #include <engine/graphics/LightRenderer.hpp>
 
+#include <engine/gui/GUIState.hpp>
+
 constexpr const char* MODEL_BIN_PATH = "models/bin";
 
 class RenderSystem : public System
 {
 public:
-    RenderSystem(Scene& scene, Entity camera);
+    RenderSystem(Scene& scene, Entity camera, GUIState& gui_state);
 
     void init();
     void update(float dt);
@@ -39,4 +41,6 @@ private:
     ModelManager m_model_manager;
     TextureManager m_texture_manager;
     std::unique_ptr<LightRenderer> m_light_renderer;
+    
+    GUIState* m_gui_state;
 };

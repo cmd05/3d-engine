@@ -9,6 +9,9 @@ uniform bool ambient_tex_exists;
 uniform bool diffuse_tex_exists;
 uniform bool specular_tex_exists;
 
+
+uniform float u_ambient_strength;
+
 // ---
 
 #define NR_POINT_LIGHTS 1
@@ -49,7 +52,7 @@ void main() {
     vec3 color = texture(texture_diffuse1, fs_in.TexCoords).rgb;
 
     // ambient
-    vec3 ambient = 0.05 * color;
+    vec3 ambient = u_ambient_strength * color;
 
     // specular
     vec3 viewDir = normalize(fs_in.TangentViewPos - fs_in.TangentFragPos);

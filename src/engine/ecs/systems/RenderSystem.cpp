@@ -19,7 +19,9 @@
 #include <engine/graphics/Shader.hpp>
 #include <engine/graphics/objects/CubeObject.hpp>
 
-RenderSystem::RenderSystem(Scene& scene, Entity camera): 
+#include <iostream> // DEBUG: _
+
+RenderSystem::RenderSystem(Scene& scene, Entity camera, GUIState& gui_state): 
     System(scene),
     m_model_manager(m_texture_manager, FS_RESOURCES_DIR + std::string(MODEL_BIN_PATH)),
     m_camera_wrapper(scene, camera) {
@@ -37,6 +39,9 @@ RenderSystem::RenderSystem(Scene& scene, Entity camera):
     // initialize shaders
     model_shader = std::make_unique<Shader>(std::string(FS_SHADERS_DIR) + "shader_model_normal.vs", std::string(FS_SHADERS_DIR) + "shader_model_normal.fs");
     cubemap_shader = std::make_unique<Shader>(std::string(FS_SHADERS_DIR) + "cubemap.vs", std::string(FS_SHADERS_DIR) + "cubemap.fs");
+
+    // store GUIState pointer
+    m_gui_state = &gui_state;
 
     // initialize members (which depend on graphics objects)
     m_light_renderer = std::make_unique<LightRenderer>();
@@ -86,6 +91,13 @@ void RenderSystem::update(float dt)
         
         i_lights++;
     }
+
+    // experiment with lighting
+
+    model_shader->activate();
+    model_shader->set_uniform<float>("u_ambient_strength", m_gui_state->ambient_strength);
+
+    // ---
 
     // draw models
     for(const auto& entity : SceneView<Renderable, Model, Transform>(ref_scene)) {

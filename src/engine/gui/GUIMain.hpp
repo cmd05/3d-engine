@@ -8,6 +8,7 @@
 
 #include <engine/window/WindowManager.hpp>
 
+#include <engine/gui/GUIState.hpp>
 #include <engine/gui/windows/CameraControlWindow.hpp>
 #include <engine/gui/windows/LightControlWindow.hpp>
 
@@ -15,18 +16,18 @@ constexpr auto IMGUI_CONFIG_FLAGS = (ImGuiConfigFlags_NavEnableKeyboard | ImGuiC
 
 class GUIMain {
 public:
-    GUIMain(WindowManager& window_manager, const char* glsl_version);
+    GUIMain(WindowManager& window_manager, GUIState& gui_state, const char* glsl_version);
 
     void new_frame();
     void update();
     void render();
     void update_platform_windows();
     void shutdown();
-protected:
-    ImGuiIO* m_imgui_io;
 private:
     WindowManager* m_window_manager;
+    GUIState* m_gui_state;
     GLFWwindow* m_window;
+    ImGuiIO* m_imgui_io;
 
     // list of gui windows
     std::unique_ptr<CameraControlWindow> m_camera_control_window;

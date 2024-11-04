@@ -31,7 +31,7 @@ cmake --build build > log.txt && ./build/3dengine.exe
 
 #include <engine/window/WindowManager.hpp>
 
-#include <engine/GUI/GUIMain.hpp>
+#include <engine/gui/GUIMain.hpp>
 
 // main scene
 Scene main_scene;
@@ -49,7 +49,8 @@ int main() {
 
     // gui setup
     const char *glsl_version = "#version 130";
-    GUIMain gui_main {window_manager, glsl_version};
+    GUIState gui_state;
+    GUIMain gui_main {window_manager, gui_state, glsl_version};
 
     // quit handler for `Application`
     main_scene.add_event_listener(FUNCTION_LISTENER(Events::Window::QUIT, quit_handler));
@@ -93,7 +94,7 @@ int main() {
         Camera(DEFAULT_SCR_WIDTH, DEFAULT_SCR_HEIGHT)
     );
 
-    auto& render_system = main_scene.register_system<RenderSystem>(camera_entity);
+    auto& render_system = main_scene.register_system<RenderSystem>(camera_entity, gui_state);
     
     const int MODELS_TO_RENDER = 1;
     // const int MODELS_TO_RENDER = 8;
