@@ -17,7 +17,7 @@ class WindowManager
 {
 public:
     WindowManager(Scene& scene, InputHandler& input_handler): 
-        ref_scene{scene}, ref_input_handler{input_handler} {}
+        ref_scene{scene}, m_input_handler{&input_handler} {}
 
     void init(std::string const& window_title, unsigned int window_width,
         unsigned int window_height, unsigned int window_position_x, unsigned int window_position_y);
@@ -55,8 +55,8 @@ public:
 
 private:
     GLFWwindow* m_window;
+    InputHandler* m_input_handler;
 
-    InputHandler& ref_input_handler;
     Scene& ref_scene;
 
     MouseData m_mouse_data{};

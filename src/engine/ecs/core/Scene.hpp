@@ -4,8 +4,6 @@
 #include <functional>
 #include <utility>
 
-#include <engine/input/InputHandler.hpp>
-
 #include <engine/ecs/core/ComponentManager.hpp>
 #include <engine/ecs/core/EntityManager.hpp>
 #include <engine/ecs/core/SystemManager.hpp>
@@ -64,16 +62,9 @@ public:
 public:
     // Event Methods
     void add_event_listener(EventId event_id, const std::function<void(Event&)>& listener); // pass listener by reference
-
     void send_event(Event& event);
-
     void send_event(EventId event_id);
-public:
-    // The Scene and Window class have been intentionally decoupled
-    // Window stores a Scene&, and can send events to the `Scene` and "it's ecosystem i.e systems" via `Event`
-    // However, instead of just events, we use InputHandler for polling. ex: keyboard keys
 
-    InputHandler input_handler; // avoid prefixing with m_ for public members
 private:
     std::unique_ptr<ComponentManager> m_component_manager;
     std::unique_ptr<EntityManager> m_entity_manager;

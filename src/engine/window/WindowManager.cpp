@@ -39,6 +39,14 @@ void WindowManager::init(std::string const& window_title, unsigned int window_wi
 
 void WindowManager::update() {
     glfwSwapBuffers(m_window);
+
+    // since window_manager.process_events() is before window_manager.update()
+    // we can handle only key setting in key_callback and respond here
+    // TODO: fix logic in entire engine for window quit logic and process
+    if(m_input_handler->get_key(GLFW_KEY_ESCAPE)) {
+        ref_scene.send_event(Events::Window::QUIT);
+        glfwSetWindowShouldClose(m_window, true);
+    }
 }
 
 void WindowManager::framebuffer_size_callback(GLFWwindow* window, int width, int height) {
@@ -62,10 +70,10 @@ void WindowManager::key_callback(GLFWwindow* window, int key, int scancode, int 
         
     if(key >= WIN_INPUT_KEYS_START && key < WIN_INPUT_KEYS_END) {
         if(action == GLFW_PRESS)
-            p_window_manager->ref_input_handler.set_key(key);
+            p_window_manager->m_input_handler->set_key(key);
         else if(action == GLFW_RELEASE) {
-            p_window_manager->ref_input_handler.reset_key(key);
-            p_window_manager->ref_input_handler.reset_key_processed(key);
+            p_window_manager->m_input_handler->reset_key(key);
+            p_window_manager->m_input_handler->reset_key_processed(key);
         }
     }
     

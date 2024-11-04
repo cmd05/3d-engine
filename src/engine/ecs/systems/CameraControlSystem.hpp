@@ -5,10 +5,11 @@
 #include <engine/ecs/core/Event.hpp>
 
 #include <engine/window/WindowManager.hpp>
+#include <engine/input/InputHandler.hpp>
 
 class CameraControlSystem : public System {
 public:
-    CameraControlSystem(Scene& scene);
+    CameraControlSystem(Scene& scene, InputHandler& input_handler);
     void update(float dt);
 
 private:
@@ -24,4 +25,7 @@ private:
 
     void mouse_listener(Event& event);
     void scroll_listener(Event& event);
+
+    // WindowManager* m_window_manager; // TODO:
+    InputHandler* m_input_handler;
 };

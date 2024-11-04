@@ -12,7 +12,9 @@
 
 #include <engine/ecs/configs/CameraConfigs.hpp>
 
-CameraControlSystem::CameraControlSystem(Scene& scene): System(scene) {
+CameraControlSystem::CameraControlSystem(Scene& scene, InputHandler& input_handler): System(scene) {
+    m_input_handler = &input_handler;
+
     ref_scene.add_event_listener(METHOD_LISTENER(Events::Window::Input::MOUSE, CameraControlSystem::mouse_listener));
     ref_scene.add_event_listener(METHOD_LISTENER(Events::Window::Input::SCROLL, CameraControlSystem::scroll_listener));
 }
@@ -23,22 +25,22 @@ void CameraControlSystem::update(float dt) {
         float cam_offset = dt * CAMERA_SPEED;
 
         // poll camera keys
-        if(ref_scene.input_handler.get_key(GLFW_KEY_W))
+        if(m_input_handler->get_key(GLFW_KEY_W))
             // no need to reset_key here
             camera_wrapper.translate_camera(BasicMovement::Forward, cam_offset);
-        else if(ref_scene.input_handler.get_key(GLFW_KEY_S))
+        else if(m_input_handler->get_key(GLFW_KEY_S))
             camera_wrapper.translate_camera(BasicMovement::Backward, cam_offset);
-        if(ref_scene.input_handler.get_key(GLFW_KEY_A))
+        if(m_input_handler->get_key(GLFW_KEY_A))
             camera_wrapper.translate_camera(BasicMovement::Left, cam_offset);
-        else if(ref_scene.input_handler.get_key(GLFW_KEY_D))
+        else if(m_input_handler->get_key(GLFW_KEY_D))
             camera_wrapper.translate_camera(BasicMovement::Right, cam_offset);
-        if(ref_scene.input_handler.get_key(GLFW_KEY_Q))
+        if(m_input_handler->get_key(GLFW_KEY_Q))
             camera_wrapper.translate_camera(BasicMovement::Up, cam_offset);
-        else if(ref_scene.input_handler.get_key(GLFW_KEY_E))
+        else if(m_input_handler->get_key(GLFW_KEY_E))
             camera_wrapper.translate_camera(BasicMovement::Down, cam_offset);
 
         // TODO:
-        // ref_scene.input_handler.react_key_noprocess(GLFW_KEY_W, []() {})
+        // m_input_handler->react_key_noprocess(GLFW_KEY_W, []() {})
 
         // rotate camera
         if(m_camera_rotation.b_rotate) {

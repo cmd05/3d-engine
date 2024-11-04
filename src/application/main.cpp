@@ -30,6 +30,7 @@ cmake --build build > log.txt && ./build/3dengine.exe
 #include <engine/ecs/components/PointLightComponent.hpp>
 
 #include <engine/window/WindowManager.hpp>
+#include <engine/input/InputHandler.hpp>
 
 #include <engine/gui/GUIMain.hpp>
 
@@ -43,8 +44,13 @@ void quit_handler(Event& event) {
 }
 
 int main() {
+    // TODO: (remove comment?) The Scene and Window class have been intentionally decoupled
+    // Window stores a Scene&, and can send events to the `Scene` and "it's ecosystem i.e systems" via `Event`
+    // However, instead of just events, we use InputHandler for polling. ex: keyboard keys
+
     // window setup
-    WindowManager window_manager {main_scene, main_scene.input_handler}; // window manager requires reference to scene and input handler
+    InputHandler input_handler;
+    WindowManager window_manager {main_scene, input_handler}; // window manager requires reference to scene and input handler
     window_manager.init("3D engine", DEFAULT_SCR_WIDTH, DEFAULT_SCR_HEIGHT, 0, 0);
 
     // gui setup
@@ -77,7 +83,7 @@ int main() {
     
     // register system to our scene and set its signature
     auto& physics_system = main_scene.register_system<PhysicsSystem>();
-    auto& camera_control_system = main_scene.register_system<CameraControlSystem>();
+    auto& camera_control_system = main_scene.register_system<CameraControlSystem>(input_handler);
     auto& player_control_system = main_scene.register_system<PlayerControlSystem>();
 
     // create camera entity
