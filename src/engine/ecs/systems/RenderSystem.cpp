@@ -71,7 +71,7 @@ void RenderSystem::update(float dt)
 
     // set OpenGL parameters
     glEnable(GL_DEPTH_TEST);
-    // glEnable(GL_CULL_FACE);
+    glEnable(GL_CULL_FACE);
 
     model_shader->activate();
     model_shader->set_uniform<glm::vec3>("viewPos", m_camera_wrapper.get_transform_component().position);
@@ -107,7 +107,7 @@ void RenderSystem::update(float dt)
         m_model_manager.draw_model(model_shader, object_model.model_id, m_camera_wrapper, transform);
     }
 
-    // glDisable(GL_CULL_FACE);
+    glDisable(GL_CULL_FACE);
 
     // draw cubemaps
     for(const auto& entity : SceneView<Renderable, Cubemap>(ref_scene))
