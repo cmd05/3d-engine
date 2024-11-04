@@ -31,8 +31,9 @@ public:
     // react_key_noprocess
     // react_key_processed
 private:
-    bool input_keys[WIN_INPUT_KEYS_LEN];
-    bool input_keys_processed[WIN_INPUT_KEYS_LEN];
+    // default initialize all array elements to zero (false)
+    bool input_keys[WIN_INPUT_KEYS_LEN] = {0};
+    bool input_keys_processed[WIN_INPUT_KEYS_LEN] = {0};
     
     // TODO: right now InputHandler does not use `Scene`
     // However, we will have to initialize it with a scene reference, to use the scene object 
