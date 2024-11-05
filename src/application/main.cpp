@@ -118,9 +118,11 @@ int main() {
         // {"rock", std::string(FS_RESOURCES_DIR) + "models/rock/rock.obj"},
         // {"m4a1", std::string(FS_RESOURCES_DIR) +"models/m4a1/m4a1.obj"},
         // {"planet", std::string(FS_RESOURCES_DIR) +"models/planet/planet.obj"},
+
         // {"cyborg", std::string(FS_RESOURCES_DIR) + "models/cyborg/cyborg.obj"},
         // {"backpack", std::string(FS_RESOURCES_DIR) +"models/forest-backpack/backpack.obj"},
-        {"sponza", std::string(FS_RESOURCES_DIR) + "models/sponza-gltf/scene.gltf"},
+        // {"sponza", std::string(FS_RESOURCES_DIR) + "models/sponza-gltf/scene.gltf"},
+        {"sponza-khronos", std::string(FS_RESOURCES_DIR) + "models/sponza-gltf-khronos/Sponza.gltf"},
 
         // {"sponza", std::string(FS_RESOURCES_DIR) + "models/sponza2/sponza.obj"},
         // {"low_poly_house", std::string(FS_RESOURCES_DIR) +"models/low_poly_house/low_poly_house.fbx"},
@@ -163,6 +165,7 @@ int main() {
     generator.seed(std::chrono::system_clock::now().time_since_epoch().count());
 
     std::uniform_real_distribution<float> rand_position(-300.0f, 300.0f);
+    std::uniform_real_distribution<float> rand_light_position(-90.0f, 90.0f);
     std::uniform_real_distribution<float> rand_color(0.0f, 1.0f);
     std::uniform_real_distribution<float> rand_model(0.0f, 1.0f);
     std::uniform_real_distribution<float> rand_gravity(-10.0f, -1.0f); // gravity is negative (downwards force)
@@ -178,6 +181,7 @@ int main() {
         main_scene.add_component(light_entity, Transform{
             // .position = glm::vec3(rand_position(generator), rand_position(generator), rand_position(generator)),
             .position = glm::vec3(10.0f, 50.0f, 10.0f),
+            // .position = glm::vec3(rand_light_position(generator), 50.0f, rand_light_position(generator)),
             .scale = glm::vec3(5.0f)
         });
         
@@ -232,7 +236,7 @@ int main() {
         auto item = models_map.begin();
         std::advance( item, rand() % models_map.size() );
 
-        main_scene.add_component(entity, 
+        main_scene.add_component(entity,
             Model{.model_id = item->second }
         );
     }
