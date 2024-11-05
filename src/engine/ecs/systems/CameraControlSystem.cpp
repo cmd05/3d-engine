@@ -20,6 +20,9 @@ CameraControlSystem::CameraControlSystem(Scene& scene, InputHandler& input_handl
 }
 
 void CameraControlSystem::update(float dt) {
+    if(!WindowManager::is_window_focused())
+        return;
+
     for (Entity entity : SceneView<Camera, Transform>(ref_scene)) {
         CameraWrapper camera_wrapper{ref_scene, entity};
         float cam_offset = dt * CAMERA_SPEED;

@@ -6,6 +6,14 @@
 
 #include <lib/utilities/DebugAssert.hpp>
 
+// assuming single GLFW window
+// static global variable - only visible to WindowManager.cpp
+static bool g_window_focused = false;
+
+bool WindowManager::is_window_focused() {
+    return g_window_focused;
+}
+
 void WindowManager::init(std::string const& window_title, unsigned int window_width,
     unsigned int window_height, unsigned int window_position_x, unsigned int window_position_y) {
     // setup window
@@ -27,7 +35,7 @@ void WindowManager::init(std::string const& window_title, unsigned int window_wi
     glfwSetFramebufferSizeCallback(m_window, WindowManager::framebuffer_size_callback);
 
     // tell GLFW to capture our mouse
-    glfwSetInputMode(m_window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+    // glfwSetInputMode(m_window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 
     // Create OpenGL Context
     glfwMakeContextCurrent(m_window);
@@ -46,6 +54,27 @@ void WindowManager::update() {
     if(m_input_handler->get_key(GLFW_KEY_ESCAPE)) {
         ref_scene.send_event(Events::Window::QUIT);
         glfwSetWindowShouldClose(m_window, true);
+    }
+
+    // check that imgui is not focused/hovered
+    if(m_input_handler->get_key(GLFW_KEY_LEFT_ALT) && g_window_focused) {
+        // Event event {Events::Window::RESIZED};
+        // event.set_param(Events::Window::Resized::WIDTH, width);
+        // event.set_param(Events::Window::Resized::HEIGHT, height);
+    
+        // p_window_manager->ref_scene.send_event(event);
+        glfwSetInputMode(m_window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
+        g_window_focused = false;
+    }
+
+    if(m_input_handler->get_key(GLFW_KEY_ENTER) && !g_window_focused) {
+        // Event event {Events::Window::RESIZED};
+        // event.set_param(Events::Window::Resized::WIDTH, width);
+        // event.set_param(Events::Window::Resized::HEIGHT, height);
+    
+        // p_window_manager->ref_scene.send_event(event);
+        glfwSetInputMode(m_window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+        g_window_focused = true;
     }
 }
 

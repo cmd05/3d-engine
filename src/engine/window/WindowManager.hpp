@@ -53,6 +53,7 @@ public:
         double y_offset = 0;
     };
 
+    static bool is_window_focused();
 private:
     GLFWwindow* m_window;
     InputHandler* m_input_handler;
@@ -61,4 +62,5 @@ private:
 
     MouseData m_mouse_data{};
     ScrollData m_scroll_data{};
+    // bool m_window_focused = false;
 };

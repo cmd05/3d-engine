@@ -25,6 +25,66 @@ const system_count_size_type MAX_SYSTEMS = 32;
 
 using Signature = std::bitset<MAX_COMPONENTS>;
 
+// Events
+using EventId = std::uint32_t;
+using ParamId = std::uint32_t;
+
+// see CameraControlSystem::Init() for detailed explanation of METHOD_LISTENER
+#define METHOD_LISTENER(EventType, Listener) EventType, std::bind(&Listener, this, std::placeholders::_1)
+#define FUNCTION_LISTENER(EventType, Listener) EventType, std::bind(&Listener, std::placeholders::_1)
+
+// Source: https://gist.github.com/Lee-R/3839813
+// static function (non extern)
+static constexpr std::uint32_t fnv1a_32(char const* s, std::size_t count) {
+    return ((count ? fnv1a_32(s, count - 1) : 2166136261u) ^ s[count]) * 16777619u;
+}
+
+// _hash creates uint32_t sized unique hashes for strings at compile time
+// hash comparisons are faster than string comparison for the event system
+static constexpr std::uint32_t operator "" _hash(char const* s, std::size_t count) {
+    return fnv1a_32(s, count);
+}
+
+/// TODO: move all this to seperate config files. unrelated to ECS
+namespace Events::Window {
+    const EventId QUIT = "Events::Window::QUIT"_hash;
+    const EventId RESIZED = "Events::Window::RESIZED"_hash;
+    const EventId INPUT = "Events::Window::INPUT"_hash;
+}
+
+namespace Events::Window::Input {
+    const EventId KEYBOARD = "Events::Window::Input::KEYBOARD"_hash;
+    const EventId MOUSE = "Events::Window::Input::MOUSE"_hash;
+    const EventId SCROLL = "Events::Window::Input::SCROLL"_hash;
+    const EventId FOCUS_CHANGE = "Events::Window::Input::FOCUS_CHANGE"_hash;
+}
+
+namespace Events::Window::Input::Keyboard {
+    const ParamId KEYS = "Events::Window::Input::Keyboard::KEYS"_hash; // implement camera translation
+}
+
+namespace Events::Window::Input::Mouse {
+    const ParamId MOUSE_DATA = "Events::Window::Input::Mouse::MOUSE_DATA"_hash;
+}
+
+namespace Events::Window::Input::Scroll {
+    const ParamId SCROLL_DATA = "Events::Window::Input::Scroll::SCROLL_DATA"_hash;
+}
+
+namespace Events::Window::Resized {
+    const ParamId WIDTH = "Events::Window::Resized::WIDTH"_hash;
+    const ParamId HEIGHT = "Events::Window::Resized::HEIGHT"_hash;
+}
+
+namespace Events::Window::Input::FocusChange {
+    const ParamId FOCUSED = "Events::Window::Input::FocusChange::FOCUSED"_hash;
+}
+
+// GLFW Keys information
+constexpr int WIN_INPUT_KEYS_START = 0;
+constexpr int WIN_INPUT_KEYS_END = 1024; // not included
+constexpr int WIN_INPUT_KEYS_LEN = WIN_INPUT_KEYS_END;
+
 // Input
 enum class InputButtons {
     W,
@@ -45,57 +105,3 @@ enum class BasicMovement {
 };
 
 using BasicMoves = std::bitset<8>;
-
-// Events
-using EventId = std::uint32_t;
-using ParamId = std::uint32_t;
-
-// see CameraControlSystem::Init() for detailed explanation of METHOD_LISTENER
-#define METHOD_LISTENER(EventType, Listener) EventType, std::bind(&Listener, this, std::placeholders::_1)
-#define FUNCTION_LISTENER(EventType, Listener) EventType, std::bind(&Listener, std::placeholders::_1)
-
-// Source: https://gist.github.com/Lee-R/3839813
-// static function (non extern)
-static constexpr std::uint32_t fnv1a_32(char const* s, std::size_t count) {
-    return ((count ? fnv1a_32(s, count - 1) : 2166136261u) ^ s[count]) * 16777619u;
-}
-
-static constexpr std::uint32_t operator "" _hash(char const* s, std::size_t count) {
-    return fnv1a_32(s, count);
-}
-
-// _hash creates uint32_t sized unique hashes for strings at compile time
-// hash comparisons are faster than string comparison for the event system
-namespace Events::Window {
-    const EventId QUIT = "Events::Window::QUIT"_hash;
-    const EventId RESIZED = "Events::Window::RESIZED"_hash;
-    const EventId INPUT = "Events::Window::INPUT"_hash;
-}
-
-namespace Events::Window::Input {
-    const EventId KEYBOARD = "Events::Window::Input::KEYBOARD"_hash;
-    const EventId MOUSE = "Events::Window::Input::MOUSE"_hash;
-    const EventId SCROLL = "Events::Window::Input::SCROLL"_hash;
-}
-
-namespace Events::Window::Input::Keyboard {
-    const ParamId KEYS = "Events::Window::Input::Keyboard::KEYS"_hash; // implement camera translation
-}
-
-namespace Events::Window::Input::Mouse {
-    const ParamId MOUSE_DATA = "Events::Window::Input::Mouse::MOUSE_DATA"_hash;
-}
-
-namespace Events::Window::Input::Scroll {
-    const ParamId SCROLL_DATA = "Events::Window::Input::Scroll::SCROLL_DATA"_hash;
-}
-
-namespace Events::Window::Resized {
-    const ParamId WIDTH = "Events::Window::Resized::WIDTH"_hash;
-    const ParamId HEIGHT = "Events::Window::Resized::HEIGHT"_hash;
-}
-
-// GLFW Keys information
-constexpr int WIN_INPUT_KEYS_START = 0;
-constexpr int WIN_INPUT_KEYS_END = 1024; // not included
-constexpr int WIN_INPUT_KEYS_LEN = WIN_INPUT_KEYS_END;
