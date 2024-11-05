@@ -9,8 +9,6 @@
 // #include <engine/ecs/core/Scene.hpp>
 #include <engine/ecs/core/Types.hpp>
 
-constexpr int WIN_KEYS_LEN = 1024;
-
 class InputHandler {
 public:
     // InputHandler(Scene& scene): ref_scene{scene} {
