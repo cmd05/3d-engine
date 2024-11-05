@@ -1,9 +1,9 @@
-
 #include <engine/window/WindowManager.hpp>
 
 #include <engine/ecs/core/Scene.hpp>
 #include <engine/ecs/core/Event.hpp>
 
+#include <engine/gui/GUIMain.hpp>
 #include <lib/utilities/DebugAssert.hpp>
 
 // assuming single GLFW window
@@ -43,6 +43,10 @@ void WindowManager::init(std::string const& window_title, unsigned int window_wi
     if(!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress)) {
         ASSERT_MESSAGE("Failed to load glad");
     }
+}
+
+void WindowManager::bind_gui(GUIMain &gui_main) {
+    m_gui_main = &gui_main;
 }
 
 void WindowManager::update() {
@@ -93,10 +97,17 @@ void WindowManager::framebuffer_size_callback(GLFWwindow* window, int width, int
 
 void WindowManager::key_callback(GLFWwindow* window, int key, int scancode, int action, int mods) {
     WindowManager* p_window_manager = reinterpret_cast<WindowManager*>(glfwGetWindowUserPointer(window));
+    // const ImGuiIO& io = p_window_manager->m_gui_main->get_io();
+    // io.AddKeyEvent(key, action);
+
+    // // if(io.WantCaptureKeyboard)
+    if(p_window_manager->m_gui_main->io_want_capture_keyboard())
+        return;
+    // ImGui_ImplGlfw_KeyCallback();
 
     if(!p_window_manager)
         ASSERT_MESSAGE("WindowManager handler not set");
-        
+
     if(key >= WIN_INPUT_KEYS_START && key < WIN_INPUT_KEYS_END) {
         if(action == GLFW_PRESS)
             p_window_manager->m_input_handler->set_key(key);

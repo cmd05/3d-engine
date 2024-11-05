@@ -47,16 +47,25 @@ int main() {
     // TODO: (remove comment?) The Scene and Window class have been intentionally decoupled
     // Window stores a Scene&, and can send events to the `Scene` and "it's ecosystem i.e systems" via `Event`
     // However, instead of just events, we use InputHandler for polling. ex: keyboard keys
-
-    // window setup
+    
     InputHandler input_handler;
-    WindowManager window_manager {main_scene, input_handler}; // window manager requires reference to scene and input handler
-    window_manager.init("3D engine", DEFAULT_SCR_WIDTH, DEFAULT_SCR_HEIGHT, 0, 0);
 
-    // gui setup
+    // Window setup
+    WindowManager window_manager {main_scene, input_handler}; // window manager requires reference to scene and input handler
+    
+    // GUI setup
     const char *glsl_version = "#version 130";
     GUIState gui_state;
-    GUIMain gui_main {window_manager, gui_state, glsl_version};
+    GUIMain gui_main {gui_state, glsl_version};
+
+    // --- order must be exact ---
+    window_manager.bind_gui(gui_main);
+    window_manager.init("3D Engine", DEFAULT_SCR_WIDTH, DEFAULT_SCR_HEIGHT, 0, 0);
+    
+    gui_main.bind_window_manager(window_manager);
+    gui_main.init("3D Engine Editor");
+    
+    // ---------------------------
 
     // quit handler for `Application`
     main_scene.add_event_listener(FUNCTION_LISTENER(Events::Window::QUIT, quit_handler));

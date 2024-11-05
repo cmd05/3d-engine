@@ -11,6 +11,7 @@ constexpr int DEFAULT_SCR_WIDTH = 1920;
 constexpr int DEFAULT_SCR_HEIGHT = 1080;
 
 class Scene;
+class GUIMain;
 
 // Handle main window and GLFW window contexts
 class WindowManager
@@ -21,7 +22,8 @@ public:
 
     void init(std::string const& window_title, unsigned int window_width,
         unsigned int window_height, unsigned int window_position_x, unsigned int window_position_y);
-    
+    void bind_gui(GUIMain& gui_main);
+
     void update();
     void process_events();
     void shutdown();
@@ -57,6 +59,7 @@ public:
 private:
     GLFWwindow* m_window;
     InputHandler* m_input_handler;
+    GUIMain* m_gui_main;
 
     Scene& ref_scene;
 
