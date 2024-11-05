@@ -116,32 +116,7 @@ void WindowManager::key_callback(GLFWwindow* window, int key, int scancode, int 
             p_window_manager->m_input_handler->reset_key_processed(key);
         }
     }
-    
-    // TODO: fix logic in entire engine for window quit logic and process
-    if(key == GLFW_KEY_ESCAPE && action == GLFW_PRESS) {
-        p_window_manager->ref_scene.send_event(Events::Window::QUIT);
-        glfwSetWindowShouldClose(window, true);
-    }
 }
-
-// void WindowManager::update_keys() {
-//     for(int key = WIN_INPUT_KEYS_START; key < WIN_INPUT_KEYS_END; key++) {
-//         int action = glfwGetKey(m_window, key);
-
-//         if(action == GLFW_PRESS) {
-//             ref_input_handler.set_key(key);
-//         } else if(action == GLFW_RELEASE) {
-//             ref_input_handler.reset_key(key);
-//             ref_input_handler.reset_key_processed(key);
-//         }
-
-//         // window quit logic
-//         if(key == GLFW_KEY_ESCAPE && action == GLFW_PRESS) {
-//             ref_scene.send_event(Events::Window::QUIT);
-//             glfwSetWindowShouldClose(m_window, true);
-//         }
-//     }
-// }
 
 void WindowManager::scroll_callback(GLFWwindow* window, double x_offset, double y_offset) {
     WindowManager* p_window_manager = reinterpret_cast<WindowManager*>(glfwGetWindowUserPointer(window));
