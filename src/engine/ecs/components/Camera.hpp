@@ -17,14 +17,14 @@ public:
 
     // camera direction vectors
     glm::vec3 world_up = GraphicsConfig::Camera::DEFAULT_CAM_WORLD_UP;
-    glm::vec3 cam_pos = GraphicsConfig::Camera::DEFAULT_CAM_POS;
     glm::vec3 cam_front = GraphicsConfig::Camera::DEFAULT_CAM_FRONT;
     glm::vec3 cam_up = world_up;
     glm::vec3 cam_right = glm::normalize(glm::cross(cam_front, world_up));
 
     // camera rotation
-    // Note: Currently we are not updating and using Transform::rotation (quat) for camera entities.
-    // Camera rotation is done using euler angles
+    // note: camera rotation is done using euler angles NOT Transform::rotation
     float yaw = GraphicsConfig::Camera::DEFAULT_CAM_YAW; // default yaw corresponding to cam_front
     float pitch = GraphicsConfig::Camera::DEFAULT_CAM_PITCH;
+
+    // note: camera position is stored in Transform::position
 };
