@@ -10,7 +10,7 @@
 #include <engine/ecs/components/Transform.hpp>
 #include <engine/ecs/components/Camera.hpp>
 
-#include <engine/ecs/configs/CameraConfigs.hpp>
+#include <engine/config/GraphicsConfig.hpp>
 
 CameraControlSystem::CameraControlSystem(Scene& scene, InputHandler& input_handler): System(scene) {
     m_input_handler = &input_handler;
@@ -25,7 +25,7 @@ void CameraControlSystem::update(float dt) {
 
     for (Entity entity : SceneView<Camera, Transform>(ref_scene)) {
         CameraWrapper camera_wrapper{ref_scene, entity};
-        float cam_offset = dt * CAMERA_SPEED;
+        float cam_offset = dt * GraphicsConfig::Camera::CAMERA_SPEED;
 
         // poll camera keys
         if(m_input_handler->get_key(GLFW_KEY_W))
@@ -61,15 +61,15 @@ void CameraControlSystem::update(float dt) {
 
 void CameraControlSystem::mouse_listener(Event& event) {
     m_camera_rotation.rotation = event.get_param<WindowManager::MouseData>(Events::Window::Input::Mouse::MOUSE_DATA);
-    m_camera_rotation.rotation.x_offset *= CAMERA_MOUSE_SENSITIVITY;
-    m_camera_rotation.rotation.y_offset *= CAMERA_MOUSE_SENSITIVITY;
+    m_camera_rotation.rotation.x_offset *= GraphicsConfig::Camera::CAMERA_MOUSE_SENSITIVITY;
+    m_camera_rotation.rotation.y_offset *= GraphicsConfig::Camera::CAMERA_MOUSE_SENSITIVITY;
 
     m_camera_rotation.b_rotate = true;
 }
 
 void CameraControlSystem::scroll_listener(Event& event) {
     WindowManager::ScrollData scroll_data = event.get_param<WindowManager::ScrollData>(Events::Window::Input::Scroll::SCROLL_DATA);
-    m_camera_zoom.zoom_offset = scroll_data.y_offset * CAMERA_SCROLL_SENSITIVITY;
+    m_camera_zoom.zoom_offset = scroll_data.y_offset * GraphicsConfig::Camera::CAMERA_SCROLL_SENSITIVITY;
     
     m_camera_zoom.b_zoom = true;
 }

@@ -3,7 +3,7 @@
 #include <engine/graphics/CameraWrapper.hpp>
 #include <engine/graphics/lib/GraphicsHelper.hpp>
 
-#include <engine/ecs/configs/CameraConfigs.hpp>
+#include <engine/config/GraphicsConfig.hpp>
 
 CameraWrapper::CameraWrapper(Scene& scene, Entity camera): 
     ref_scene{scene}, m_camera{camera} {}
@@ -49,7 +49,7 @@ void CameraWrapper::rotate_camera(double x_offset, double y_offset) {
     camera.pitch += glm::radians(y_offset);
 
     // clamp pitch to pitch limits
-    camera.pitch = glm::clamp(camera.pitch, -CAMERA_PITCH_LIMIT, CAMERA_PITCH_LIMIT);
+    camera.pitch = glm::clamp(camera.pitch, -GraphicsConfig::Camera::CAMERA_PITCH_LIMIT, GraphicsConfig::Camera::CAMERA_PITCH_LIMIT);
 
     camera.cam_front.x = cos(camera.yaw) * cos(camera.pitch);
     camera.cam_front.y = sin(camera.pitch);
@@ -90,5 +90,5 @@ void CameraWrapper::translate_camera(BasicMovement direction, float distance) {
 void CameraWrapper::zoom_camera(double offset) {
     auto& camera = ref_scene.get_component<Camera>(m_camera);
     camera.vfov -= (float) glm::radians(offset);
-    camera.vfov = glm::clamp(camera.vfov, CAMERA_VFOV_MIN, CAMERA_VFOV_MAX);
+    camera.vfov = glm::clamp(camera.vfov, GraphicsConfig::Camera::CAMERA_VFOV_MIN, GraphicsConfig::Camera::CAMERA_VFOV_MAX);
 }
