@@ -25,6 +25,8 @@ public:
     void init();
     void update(float dt);
 
+    void set_uniforms_pre_rendering();
+
     models_interface_type load_models(std::unordered_map<std::string, std::string> models);
 
     cubemaps_interface_type load_cubemaps(std::unordered_map<std::string, CubemapFaces> cubemaps);

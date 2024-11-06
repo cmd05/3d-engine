@@ -114,6 +114,10 @@ void RenderSystem::update(float dt)
         draw_cubemap(ref_scene.get_component<Cubemap>(entity).id);
 }
 
+void RenderSystem::set_uniforms_pre_rendering() {
+    // call some private function which sets the pre render loop uniforms   
+}
+
 void RenderSystem::window_size_listener(Event& event) {
     auto window_width = event.get_param<int>(Events::Window::Resized::WIDTH);
     auto window_height = event.get_param<int>(Events::Window::Resized::HEIGHT);

@@ -300,6 +300,8 @@ int main() {
     last_frame = current_frame = window_manager.get_time(); // note: windowManager.get_time() is not exactly zero at this call
     float dt = 0.0f;
 
+    render_system.set_uniforms_pre_rendering();
+
     // render loop
     while (!quit)
     {
