@@ -9,7 +9,6 @@ public:
     Camera(unsigned int width, unsigned int height): view_width{width}, view_height{height} {}
 public:
     // rendering parameters
-    // TODO: Move all camera config values from CameraControlSystem, Camera.hpp, CameraWrapper to config file / Types.hpp
     float vfov = GraphicsConfig::Camera::DEFAULT_CAM_VFOV;
     float near_clip = GraphicsConfig::Camera::DEFAULT_CAM_NEAR_CLIP;
     float far_clip = GraphicsConfig::Camera::DEFAULT_CAM_FAR_CLIP;
