@@ -125,5 +125,9 @@ void RenderSystem::window_size_listener(Event& event) {
     // resize viewport to match new window dimensions
     glViewport(0, 0, window_width, window_height);
 
-    m_camera_wrapper.resize_view(window_width, window_height); // resize camera aspect ratio
+    // resize view size for all cameras
+    for(auto& entity : SceneView<Camera, Transform>(ref_scene)) {
+        CameraWrapper camera_wrapper{ref_scene, entity};
+        camera_wrapper.resize_view(window_width, window_height);
+    }
 }
