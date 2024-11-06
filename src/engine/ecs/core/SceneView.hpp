@@ -22,11 +22,10 @@ public:
     iterator end() const { return m_end; }
 
 private:
-    // TODO: convert reference to pointer
-    Scene& ref_scene;
+    Scene* m_scene;
 
-    bool exclusive;
-    Signature excluded; // default std::bitset is all zero's
+    bool m_exclusive;
+    Signature m_excluded; // default std::bitset is all zero's
 
     iterator m_begin;
     iterator m_end;
@@ -71,14 +70,14 @@ bool SceneView<ComponentTypes...>::iterator::operator!=(const iterator& other) c
 
 template<typename ...ComponentTypes>
 bool SceneView<ComponentTypes...>::iterator::is_valid_entity(const iterator& it) const {
-    Signature signature_required = scene_view->ref_scene.get_components_signature<ComponentTypes...>();
-    Signature signature_entity = scene_view->ref_scene.get_entity_signature(*it.vec_iterator);
+    Signature signature_required = scene_view->m_scene->get_components_signature<ComponentTypes...>();
+    Signature signature_entity = scene_view->m_scene->get_entity_signature(*it.vec_iterator);
 
     return ( 
-        (!scene_view->exclusive &&
-            (signature_entity & scene_view->excluded).none() &&
+        (!scene_view->m_exclusive &&
+            (signature_entity & scene_view->m_excluded).none() &&
             (signature_required & signature_entity) == signature_required) ||
-        (scene_view->exclusive && signature_required == signature_entity)
+        (scene_view->m_exclusive && signature_required == signature_entity)
     );
 }
 
@@ -96,12 +95,15 @@ typename SceneView<ComponentTypes...>::iterator& SceneView<ComponentTypes...>::i
 template<typename ...ComponentTypes>
 template<typename ...ExcludeTypes>
 SceneView<ComponentTypes...>::SceneView(Scene& scene, SceneViewExclude<ExcludeTypes...> exclude): SceneView(scene) {
-    excluded = ref_scene.get_components_signature<ExcludeTypes...>();
+    m_excluded = m_scene->get_components_signature<ExcludeTypes...>();
 }
 
 template<typename ...ComponentTypes>
-SceneView<ComponentTypes...>::SceneView(Scene& scene, bool exclusive): ref_scene{scene}, exclusive{exclusive} {
-    auto [begin, end] = ref_scene.get_smallest_component_array<ComponentTypes...>();
+SceneView<ComponentTypes...>::SceneView(Scene& scene, bool exclusive) {
+    m_exclusive = exclusive;
+    m_scene = &scene;
+
+    auto [begin, end] = m_scene->get_smallest_component_array<ComponentTypes...>();
 
     m_begin = iterator{begin, this};
     m_end = iterator{end, this};
