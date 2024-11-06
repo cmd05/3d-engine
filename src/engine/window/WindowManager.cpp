@@ -61,7 +61,7 @@ void WindowManager::update() {
     }
 
     // check that imgui is not focused/hovered
-    if(m_input_handler->get_key(GLFW_KEY_LEFT_ALT) && g_window_focused) {
+    if(m_input_handler->get_key(GLFW_KEY_LEFT_ALT) && is_window_focused()) {
         // Event event {Events::Window::RESIZED};
         // event.set_param(Events::Window::Resized::WIDTH, width);
         // event.set_param(Events::Window::Resized::HEIGHT, height);
@@ -71,7 +71,7 @@ void WindowManager::update() {
         g_window_focused = false;
     }
 
-    if(m_input_handler->get_key(GLFW_KEY_ENTER) && !g_window_focused) {
+    if(m_input_handler->get_key(GLFW_KEY_ENTER) && !is_window_focused()) {
         // Event event {Events::Window::RESIZED};
         // event.set_param(Events::Window::Resized::WIDTH, width);
         // event.set_param(Events::Window::Resized::HEIGHT, height);
@@ -120,9 +120,11 @@ void WindowManager::key_callback(GLFWwindow* window, int key, int scancode, int 
 
 void WindowManager::scroll_callback(GLFWwindow* window, double x_offset, double y_offset) {
     WindowManager* p_window_manager = reinterpret_cast<WindowManager*>(glfwGetWindowUserPointer(window));
-
     if(!p_window_manager)
         ASSERT_MESSAGE("WindowManager handler not set");
+
+    if(!is_window_focused())
+        return;
 
     p_window_manager->m_scroll_data.x_offset = x_offset;
     p_window_manager->m_scroll_data.y_offset = y_offset;
@@ -138,6 +140,9 @@ void WindowManager::mouse_callback(GLFWwindow* window, double xpos_in, double yp
 
     if(!p_window_manager)
         ASSERT_MESSAGE("WindowManager handler not set");
+
+    if(!is_window_focused() || p_window_manager->m_gui_main->io_want_capture_mouse())
+        return;
 
     if(p_window_manager->m_mouse_data.first_mouse) {
         p_window_manager->m_mouse_data.mouse_last_x = xpos_in;

@@ -101,13 +101,16 @@ int main() {
 
     main_scene.add_component(
         camera_entity,
-        Transform {.position = glm::vec3(0.0f, 0.0f, 500.0f)}
+        Transform {.position = glm::vec3(90.0f, 50.0f, 10.0f)}
     );
 
     main_scene.add_component(
         camera_entity,
         Camera(DEFAULT_SCR_WIDTH, DEFAULT_SCR_HEIGHT)
     );
+
+    Camera& camera_component = main_scene.get_component<Camera>(camera_entity);
+    camera_component.cam_front = glm::vec3(-1.0f, 0.0f, 0.0f);
 
     auto& render_system = main_scene.register_system<RenderSystem>(camera_entity, gui_state);
     
