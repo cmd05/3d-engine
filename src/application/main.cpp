@@ -22,7 +22,7 @@ cmake --build build > log.txt && ./build/3dengine.exe
 #include <engine/ecs/components/Camera.hpp>
 #include <engine/ecs/components/Gravity.hpp>
 #include <engine/ecs/components/Player.hpp>
-#include <engine/ecs/components/Renderable.hpp>
+#include <engine/ecs/components/RenderableComponent.hpp>
 #include <engine/ecs/components/RigidBody.hpp>
 #include <engine/ecs/components/Thrust.hpp>
 #include <engine/ecs/components/Transform.hpp>
@@ -75,7 +75,7 @@ int main() {
     main_scene.register_component<
         Camera,
         Gravity,
-        Renderable,
+        RenderableComponent,
         RigidBody,
         Transform,
         Model,
@@ -227,7 +227,7 @@ int main() {
 
         main_scene.add_component(
             entity,
-            Renderable {
+            RenderableComponent {
                 .color = glm::vec3(rand_color(generator), rand_color(generator), rand_color(generator))
             }
         );

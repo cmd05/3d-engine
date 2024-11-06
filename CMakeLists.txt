@@ -98,13 +98,13 @@ target_sources(
 target_sources(
     3dengine
     PRIVATE
-    src/engine/ecs/components/Camera.hpp
-    src/engine/ecs/components/Gravity.hpp
-    src/engine/ecs/components/Player.hpp
-    src/engine/ecs/components/Renderable.hpp
-    src/engine/ecs/components/RigidBody.hpp
-    src/engine/ecs/components/Thrust.hpp
-    src/engine/ecs/components/Transform.hpp
+    # src/engine/ecs/components/Camera.hpp
+    # src/engine/ecs/components/Gravity.hpp
+    # src/engine/ecs/components/Player.hpp
+    # src/engine/ecs/components/RenderableComponent.hpp
+    # src/engine/ecs/components/RigidBody.hpp
+    # src/engine/ecs/components/Thrust.hpp
+    # src/engine/ecs/components/Transform.hpp
 
     src/engine/ecs/core/ComponentArray.hpp
     src/engine/ecs/core/ComponentManager.cpp

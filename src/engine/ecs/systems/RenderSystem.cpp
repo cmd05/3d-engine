@@ -11,7 +11,7 @@
 
 #include <engine/ecs/components/Cubemap.hpp>
 #include <engine/ecs/components/Camera.hpp>
-#include <engine/ecs/components/Renderable.hpp>
+#include <engine/ecs/components/RenderableComponent.hpp>
 #include <engine/ecs/components/Transform.hpp>
 #include <engine/ecs/components/Model.hpp>
 #include <engine/ecs/components/PointLightComponent.hpp>
@@ -100,7 +100,7 @@ void RenderSystem::update(float dt)
     // ---
 
     // draw models
-    for(const auto& entity : SceneView<Renderable, Model, Transform>(ref_scene)) {
+    for(const auto& entity : SceneView<RenderableComponent, Model, Transform>(ref_scene)) {
         const auto& transform = ref_scene.get_component<Transform>(entity);
         const auto& object_model = ref_scene.get_component<Model>(entity);
 
@@ -110,7 +110,7 @@ void RenderSystem::update(float dt)
     glDisable(GL_CULL_FACE);
 
     // draw cubemaps
-    for(const auto& entity : SceneView<Renderable, Cubemap>(ref_scene))
+    for(const auto& entity : SceneView<RenderableComponent, Cubemap>(ref_scene))
         draw_cubemap(ref_scene.get_component<Cubemap>(entity).id);
 }
 
