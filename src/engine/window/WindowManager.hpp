@@ -7,10 +7,6 @@
 
 #include <engine/input/InputHandler.hpp>
 
-// TODO: move this to WindowManagerConfig
-constexpr int DEFAULT_SCR_WIDTH = 1920;
-constexpr int DEFAULT_SCR_HEIGHT = 1080;
-
 class Scene;
 class GUIMain;
 

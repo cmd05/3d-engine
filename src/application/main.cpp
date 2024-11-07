@@ -31,8 +31,9 @@ cmake --build build > log.txt && ./build/3dengine.exe
 
 #include <engine/window/WindowManager.hpp>
 #include <engine/input/InputHandler.hpp>
-
 #include <engine/gui/GUIMain.hpp>
+
+#include <engine/config/WindowConfig.hpp>
 
 // main scene
 Scene main_scene;
@@ -55,8 +56,11 @@ int main() {
     GUIMain gui_main {gui_state, glsl_version};
 
     // --- order must be exact ---
+    int window_width = WindowConfig::DEFAULT_SCR_WIDTH;
+    int window_height = WindowConfig::DEFAULT_SCR_HEIGHT;
+
     window_manager.bind_gui(gui_main);
-    window_manager.init("3D Engine", DEFAULT_SCR_WIDTH, DEFAULT_SCR_HEIGHT, 0, 0);
+    window_manager.init("3D Engine", window_width, window_height, 0, 0);
     
     gui_main.bind_window_manager(window_manager);
     gui_main.init("3D Engine Editor");
@@ -102,7 +106,7 @@ int main() {
 
     main_scene.add_component(
         camera_entity,
-        Camera(DEFAULT_SCR_WIDTH, DEFAULT_SCR_HEIGHT)
+        Camera(window_width, window_height)
     );
 
     Camera& camera_component = main_scene.get_component<Camera>(camera_entity);
