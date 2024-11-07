@@ -314,7 +314,7 @@ void ModelManager::draw_mesh(const std::unique_ptr<Shader>& shader, MeshDrawData
             tex_name = "texture_ambient" + std::to_string(ambient_nr++);
 
         // set value of texture sampler as the texture unit
-        glUniform1i(glGetUniformLocation(shader->get_id(), tex_name.c_str()), i);
+        shader->set_uniform<int>(tex_name.c_str(), i);
         glBindTexture(GL_TEXTURE_2D, mesh_draw_data.textures[i].first);
     }
 

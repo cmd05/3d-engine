@@ -118,7 +118,7 @@ void TextureManager::draw_cubemap(unsigned int cubemap_id, const std::unique_ptr
     // TODO: fix setting texture units and other constant uniforms before render loop (in constructor / rendersystem::init())
     // this can be fixed by having shaders specific to each class. i.e cubemap_shader is initialized in TextureManager
     // we can have a ResourceManager to hold all the shader objects in memory and return pointers (and an id) to them
-    glUniform1i(glGetUniformLocation(cubemap_shader->get_id(), "skybox"), 0);
+    cubemap_shader->set_uniform<int>("skybox", 0);
 
     glm::mat4 view = glm::mat4(glm::mat3(camera_wrapper.get_view_matrix())); // remove translation from the view matrix
     cubemap_shader->set_uniform<glm::mat4>("view", view);
