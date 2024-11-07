@@ -49,26 +49,11 @@ static constexpr std::uint32_t operator "" _hash(char const* s, std::size_t coun
 namespace Events::Window {
     const EventId QUIT = "Events::Window::QUIT"_hash;
     const EventId RESIZED = "Events::Window::RESIZED"_hash;
-    const EventId INPUT = "Events::Window::INPUT"_hash;
+    const EventId FOCUS_CHANGE = "Events::Window::FOCUS_CHANGE"_hash;
 }
 
-namespace Events::Window::Input {
-    const EventId KEYBOARD = "Events::Window::Input::KEYBOARD"_hash;
-    const EventId MOUSE = "Events::Window::Input::MOUSE"_hash;
-    const EventId SCROLL = "Events::Window::Input::SCROLL"_hash;
-    const EventId FOCUS_CHANGE = "Events::Window::Input::FOCUS_CHANGE"_hash;
-}
-
-namespace Events::Window::Input::Keyboard {
-    const ParamId KEYS = "Events::Window::Input::Keyboard::KEYS"_hash; // implement camera translation
-}
-
-namespace Events::Window::Input::Mouse {
-    const ParamId MOUSE_DATA = "Events::Window::Input::Mouse::MOUSE_DATA"_hash;
-}
-
-namespace Events::Window::Input::Scroll {
-    const ParamId SCROLL_DATA = "Events::Window::Input::Scroll::SCROLL_DATA"_hash;
+namespace Events::Window::FocusChange {
+    const ParamId FOCUSED = "Events::Window::FocusChange::FOCUSED"_hash;
 }
 
 namespace Events::Window::Resized {
@@ -76,8 +61,24 @@ namespace Events::Window::Resized {
     const ParamId HEIGHT = "Events::Window::Resized::HEIGHT"_hash;
 }
 
-namespace Events::Window::Input::FocusChange {
-    const ParamId FOCUSED = "Events::Window::Input::FocusChange::FOCUSED"_hash;
+/// Input
+
+namespace Events::Input {
+    const EventId KEYBOARD = "Events::Input::KEYBOARD"_hash;
+    const EventId MOUSE = "Events::Input::MOUSE"_hash;
+    const EventId SCROLL = "Events::Input::SCROLL"_hash;
+};
+
+namespace Events::Input::Keyboard {
+    const ParamId KEYS = "Events::Input::Keyboard::KEYS"_hash; // implement camera translation
+}
+
+namespace Events::Input::Mouse {
+    const ParamId MOUSE_DATA = "Events::Input::Mouse::MOUSE_DATA"_hash;
+}
+
+namespace Events::Input::Scroll {
+    const ParamId SCROLL_DATA = "Events::Input::Scroll::SCROLL_DATA"_hash;
 }
 
 // GLFW Keys information
@@ -85,7 +86,6 @@ constexpr int WIN_INPUT_KEYS_START = 0;
 constexpr int WIN_INPUT_KEYS_END = 1024; // not included
 constexpr int WIN_INPUT_KEYS_LEN = WIN_INPUT_KEYS_END;
 
-// Input
 enum class InputButtons {
     W,
     A,

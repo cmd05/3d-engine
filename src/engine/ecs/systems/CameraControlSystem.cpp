@@ -15,8 +15,8 @@
 CameraControlSystem::CameraControlSystem(Scene& scene, InputHandler& input_handler): System(scene) {
     m_input_handler = &input_handler;
 
-    ref_scene.add_event_listener(METHOD_LISTENER(Events::Window::Input::MOUSE, CameraControlSystem::mouse_listener));
-    ref_scene.add_event_listener(METHOD_LISTENER(Events::Window::Input::SCROLL, CameraControlSystem::scroll_listener));
+    ref_scene.add_event_listener(METHOD_LISTENER(Events::Input::MOUSE, CameraControlSystem::mouse_listener));
+    ref_scene.add_event_listener(METHOD_LISTENER(Events::Input::SCROLL, CameraControlSystem::scroll_listener));
 }
 
 void CameraControlSystem::update(float dt) {
@@ -61,7 +61,7 @@ void CameraControlSystem::update(float dt) {
 }
 
 void CameraControlSystem::mouse_listener(Event& event) {
-    m_camera_rotation.rotation = event.get_param<InputHandler::MouseData>(Events::Window::Input::Mouse::MOUSE_DATA);
+    m_camera_rotation.rotation = event.get_param<InputHandler::MouseData>(Events::Input::Mouse::MOUSE_DATA);
     m_camera_rotation.rotation.x_offset *= GraphicsConfig::Camera::CAMERA_MOUSE_SENSITIVITY;
     m_camera_rotation.rotation.y_offset *= GraphicsConfig::Camera::CAMERA_MOUSE_SENSITIVITY;
 
@@ -69,7 +69,7 @@ void CameraControlSystem::mouse_listener(Event& event) {
 }
 
 void CameraControlSystem::scroll_listener(Event& event) {
-    InputHandler::ScrollData scroll_data = event.get_param<InputHandler::ScrollData>(Events::Window::Input::Scroll::SCROLL_DATA);
+    InputHandler::ScrollData scroll_data = event.get_param<InputHandler::ScrollData>(Events::Input::Scroll::SCROLL_DATA);
     m_camera_zoom.zoom_offset = scroll_data.y_offset * GraphicsConfig::Camera::CAMERA_SCROLL_SENSITIVITY;
     
     m_camera_zoom.b_zoom = true;

@@ -8,7 +8,7 @@
 
 void PlayerControlSystem::init()
 {
-    // ref_scene.add_event_listener(METHOD_LISTENER(Events::Window::INPUT, PlayerControlSystem::input_listener));
+    // ref_scene.add_event_listener(METHOD_LISTENER(Events::Input::, PlayerControlSystem::input_listener));
 }
 
 void PlayerControlSystem::update(float dt)
@@ -54,5 +54,4 @@ void PlayerControlSystem::update(float dt)
 
 void PlayerControlSystem::input_listener(Event& event)
 {
-    // m_buttons = event.get_param<std::bitset<8>>(Events::Window::Input::INPUT);
 }

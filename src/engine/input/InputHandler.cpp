@@ -32,8 +32,8 @@ void InputHandler::handle_mouse_callback(double xpos_in, double ypos_in) {
     m_mouse_data.mouse_last_y = ypos_in;
 
     // send event
-    Event event(Events::Window::Input::MOUSE); // TODO: rename to Events::Input::MOUSE
-    event.set_param(Events::Window::Input::Mouse::MOUSE_DATA, m_mouse_data);
+    Event event(Events::Input::MOUSE);
+    event.set_param(Events::Input::Mouse::MOUSE_DATA, m_mouse_data);
     m_scene->send_event(event);
 }
 
@@ -41,7 +41,7 @@ void InputHandler::handle_scroll_callback(double x_offset, double y_offset) {
     m_scroll_data.x_offset = x_offset;
     m_scroll_data.y_offset = y_offset;
 
-    Event event(Events::Window::Input::SCROLL); // TODO: rename to Events::Input::SCROLL
-    event.set_param(Events::Window::Input::Scroll::SCROLL_DATA, m_scroll_data);
+    Event event(Events::Input::SCROLL);
+    event.set_param(Events::Input::Scroll::SCROLL_DATA, m_scroll_data);
     m_scene->send_event(event);
 }
