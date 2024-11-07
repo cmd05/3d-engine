@@ -115,7 +115,7 @@ void TextureManager::draw_cubemap(unsigned int cubemap_id, const std::unique_ptr
 
     cubemap_shader->activate();
 
-    // TODO: fix setting texture units and other constant uniforms before render loop (in constructor / rendersystem::init())
+    // TBD: fix setting texture units and other constant uniforms before render loop (in constructor / rendersystem::init())
     // this can be fixed by having shaders specific to each class. i.e cubemap_shader is initialized in TextureManager
     // we can have a ResourceManager to hold all the shader objects in memory and return pointers (and an id) to them
     cubemap_shader->set_uniform<int>("skybox", 0);
