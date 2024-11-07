@@ -7,6 +7,7 @@
 
 #include <engine/input/InputHandler.hpp>
 
+// TODO: move this to WindowManagerConfig
 constexpr int DEFAULT_SCR_WIDTH = 1920;
 constexpr int DEFAULT_SCR_HEIGHT = 1080;
 
@@ -35,25 +36,9 @@ public:
     static void scroll_callback(GLFWwindow* window, double x_offset, double y_offset);
     static void framebuffer_size_callback(GLFWwindow* window, int width, int height);
     
-    // void update_keys();
-
     GLFWwindow* get_window() { return m_window; }
     GLFWwindow* get_current_context() { return glfwGetCurrentContext(); }
     void set_current_context(GLFWwindow* window) { glfwMakeContextCurrent(window); }
-
-    struct MouseData {
-        bool first_mouse = true;
-        double mouse_last_x = 0;
-        double mouse_last_y = 0;
-
-        double x_offset;
-        double y_offset;
-    };
-
-    struct ScrollData {
-        double x_offset = 0;
-        double y_offset = 0;
-    };
 
     static bool is_window_focused();
 private:
@@ -63,7 +48,5 @@ private:
 
     Scene& ref_scene;
 
-    MouseData m_mouse_data{};
-    ScrollData m_scroll_data{};
     // bool m_window_focused = false;
 };

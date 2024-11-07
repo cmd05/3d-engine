@@ -275,7 +275,8 @@ void ModelManager::draw_mesh(const std::unique_ptr<Shader>& shader, MeshDrawData
     unsigned int normal_nr = 1;
     unsigned int ambient_nr = 1;
 
-    // TODO: store this information in model dump
+    // TODO: store this information in MeshTexturesAvailable
+    
     // bool has_amb_tex = std::find_if(mesh_draw_data.textures.begin(), mesh_draw_data.textures.end(),
     //     [](const auto& pair) { return pair.second == MeshTextureType::AMBIENT; }) != mesh_draw_data.textures.end();
     // bool has_diff_tex = std::find_if(mesh_draw_data.textures.begin(), mesh_draw_data.textures.end(),

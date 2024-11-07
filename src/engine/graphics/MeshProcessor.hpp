@@ -28,6 +28,20 @@ enum MeshTextureType {
     // UNKNOWN // does not match any of the above types only then
 };
 
+struct MeshTexturesAvailable {
+    bool diffuse = false;
+    bool specular = false;
+    bool normal = false;
+    bool ambient = false;
+    bool height = false;
+    bool metallic = false;
+    bool roughness = false;
+    bool metallic_roughness = false;
+    // ...
+
+    bool unknown = true;
+};
+
 struct MeshTexture {
     MeshTextureType type;
     std::string path;

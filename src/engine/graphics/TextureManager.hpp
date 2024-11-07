@@ -25,7 +25,6 @@ public:
 
     cubemaps_interface_type load_cubemaps(std::unordered_map<std::string, CubemapFaces> cubemaps);
     unsigned int add_cubemap(CubemapFaces faces);
-    // FIX: dirty workaround right now for matrices. take Camera& as a reference, for camera class
     void draw_cubemap(unsigned int cubemap_id, const std::unique_ptr<Shader>& cubemap_shader, const CameraWrapper& camera_wrapper);
 private:
     std::unordered_map<std::string, unsigned int> m_loaded_textures; // absolute texture path, texture id

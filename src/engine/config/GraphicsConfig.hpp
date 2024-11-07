@@ -14,10 +14,6 @@ struct GraphicsConfig {
         static constexpr glm::vec3 DEFAULT_CAM_FRONT = glm::vec3(0.0f, 0.0f, -1.0f);
         static constexpr glm::vec3 DEFAULT_CAM_UP = DEFAULT_CAM_WORLD_UP;
 
-        // camera rotation
-        static constexpr float DEFAULT_CAM_YAW = glm::asin(DEFAULT_CAM_FRONT.z); // default yaw corresponding to cam_front
-        static constexpr float DEFAULT_CAM_PITCH = 0;
-
         // camera movement
         static constexpr float CAMERA_PITCH_LIMIT = glm::radians(89.0f);
         static constexpr float CAMERA_VFOV_MIN = glm::radians(1.0f);
@@ -28,9 +24,7 @@ struct GraphicsConfig {
         static constexpr double CAMERA_SCROLL_SENSITIVITY = 1.0;
         static constexpr float CAMERA_SPEED = 90.0f;
 
-        // camera position (stored in `TransformComponent`)
+        // camera position (stored in `Transform`)
         static constexpr glm::vec3 DEFAULT_CAM_POS = glm::vec3(0.0f);
     };
 };
-
-// extern GraphicsConfigs g_graphics_configs;

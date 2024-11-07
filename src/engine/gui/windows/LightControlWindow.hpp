@@ -11,7 +11,7 @@ public:
         // Always center this window when appearing
         // ImVec2 center = ImGui::GetMainViewport()->GetCenter();
         // ImGui::SetNextWindowPos(center, ImGuiCond_Appearing, ImVec2(0.1f, 0.5f));
-        ImGui::SetNextWindowPos(ImVec2(10, 200), ImGuiCond_Once); // TODO: fix these magic values for window size and placements
+        ImGui::SetNextWindowPos(ImVec2(10, 200), ImGuiCond_Once);
         ImGui::SetNextWindowSize(ImVec2(m_window_length, m_window_height));
         ImGui::Begin("Light Control");                          // Create a window called "Hello, world!" and append into it.
         

@@ -44,11 +44,7 @@ void quit_handler(Event& event) {
 }
 
 int main() {
-    // TODO: (remove comment?) The Scene and Window class have been intentionally decoupled
-    // Window stores a Scene&, and can send events to the `Scene` and "it's ecosystem i.e systems" via `Event`
-    // However, instead of just events, we use InputHandler for polling. ex: keyboard keys
-    
-    InputHandler input_handler;
+    InputHandler input_handler {main_scene};
 
     // Window setup
     WindowManager window_manager {main_scene, input_handler}; // window manager requires reference to scene and input handler
@@ -110,7 +106,7 @@ int main() {
     );
 
     Camera& camera_component = main_scene.get_component<Camera>(camera_entity);
-    camera_component.cam_front = glm::vec3(-1.0f, 0.0f, 0.0f);
+    camera_component.set_cam_front(glm::vec3(-1.0f, 0.0f, 0.0f));
 
     auto& render_system = main_scene.register_system<RenderSystem>(camera_entity, gui_state);
     

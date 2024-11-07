@@ -1,0 +1,7 @@
+{
+    "name": "model_shader",
+    "uniforms": {
+        "u_lights": 0,
+        "u_ambient_strength": 1
+    }
+}

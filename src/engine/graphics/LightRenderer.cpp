@@ -1,8 +1,6 @@
 #include <engine/graphics/LightRenderer.hpp>
 
 LightRenderer::LightRenderer() {
-// TODO: make resource manager which loads shaders using make_unique
-    // resource manager will then own the Shader objects in memory. (to decide)
     m_light_cube_shader = std::make_unique<Shader>(std::string(FS_SHADERS_DIR) + "light_cube.vs", std::string(FS_SHADERS_DIR) + "light_cube.fs");
 }
 

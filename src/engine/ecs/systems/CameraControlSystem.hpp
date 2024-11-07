@@ -4,7 +4,6 @@
 #include <engine/ecs/core/System.hpp>
 #include <engine/ecs/core/Event.hpp>
 
-#include <engine/window/WindowManager.hpp>
 #include <engine/input/InputHandler.hpp>
 
 class CameraControlSystem : public System {
@@ -15,7 +14,7 @@ public:
 private:
     struct CameraRotateData {
         bool b_rotate = false;
-        WindowManager::MouseData rotation;
+        InputHandler::MouseData rotation;
     } m_camera_rotation;
     
     struct CameraZoomData {
@@ -26,6 +25,5 @@ private:
     void mouse_listener(Event& event);
     void scroll_listener(Event& event);
 
-    // WindowManager* m_window_manager; // TODO:
     InputHandler* m_input_handler;
 };

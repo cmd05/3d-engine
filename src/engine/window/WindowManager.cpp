@@ -36,6 +36,7 @@ void WindowManager::init(std::string const& window_title, unsigned int window_wi
 
     // tell GLFW to capture our mouse
     // glfwSetInputMode(m_window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+    glfwSetInputMode(m_window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
 
     // Create OpenGL Context
     glfwMakeContextCurrent(m_window);
@@ -52,32 +53,21 @@ void WindowManager::bind_gui(GUIMain &gui_main) {
 void WindowManager::update() {
     glfwSwapBuffers(m_window);
 
-    // since window_manager.process_events() is before window_manager.update()
-    // we can handle only key setting in key_callback and respond here
-    // TODO: fix logic in entire engine for window quit logic and process
+    // window_manager.process_events() is executed before window_manager.update()
     if(m_input_handler->get_key(GLFW_KEY_ESCAPE)) {
         ref_scene.send_event(Events::Window::QUIT);
         glfwSetWindowShouldClose(m_window, true);
     }
 
-    // check that imgui is not focused/hovered
     if(m_input_handler->get_key(GLFW_KEY_LEFT_ALT) && is_window_focused()) {
-        // Event event {Events::Window::RESIZED};
-        // event.set_param(Events::Window::Resized::WIDTH, width);
-        // event.set_param(Events::Window::Resized::HEIGHT, height);
-    
-        // p_window_manager->ref_scene.send_event(event);
         glfwSetInputMode(m_window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
         g_window_focused = false;
     }
 
     if(m_input_handler->get_key(GLFW_KEY_ENTER) && !is_window_focused()) {
-        // Event event {Events::Window::RESIZED};
-        // event.set_param(Events::Window::Resized::WIDTH, width);
-        // event.set_param(Events::Window::Resized::HEIGHT, height);
-    
-        // p_window_manager->ref_scene.send_event(event);
         glfwSetInputMode(m_window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+        
+        m_input_handler->get_mouse_data().first_mouse = true; // avoid large offsets on refocus
         g_window_focused = true;
     }
 }
@@ -97,25 +87,15 @@ void WindowManager::framebuffer_size_callback(GLFWwindow* window, int width, int
 
 void WindowManager::key_callback(GLFWwindow* window, int key, int scancode, int action, int mods) {
     WindowManager* p_window_manager = reinterpret_cast<WindowManager*>(glfwGetWindowUserPointer(window));
-    // const ImGuiIO& io = p_window_manager->m_gui_main->get_io();
-    // io.AddKeyEvent(key, action);
 
-    // // if(io.WantCaptureKeyboard)
     if(p_window_manager->m_gui_main->io_want_capture_keyboard())
         return;
-    // ImGui_ImplGlfw_KeyCallback();
 
     if(!p_window_manager)
         ASSERT_MESSAGE("WindowManager handler not set");
 
-    if(key >= WIN_INPUT_KEYS_START && key < WIN_INPUT_KEYS_END) {
-        if(action == GLFW_PRESS)
-            p_window_manager->m_input_handler->set_key(key);
-        else if(action == GLFW_RELEASE) {
-            p_window_manager->m_input_handler->reset_key(key);
-            p_window_manager->m_input_handler->reset_key_processed(key);
-        }
-    }
+    // update state of input handler
+    p_window_manager->m_input_handler->handle_key_callback(key, scancode, action, mods);
 }
 
 void WindowManager::scroll_callback(GLFWwindow* window, double x_offset, double y_offset) {
@@ -126,15 +106,9 @@ void WindowManager::scroll_callback(GLFWwindow* window, double x_offset, double 
     if(!is_window_focused())
         return;
 
-    p_window_manager->m_scroll_data.x_offset = x_offset;
-    p_window_manager->m_scroll_data.y_offset = y_offset;
-
-    Event event(Events::Window::Input::SCROLL);
-    event.set_param(Events::Window::Input::Scroll::SCROLL_DATA, p_window_manager->m_scroll_data);
-    p_window_manager->ref_scene.send_event(event);
+    p_window_manager->m_input_handler->handle_scroll_callback(x_offset, y_offset);
 }
 
-// TODO: window manager sends mouse callback data to InputHandler which transmits an `Event`
 void WindowManager::mouse_callback(GLFWwindow* window, double xpos_in, double ypos_in) {
     WindowManager* p_window_manager = reinterpret_cast<WindowManager*>(glfwGetWindowUserPointer(window));
 
@@ -144,26 +118,7 @@ void WindowManager::mouse_callback(GLFWwindow* window, double xpos_in, double yp
     if(!is_window_focused() || p_window_manager->m_gui_main->io_want_capture_mouse())
         return;
 
-    if(p_window_manager->m_mouse_data.first_mouse) {
-        p_window_manager->m_mouse_data.mouse_last_x = xpos_in;
-        p_window_manager->m_mouse_data.mouse_last_y = ypos_in;
-        p_window_manager->m_mouse_data.first_mouse = false;
-    }
-
-    double xoffset = xpos_in - p_window_manager->m_mouse_data.mouse_last_x;
-    double yoffset = p_window_manager->m_mouse_data.mouse_last_y - ypos_in; // reversed since y-coordinates go from bottom to top
-
-    // set data
-    p_window_manager->m_mouse_data.x_offset = xoffset;
-    p_window_manager->m_mouse_data.y_offset = yoffset;
-
-    p_window_manager->m_mouse_data.mouse_last_x = xpos_in;
-    p_window_manager->m_mouse_data.mouse_last_y = ypos_in;
-
-    // send event
-    Event event(Events::Window::Input::MOUSE);
-    event.set_param(Events::Window::Input::Mouse::MOUSE_DATA, p_window_manager->m_mouse_data);
-    p_window_manager->ref_scene.send_event(event);
+    p_window_manager->m_input_handler->handle_mouse_callback(xpos_in, ypos_in);
 }
 
 void WindowManager::shutdown() {

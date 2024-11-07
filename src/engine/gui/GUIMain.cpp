@@ -1,5 +1,4 @@
 #include <engine/gui/GUIMain.hpp>
-#include "GUIMain.hpp"
 
 GUIMain::GUIMain(GUIState& gui_state, const char* glsl_version) {
     m_gui_state = &gui_state;

@@ -5,11 +5,13 @@
 
 #include <engine/config/GraphicsConfig.hpp>
 
-CameraWrapper::CameraWrapper(Scene& scene, Entity camera): 
-    ref_scene{scene}, m_camera{camera} {}
+CameraWrapper::CameraWrapper(Scene& scene, Entity camera) {
+    m_scene = &scene;
+    m_camera = camera;
+}
 
 void CameraWrapper::resize_view(unsigned int new_width, unsigned int new_height) {
-    auto& camera = ref_scene.get_component<Camera>(m_camera);
+    auto& camera = m_scene->get_component<Camera>(m_camera);
     camera.view_width = new_width;
     camera.view_height = new_height;
 }
@@ -22,27 +24,31 @@ glm::mat4 CameraWrapper::get_view_matrix() const {
     
     // return view_matrix;
 
-    const auto& camera_transform = ref_scene.get_component<Transform>(m_camera);
-    auto& camera = ref_scene.get_component<Camera>(m_camera);
+    const auto& camera_transform = m_scene->get_component<Transform>(m_camera);
+    auto& camera = m_scene->get_component<Camera>(m_camera);
     
     return glm::lookAt(camera_transform.position, camera_transform.position + camera.cam_front, camera.cam_up);
 }
 
 const Transform& CameraWrapper::get_transform_component() const {
-    return ref_scene.get_component<Transform>(m_camera);
+    return m_scene->get_component<Transform>(m_camera);
 }
 
 const Camera& CameraWrapper::get_camera_component() const {
-    return ref_scene.get_component<Camera>(m_camera);
+    return m_scene->get_component<Camera>(m_camera);
 }
 
 glm::mat4 CameraWrapper::get_projection_matrix() const {
-    const auto& camera = ref_scene.get_component<Camera>(m_camera);
+    const auto& camera = m_scene->get_component<Camera>(m_camera);
     return glm::perspective(camera.vfov, (float) camera.view_width / camera.view_height, camera.near_clip, camera.far_clip); 
 }
 
 void CameraWrapper::rotate_camera(double x_offset, double y_offset) {
-    auto& camera = ref_scene.get_component<Camera>(m_camera);
+    auto& camera = m_scene->get_component<Camera>(m_camera);
+
+    // TBD: correct x_offset and y_offset directions according to camera orientation 
+    // (need to properly calculate / transform stuff for this)
+    // glm::vec3 new_offset = x_offset * camera.cam_right + y_offset * camera.world_up;
 
     // apply offsets
     camera.yaw += glm::radians(x_offset);
@@ -59,8 +65,8 @@ void CameraWrapper::rotate_camera(double x_offset, double y_offset) {
     camera.cam_right = glm::normalize(glm::cross(camera.cam_front, camera.world_up));
     camera.cam_up    = glm::normalize(glm::cross(camera.cam_right, camera.cam_front));
     
-    // update camera quaternion
-    // euler to quat rotations
+    // // update camera quaternion
+    // // euler to quat rotations
     // glm::quat q_yaw = glm::angleAxis(camera.yaw, MATH_Y_AXIS);
     // glm::quat q_pitch = glm::angleAxis(camera.pitch, MATH_X_AXIS);
     
@@ -70,8 +76,8 @@ void CameraWrapper::rotate_camera(double x_offset, double y_offset) {
 }
 
 void CameraWrapper::translate_camera(BasicMovement direction, float distance) {
-    auto& camera_transform = ref_scene.get_component<Transform>(m_camera);
-    auto& camera = ref_scene.get_component<Camera>(m_camera);
+    auto& camera_transform = m_scene->get_component<Transform>(m_camera);
+    auto& camera = m_scene->get_component<Camera>(m_camera);
 
     if (direction == BasicMovement::Forward)
         camera_transform.position += camera.cam_front * distance;
@@ -88,7 +94,7 @@ void CameraWrapper::translate_camera(BasicMovement direction, float distance) {
 }
 
 void CameraWrapper::zoom_camera(double offset) {
-    auto& camera = ref_scene.get_component<Camera>(m_camera);
+    auto& camera = m_scene->get_component<Camera>(m_camera);
     camera.vfov -= (float) glm::radians(offset);
     camera.vfov = glm::clamp(camera.vfov, GraphicsConfig::Camera::CAMERA_VFOV_MIN, GraphicsConfig::Camera::CAMERA_VFOV_MAX);
 }

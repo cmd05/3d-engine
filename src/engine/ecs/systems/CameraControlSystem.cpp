@@ -28,6 +28,7 @@ void CameraControlSystem::update(float dt) {
         float cam_offset = dt * GraphicsConfig::Camera::CAMERA_SPEED;
 
         // poll camera keys
+        // TODO: move these keys to a common key mapping .cpp file - KeyMap.cpp
         if(m_input_handler->get_key(GLFW_KEY_W))
             // no need to reset_key here
             camera_wrapper.translate_camera(BasicMovement::Forward, cam_offset);
@@ -60,7 +61,7 @@ void CameraControlSystem::update(float dt) {
 }
 
 void CameraControlSystem::mouse_listener(Event& event) {
-    m_camera_rotation.rotation = event.get_param<WindowManager::MouseData>(Events::Window::Input::Mouse::MOUSE_DATA);
+    m_camera_rotation.rotation = event.get_param<InputHandler::MouseData>(Events::Window::Input::Mouse::MOUSE_DATA);
     m_camera_rotation.rotation.x_offset *= GraphicsConfig::Camera::CAMERA_MOUSE_SENSITIVITY;
     m_camera_rotation.rotation.y_offset *= GraphicsConfig::Camera::CAMERA_MOUSE_SENSITIVITY;
 
@@ -68,7 +69,7 @@ void CameraControlSystem::mouse_listener(Event& event) {
 }
 
 void CameraControlSystem::scroll_listener(Event& event) {
-    WindowManager::ScrollData scroll_data = event.get_param<WindowManager::ScrollData>(Events::Window::Input::Scroll::SCROLL_DATA);
+    InputHandler::ScrollData scroll_data = event.get_param<InputHandler::ScrollData>(Events::Window::Input::Scroll::SCROLL_DATA);
     m_camera_zoom.zoom_offset = scroll_data.y_offset * GraphicsConfig::Camera::CAMERA_SCROLL_SENSITIVITY;
     
     m_camera_zoom.b_zoom = true;

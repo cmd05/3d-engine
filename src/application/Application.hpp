@@ -2,7 +2,6 @@
 #include <engine/window/WindowManager.hpp>
 #include <engine/gui/GUIMain.hpp>
 
-// TODO: create an application class
 // Application::init()
 // Application::run()
 
