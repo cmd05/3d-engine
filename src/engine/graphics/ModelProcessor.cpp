@@ -112,7 +112,7 @@ Mesh ModelProcessor::process_mesh(aiMesh* mesh, const aiScene* scene) {
         std::copy(face.mIndices, face.mIndices + face.mNumIndices, std::back_inserter(indices));
     }
 
-    // process materials
+    // Process Materials
     aiMaterial* material = scene->mMaterials[mesh->mMaterialIndex];
     
     // diffuse maps
@@ -123,19 +123,27 @@ Mesh ModelProcessor::process_mesh(aiMesh* mesh, const aiScene* scene) {
     std::vector<MeshTexture> specular_maps = load_material_textures(material, aiTextureType_SPECULAR, MeshTextureType::SPECULAR);
     textures.insert(textures.end(), specular_maps.begin(), specular_maps.end());
     
-    // normal maps
-    // assimp: "The texture is a (tangent space) normal-map"
+    // normal maps (assimp: "The texture is a (tangent space) normal-map")
     std::vector<MeshTexture> normal_maps = load_material_textures(material, aiTextureType_NORMALS, MeshTextureType::NORMAL);
     textures.insert(textures.end(), normal_maps.begin(), normal_maps.end());
 
-    // TBD: USE HEIGHT MAPS AS MeshTextureType::NORMAL FOR NOW. Fix height maps to parallax mapping?
-    std::vector<MeshTexture> height_maps = load_material_textures(material, aiTextureType_HEIGHT, MeshTextureType::NORMAL);
+    // TBD: USE HEIGHT MAPS AS MeshTextureType::NORMAL FOR NOW. Height maps can be used later for parallax mapping
+    std::vector<MeshTexture> height_maps = load_material_textures(material, aiTextureType_HEIGHT, 
+        MeshTextureType::NORMAL /* NOTE: using HEIGHT MAP as NORMAL MAP */);
+
     textures.insert(textures.end(), height_maps.begin(), height_maps.end());
     
     // ambient maps
     std::vector<MeshTexture> ambient_maps = load_material_textures(material, aiTextureType_AMBIENT, MeshTextureType::AMBIENT);
     textures.insert(textures.end(), ambient_maps.begin(), ambient_maps.end());
-    
+
+    MeshTexturesAvailable textures_available;
+
+    textures_available.diffuse  = diffuse_maps.size();
+    textures_available.specular = specular_maps.size();
+    textures_available.normal   = normal_maps.size() + height_maps.size(); /* NOTE: using HEIGHT MAP as NORMAL MAP */
+    textures_available.ambient  = ambient_maps.size();
+
     /// DEBUGGING
     // height maps 
     // assimp: "The texture is a height map."
@@ -161,7 +169,7 @@ Mesh ModelProcessor::process_mesh(aiMesh* mesh, const aiScene* scene) {
     // enum textures { bool specular; }
     // each model can have multiple textures of the same type. ex: door normals, window normals, floor normals etc.
 
-    return Mesh(std::move(vertices), std::move(indices), std::move(textures));
+    return Mesh(std::move(vertices), std::move(indices), std::move(textures), textures_available);
 }
 
 // checks all material textures of a given type and loads the textures if they're not loaded yet.

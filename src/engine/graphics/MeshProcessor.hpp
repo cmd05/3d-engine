@@ -29,17 +29,14 @@ enum MeshTextureType {
 };
 
 struct MeshTexturesAvailable {
-    bool diffuse = false;
-    bool specular = false;
-    bool normal = false;
-    bool ambient = false;
-    bool height = false;
-    bool metallic = false;
-    bool roughness = false;
-    bool metallic_roughness = false;
-    // ...
-
-    bool unknown = true;
+    unsigned int diffuse            = 0;
+    unsigned int specular           = 0;
+    unsigned int normal             = 0;
+    unsigned int ambient            = 0;
+    unsigned int metallic           = 0;
+    unsigned int roughness          = 0;
+    unsigned int metallic_roughness = 0;
+    // unsigned int unknown = 0;
 };
 
 struct MeshTexture {
@@ -53,7 +50,9 @@ public:
     std::vector<MeshVertex> m_vertices;
     std::vector<unsigned int> m_indices;
     std::vector<MeshTexture> m_textures;
-    
+    MeshTexturesAvailable m_textures_available;
+
     Mesh() {}
-    Mesh(std::vector<MeshVertex> vertices, std::vector<unsigned int> indices, std::vector<MeshTexture> textures);
+    Mesh(std::vector<MeshVertex> vertices, std::vector<unsigned int> indices, 
+        std::vector<MeshTexture> textures, MeshTexturesAvailable mesh_textures_available);
 };

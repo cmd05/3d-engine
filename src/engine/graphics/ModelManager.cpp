@@ -65,10 +65,13 @@ mapper_data_map_type::iterator ModelManager::create_model_dump(const std::string
         ofs.write(reinterpret_cast<char*>(&mesh.m_indices[0]), vec_sz * sizeof(mesh.m_indices[0]));
         
         // textures
+        // write count of different available textures
+        ofs.write(reinterpret_cast<char*>(&mesh.m_textures_available), sizeof(mesh.m_textures_available));
+
         // write size of `m_textures` vector
         vec_sz = mesh.m_textures.size();
         ofs.write(reinterpret_cast<char*>(&vec_sz), sizeof(vec_sz));
-        
+
         // write data for textures
         for(MeshTexture& mesh_texture : mesh.m_textures) {
             // write texture type
@@ -78,6 +81,7 @@ mapper_data_map_type::iterator ModelManager::create_model_dump(const std::string
             std::size_t str_sz = mesh_texture.path.size();
             ofs.write(reinterpret_cast<char*>(&str_sz), sizeof(str_sz));
             ofs.write(reinterpret_cast<char*>(&mesh_texture.path[0]), str_sz * sizeof(mesh_texture.path[0]));
+
         }
     }
     
@@ -135,9 +139,13 @@ ModelManager::ModelData ModelManager::load_model_data(std::string model_bin_path
         ifs.read(reinterpret_cast<char*>(mesh.m_indices.data()), vec_sz * sizeof(unsigned int));
 
         // textures
+        // read count of different available textures
+        ifs.read(reinterpret_cast<char*>(&mesh.m_textures_available), sizeof(mesh.m_textures_available));
+
+        // resize `m_textures`
         ifs.read(reinterpret_cast<char*>(&vec_sz), sizeof(vec_sz));
         mesh.m_textures.resize(vec_sz);
-        
+
         for(MeshTexture& mesh_texture : mesh.m_textures) {
             // texture type
             ifs.read(reinterpret_cast<char*>(&mesh_texture.type), sizeof(MeshTextureType));
@@ -203,6 +211,10 @@ ModelManager::MeshDrawData ModelManager::setup_mesh(std::string model_path, Mesh
     glVertexAttribPointer(4, 3, GL_FLOAT, GL_FALSE, sizeof(MeshVertex), (void*) offsetof(MeshVertex, bitangent));
 
     glBindVertexArray(0);
+
+    // Textures
+    // store count of available textures
+    mesh_draw_data.textures_available = mesh.m_textures_available;
 
     // load textures
     std::string model_dir = model_path.substr(0, model_path.find_last_of('/'));
@@ -270,21 +282,14 @@ void ModelManager::draw_mesh(const std::unique_ptr<Shader>& shader, MeshDrawData
     shader->activate();
 
     // bind appropriate textures
+    // count for texture names as texture_diffuse1, texture_diffuse2 ...
     unsigned int diffuse_nr = 1;
     unsigned int specular_nr = 1;
     unsigned int normal_nr = 1;
     unsigned int ambient_nr = 1;
 
-    // TODO: store this information in MeshTexturesAvailable
-    
-    // bool has_amb_tex = std::find_if(mesh_draw_data.textures.begin(), mesh_draw_data.textures.end(),
-    //     [](const auto& pair) { return pair.second == MeshTextureType::AMBIENT; }) != mesh_draw_data.textures.end();
-    // bool has_diff_tex = std::find_if(mesh_draw_data.textures.begin(), mesh_draw_data.textures.end(),
-    //     [](const auto& pair) { return pair.second == MeshTextureType::DIFFUSE; }) != mesh_draw_data.textures.end();
-    // bool has_normal_tex = std::find_if(mesh_draw_data.textures.begin(), mesh_draw_data.textures.end(),
-    //     [](const auto& pair) { return pair.second == MeshTextureType::NORMAL; }) != mesh_draw_data.textures.end();
-    bool has_spec_tex = std::find_if(mesh_draw_data.textures.begin(), mesh_draw_data.textures.end(),
-        [](const auto& pair) { return pair.second == MeshTextureType::SPECULAR; }) != mesh_draw_data.textures.end();
+    int specular_tex_exists = (mesh_draw_data.textures_available.specular > 0);
+    shader->set_uniform<int>("specular_tex_exists", specular_tex_exists);
 
     // if(has_spec_tex)
     //     ASSERT_MESSAGE("has spec");
@@ -292,10 +297,6 @@ void ModelManager::draw_mesh(const std::unique_ptr<Shader>& shader, MeshDrawData
     //     ASSERT_MESSAGE("has diff");
     // if(has_normal_tex)
     //     ASSERT_MESSAGE("has normal");
-
-
-    // std::cout << has_diff_tex << " " << has_diff_tex << " " << has_spec_tex << '\n';
-    glUniform1i(glGetUniformLocation(shader->get_id(), "specular_tex_exists"), has_spec_tex);
 
     for(unsigned int i = 0; i < mesh_draw_data.textures.size(); i++) {
         glActiveTexture(GL_TEXTURE0 + i);

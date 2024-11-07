@@ -33,8 +33,8 @@ public:
         unsigned int num_vertices;
         unsigned int num_indices;
 
-        // texture id, type
-        std::vector<std::pair<unsigned int, MeshTextureType>> textures;
+        std::vector<std::pair<unsigned int, MeshTextureType>> textures; // texture id, type
+        MeshTexturesAvailable textures_available;
     };
 
     struct ModelDrawData {
