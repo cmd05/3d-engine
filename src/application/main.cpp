@@ -122,9 +122,10 @@ int main() {
         // {"m4a1", std::string(FS_RESOURCES_DIR) +"models/m4a1/m4a1.obj"},
         // {"planet", std::string(FS_RESOURCES_DIR) +"models/planet/planet.obj"},
 
+        // {"no-flag-sponza", std::string(FS_RESOURCES_DIR) + "models/sponza-gltf/scene.gltf"},
+
         // {"cyborg", std::string(FS_RESOURCES_DIR) + "models/cyborg/cyborg.obj"},
         // {"backpack", std::string(FS_RESOURCES_DIR) +"models/forest-backpack/backpack.obj"},
-        // {"sponza", std::string(FS_RESOURCES_DIR) + "models/sponza-gltf/scene.gltf"},
         {"sponza-khronos", std::string(FS_RESOURCES_DIR) + "models/sponza-gltf-khronos/Sponza.gltf"},
 
         // {"sponza", std::string(FS_RESOURCES_DIR) + "models/sponza2/sponza.obj"},
