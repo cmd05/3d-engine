@@ -154,7 +154,7 @@ int main() {
     /// -------------------------------------------------
 
     // auto cubemap_entity = main_scene.create_entity();
-    // main_scene.add_component(cubemap_entity, Renderable{});
+    // main_scene.add_component(cubemap_entity, RenderableComponent{});
     // main_scene.add_component(cubemap_entity, Cubemap{.id = cubemaps.at("sky")});
     
     // Create entities
@@ -169,7 +169,7 @@ int main() {
     generator.seed(std::chrono::system_clock::now().time_since_epoch().count());
 
     std::uniform_real_distribution<float> rand_position(-300.0f, 300.0f);
-    std::uniform_real_distribution<float> rand_light_position(-90.0f, 90.0f);
+    std::uniform_real_distribution<float> rand_light_position(-70.0f, 40.0f);
     std::uniform_real_distribution<float> rand_color(0.0f, 1.0f);
     std::uniform_real_distribution<float> rand_model(0.0f, 1.0f);
     std::uniform_real_distribution<float> rand_gravity(-10.0f, -1.0f); // gravity is negative (downwards force)
@@ -183,9 +183,9 @@ int main() {
         auto light_entity = main_scene.create_entity();
 
         main_scene.add_component(light_entity, Transform{
-            // .position = glm::vec3(rand_position(generator), rand_position(generator), rand_position(generator)),
-            .position = glm::vec3(10.0f, 50.0f, 10.0f),
             // .position = glm::vec3(rand_light_position(generator), 50.0f, rand_light_position(generator)),
+            // .scale = glm::vec3(5.0f)
+            .position = glm::vec3(10.0f, 50.0f, 10.0f),
             .scale = glm::vec3(5.0f)
         });
         
