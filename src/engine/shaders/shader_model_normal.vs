@@ -32,16 +32,19 @@ out vec3 world_Normal;
 
 // ---
 
+precision highp float;
+uniform mat3 normalMatrix;
+
 uniform mat4 model;
 uniform mat4 view;
 uniform mat4 projection;
+uniform mat4 u_MVP;
 
 void main() {
     vs_out.FragPos = vec3(model * vec4(aPos, 1.0));
     vs_out.TexCoords = aTexCoords;
+    // mat3 normalMatrix = transpose(inverse(mat3(model)));
 
-    mat3 normalMatrix = transpose(inverse(mat3(model)));
-    
     // convert normals from model space to world space
     vec3 T = normalize(normalMatrix * aTangent);
     vec3 N = normalize(normalMatrix * aNormal);
@@ -63,5 +66,5 @@ void main() {
 
     world_Normal = normalize(normalMatrix * aNormal);
 
-    gl_Position = projection * view * model * vec4(aPos, 1.0);
+    gl_Position = u_MVP * vec4(aPos, 1.0);
 }

@@ -6,6 +6,7 @@
 
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
+#include <glm/gtc/matrix_inverse.hpp>
 
 #include <engine/graphics/ModelManager.hpp>
 
@@ -337,10 +338,18 @@ void ModelManager::draw_model(const std::unique_ptr<Shader>& model_shader, std::
     model_shader->activate();
     
     // set uniforms
-    model_shader->set_uniform<glm::mat4>("model", GraphicsHelper::create_model_matrix(transform));
-    model_shader->set_uniform<glm::mat4>("view", camera_wrapper.get_view_matrix());
-    model_shader->set_uniform<glm::mat4>("projection", camera_wrapper.get_projection_matrix());
+    glm::mat4 model_matrix = GraphicsHelper::create_model_matrix(transform);
+    glm::mat4 view_matrix = camera_wrapper.get_view_matrix();
+    glm::mat4 projection_matrix = camera_wrapper.get_projection_matrix();
+    glm::mat4 mvp_matrix = projection_matrix * view_matrix * model_matrix;
+
+    model_shader->set_uniform<glm::mat4>("model", model_matrix);
+    model_shader->set_uniform<glm::mat4>("view", view_matrix);
+    model_shader->set_uniform<glm::mat4>("projection", projection_matrix);
     
+    model_shader->set_uniform<glm::mat4>("u_MVP", mvp_matrix);
+    model_shader->set_uniform<glm::mat3>("normalMatrix", glm::inverseTranspose(glm::mat3(model_matrix))); // glm::highp_mat3
+
     // draw meshes
     for(MeshDrawData& mesh_draw_data : model_draw_data.meshes)
         draw_mesh(model_shader, mesh_draw_data);

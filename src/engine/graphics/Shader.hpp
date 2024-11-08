@@ -28,14 +28,22 @@ void Shader::set_uniform(const std::string& name, const std::type_identity_t<T>&
     {
         glUniformMatrix4fv(glGetUniformLocation(m_id, name.c_str()), 1, GL_FALSE, &value[0][0]);
     }
+    
+    if constexpr (std::is_same_v<T, glm::mat3>)
+    {
+        glUniformMatrix3fv(glGetUniformLocation(m_id, name.c_str()), 1, GL_FALSE, &value[0][0]);
+    }
+
     if constexpr (std::is_same_v<T, glm::vec3>)
     {
         glUniform3fv(glGetUniformLocation(m_id, name.c_str()), 1, &value[0]); 
     }
+    
     if constexpr (std::is_same_v<T, float>)
     {
         glUniform1f(glGetUniformLocation(m_id, name.c_str()), value); 
     }
+    
     if constexpr (std::is_same_v<T, int>)
     {
         glUniform1i(glGetUniformLocation(m_id, name.c_str()), value); 
