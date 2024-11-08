@@ -55,7 +55,7 @@ void main() {
     vec3 ambient = u_ambient_strength * color;
 
     // specular
-    vec3 viewDir = normalize(fs_in.TangentViewPos - fs_in.TangentFragPos);
+    // vec3 viewDir = normalize(fs_in.TangentViewPos - fs_in.TangentFragPos);
 
     vec3 result = vec3(0.0);
 
@@ -65,17 +65,17 @@ void main() {
         float diff = max(dot(lightDir, normal), 0.0);
         vec3 diffuse = diff * color;
 
-        vec3 halfwayDir = normalize(lightDir + viewDir);
-        float spec = pow(max(dot(normal, halfwayDir), 0.0), 256.0);
+        // vec3 halfwayDir = normalize(lightDir + viewDir);
+        // float spec = pow(max(dot(normal, halfwayDir), 0.0), 256.0);
+        // vec3 specular = vec3(0.3) * spec;
 
-        vec3 specular = vec3(0.3) * spec;
+        // // orange specular => no specular texture for model/mesh
+        // if(specular_tex_exists)
+        //     specular *= vec3(texture(texture_specular1, fs_in.TexCoords));
+        // else
+        //     specular = vec3(0.0);
+        vec3 specular = vec3(0.0);
 
-        // orange specular => no specular texture for model/mesh
-        if(specular_tex_exists)
-            specular *= vec3(texture(texture_specular1, fs_in.TexCoords));
-        else
-            specular = vec3(0.0);
-        
         float dist = length(fs_in.TangentPointLights[i].position - fs_in.TangentFragPos);
         float attenuation = 1.0 / (att_const + att_linear * dist + att_quadratic * (dist * dist));
 
