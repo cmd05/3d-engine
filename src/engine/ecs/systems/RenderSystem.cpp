@@ -19,29 +19,29 @@
 #include <engine/graphics/Shader.hpp>
 #include <engine/graphics/objects/CubeObject.hpp>
 
+void RenderSystem::gl_init_callback(Event& event) {
+    // build default objects and their VBO's
+    // this should happen only after opengl context is setup
+    g_graphics_objects.init();
+}
+
 RenderSystem::RenderSystem(Scene& scene, Entity camera, GUIState& gui_state): 
     System(scene),
-    m_model_manager(m_texture_manager, FS_RESOURCES_DIR + std::string(MODEL_BIN_PATH)), m_camera_wrapper(scene, camera) {
+    m_model_manager(m_texture_manager, FS_RESOURCES_DIR + std::string(MODEL_BIN_PATH)), m_camera_wrapper(scene, camera),
+    m_gui_state{&gui_state} {
     // setup opengl properties
     glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
     glEnable(GL_DEPTH_TEST);
 
     // add window resize listener
     ref_scene.add_event_listener(METHOD_LISTENER(Events::Window::RESIZED, RenderSystem::window_size_listener));
-    
-    // build default objects and their VBO's
-    // this should happen only after opengl context is setup
-    g_graphics_objects.init();
 
     // initialize shaders
     m_model_shader = std::make_unique<Shader>(std::string(FS_SHADERS_DIR) + "shader_model_normal.vs", std::string(FS_SHADERS_DIR) + "shader_model_normal.fs");
     m_cubemap_shader = std::make_unique<Shader>(std::string(FS_SHADERS_DIR) + "cubemap.vs", std::string(FS_SHADERS_DIR) + "cubemap.fs");
 
     // store GUIState pointer
-    m_gui_state = &gui_state;
-
-    // initialize members (which depend on graphics objects)
-    m_light_renderer = std::make_unique<LightRenderer>();
+    // m_gui_state = &gui_state;
 }
 
 models_interface_type RenderSystem::load_models(std::unordered_map<std::string, std::string> models) {
@@ -51,8 +51,6 @@ models_interface_type RenderSystem::load_models(std::unordered_map<std::string, 
 cubemaps_interface_type RenderSystem::load_cubemaps(std::unordered_map<std::string, CubemapFaces> cubemaps) {
     return m_texture_manager.load_cubemaps(cubemaps);
 }
-
-void RenderSystem::init() {}
 
 void RenderSystem::draw_cubemap(unsigned int cubemap_id) {
     m_texture_manager.draw_cubemap(cubemap_id, m_cubemap_shader, m_camera_wrapper);
@@ -76,7 +74,7 @@ void RenderSystem::update(float dt)
         glm::vec3 light_color = ref_scene.get_component<PointLightComponent>(entity).light_color;
         Transform light_transform = ref_scene.get_component<Transform>(entity);
 
-        m_light_renderer->draw_light_cube(light_transform, m_camera_wrapper, light_color);
+        m_light_renderer.draw_light_cube(light_transform, m_camera_wrapper, light_color);
 
         m_model_shader->activate();
 

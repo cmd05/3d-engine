@@ -21,8 +21,8 @@ class RenderSystem : public System
 {
 public:
     RenderSystem(Scene& scene, Entity camera, GUIState& gui_state);
+    // void init();
 
-    void init();
     void update(float dt);
 
     void set_uniforms_pre_rendering();
@@ -32,6 +32,8 @@ public:
     cubemaps_interface_type load_cubemaps(std::unordered_map<std::string, CubemapFaces> cubemaps);
     void draw_cubemap(unsigned int cubemap_id);
 
+    // callback methods for when opengl context has been created
+    static void gl_init_callback(Event& event);
 private:
     std::unique_ptr<Shader> m_model_shader;
     std::unique_ptr<Shader> m_cubemap_shader;
@@ -39,9 +41,9 @@ private:
     CameraWrapper m_camera_wrapper;
     ModelManager m_model_manager;
     TextureManager m_texture_manager;
-    std::unique_ptr<LightRenderer> m_light_renderer;
+    LightRenderer m_light_renderer;
     
-    GUIState* m_gui_state;
+    GUIState* const m_gui_state;
 
 private:
     void window_size_listener(Event& event);

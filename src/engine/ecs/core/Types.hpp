@@ -50,6 +50,7 @@ namespace Events::Window {
     const EventId QUIT = "Events::Window::QUIT"_hash;
     const EventId RESIZED = "Events::Window::RESIZED"_hash;
     const EventId FOCUS_CHANGE = "Events::Window::FOCUS_CHANGE"_hash;
+    const EventId GL_INIT = "Events::Window::GL_INIT"_hash;
 }
 
 namespace Events::Window::FocusChange {

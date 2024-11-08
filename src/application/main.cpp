@@ -45,6 +45,16 @@ void quit_handler(Event& event) {
 }
 
 int main() {
+    // -- register essential callbacks --
+
+    // quit handler for `Application`
+    main_scene.add_event_listener(FUNCTION_LISTENER(Events::Window::QUIT, quit_handler));
+
+    // initialize program state (eg: g_graphics_objects) once OpenGL has been initialized
+    main_scene.add_event_listener(FUNCTION_LISTENER(Events::Window::GL_INIT, RenderSystem::gl_init_callback));
+
+    // ----------------------------
+
     InputHandler input_handler {main_scene};
 
     // Window setup
@@ -67,8 +77,6 @@ int main() {
     
     // ---------------------------
 
-    // quit handler for `Application`
-    main_scene.add_event_listener(FUNCTION_LISTENER(Events::Window::QUIT, quit_handler));
 
     /// ------------- Register Components ---------------
     
