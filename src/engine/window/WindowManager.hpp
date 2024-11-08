@@ -26,12 +26,15 @@ public:
     void shutdown();
     float get_time() const { return glfwGetTime(); }
 
+    void close_window();
+
     // GLFW callbacks
     static void mouse_callback(GLFWwindow* window, double xpos_in, double ypos_in);
     static void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods);
     static void scroll_callback(GLFWwindow* window, double x_offset, double y_offset);
     static void framebuffer_size_callback(GLFWwindow* window, int width, int height);
-    
+    static void close_callback(GLFWwindow* window);
+
     GLFWwindow* get_window() { return m_window; }
     GLFWwindow* get_current_context() { return glfwGetCurrentContext(); }
     void set_current_context(GLFWwindow* window) { glfwMakeContextCurrent(window); }

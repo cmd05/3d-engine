@@ -33,17 +33,20 @@ void WindowManager::init(std::string const& window_title, unsigned int window_wi
     glfwSetKeyCallback(m_window, WindowManager::key_callback);
     
     glfwSetFramebufferSizeCallback(m_window, WindowManager::framebuffer_size_callback);
+    glfwSetWindowCloseCallback(m_window, WindowManager::close_callback);
 
-    // tell GLFW to capture our mouse
-    // glfwSetInputMode(m_window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+    // glfwSetInputMode(m_window, GLFW_CURSOR, GLFW_CURSOR_DISABLED); // tell GLFW to capture our mouse
     glfwSetInputMode(m_window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
 
     // Create OpenGL Context
     glfwMakeContextCurrent(m_window);
 
-    if(!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress)) {
+    if(!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress))
         ASSERT_MESSAGE("Failed to load glad");
-    }
+
+    // send event for OpenGL being initialized
+    Event event {Events::Window::GL_INIT};
+    ref_scene.send_event(event);
 }
 
 void WindowManager::bind_gui(GUIMain &gui_main) {
@@ -53,11 +56,10 @@ void WindowManager::bind_gui(GUIMain &gui_main) {
 void WindowManager::update() {
     glfwSwapBuffers(m_window);
 
-    // window_manager.process_events() is executed before window_manager.update()
-    if(m_input_handler->get_key(GLFW_KEY_ESCAPE)) {
-        ref_scene.send_event(Events::Window::QUIT);
-        glfwSetWindowShouldClose(m_window, true);
-    }
+    // window_manager.process_events() is executed before window_manager.update(), 
+    // so we get updated key actions for the same frame
+    if(m_input_handler->get_key(GLFW_KEY_ESCAPE))
+        close_window();
 
     if(m_input_handler->get_key(GLFW_KEY_LEFT_ALT) && is_window_focused()) {
         glfwSetInputMode(m_window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
@@ -83,6 +85,15 @@ void WindowManager::framebuffer_size_callback(GLFWwindow* window, int width, int
     event.set_param(Events::Window::Resized::HEIGHT, height);
     
     p_window_manager->ref_scene.send_event(event);
+}
+
+void WindowManager::close_callback(GLFWwindow* window) {
+    WindowManager* p_window_manager = reinterpret_cast<WindowManager*>(glfwGetWindowUserPointer(window));
+
+    if(!p_window_manager)
+        ASSERT_MESSAGE("WindowManager handler not set");
+
+    p_window_manager->close_window();
 }
 
 void WindowManager::key_callback(GLFWwindow* window, int key, int scancode, int action, int mods) {
@@ -124,6 +135,11 @@ void WindowManager::mouse_callback(GLFWwindow* window, double xpos_in, double yp
 void WindowManager::shutdown() {
     glfwDestroyWindow(m_window);
     glfwTerminate();
+}
+
+void WindowManager::close_window() {
+    ref_scene.send_event(Events::Window::QUIT);
+    glfwSetWindowShouldClose(m_window, true);
 }
 
 void WindowManager::process_events() {
