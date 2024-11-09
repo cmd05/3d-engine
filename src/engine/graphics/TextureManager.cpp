@@ -121,8 +121,10 @@ void TextureManager::draw_cubemap(unsigned int cubemap_id, const std::unique_ptr
     cubemap_shader->set_uniform<int>("skybox", 0);
 
     glm::mat4 view = glm::mat4(glm::mat3(camera_wrapper.get_view_matrix())); // remove translation from the view matrix
-    cubemap_shader->set_uniform<glm::mat4>("view", view);
-    cubemap_shader->set_uniform<glm::mat4>("projection", camera_wrapper.get_projection_matrix());
+    glm::mat4 projection = camera_wrapper.get_projection_matrix();
+    glm::mat4 vp_matrix = projection * view;
+
+    cubemap_shader->set_uniform<glm::mat4>("u_VP_matrix", vp_matrix);
 
     glBindVertexArray(g_graphics_objects.cube.VAO);
 
