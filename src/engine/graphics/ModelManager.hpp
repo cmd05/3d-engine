@@ -60,7 +60,7 @@ private:
     std::unordered_map<std::size_t, ModelDrawData> m_models;
     mapper_data_map_type m_mapper_data;
     
-    TextureManager& ref_tex_manager;
+    TextureManager* const m_tex_manager;
 
     std::string m_mapper_file;
     std::string m_bin_dir;

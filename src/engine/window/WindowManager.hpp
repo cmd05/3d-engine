@@ -14,8 +14,7 @@ class GUIMain;
 class WindowManager
 {
 public:
-    WindowManager(Scene& scene, InputHandler& input_handler): 
-        ref_scene{scene}, m_input_handler{&input_handler} {}
+    WindowManager(Scene& scene, InputHandler& input_handler);
 
     void init(std::string const& window_title, unsigned int window_width,
         unsigned int window_height, unsigned int window_position_x, unsigned int window_position_y);
@@ -45,7 +44,7 @@ private:
     InputHandler* m_input_handler;
     GUIMain* m_gui_main;
 
-    Scene& ref_scene;
+    Scene* const m_scene;
 
     // bool m_window_focused = false;
 };

@@ -14,8 +14,11 @@ bool WindowManager::is_window_focused() {
     return g_window_focused;
 }
 
-void WindowManager::init(std::string const& window_title, unsigned int window_width,
-    unsigned int window_height, unsigned int window_position_x, unsigned int window_position_y) {
+WindowManager::WindowManager(Scene &scene, InputHandler &input_handler): 
+    m_scene{&scene}, m_input_handler{&input_handler} {}
+
+void WindowManager::init(std::string const &window_title, unsigned int window_width,
+                         unsigned int window_height, unsigned int window_position_x, unsigned int window_position_y) {
     // setup window
     glfwInit();
     m_window = glfwCreateWindow(window_width, window_height, window_title.c_str(), NULL, NULL);
@@ -46,7 +49,7 @@ void WindowManager::init(std::string const& window_title, unsigned int window_wi
 
     // send event for OpenGL being initialized
     Event event {Events::Window::GL_INIT};
-    ref_scene.send_event(event);
+    m_scene->send_event(event);
 }
 
 void WindowManager::bind_gui(GUIMain &gui_main) {
@@ -84,7 +87,7 @@ void WindowManager::framebuffer_size_callback(GLFWwindow* window, int width, int
     event.set_param(Events::Window::Resized::WIDTH, width);
     event.set_param(Events::Window::Resized::HEIGHT, height);
     
-    p_window_manager->ref_scene.send_event(event);
+    p_window_manager->m_scene->send_event(event);
 }
 
 void WindowManager::close_callback(GLFWwindow* window) {
@@ -138,7 +141,7 @@ void WindowManager::shutdown() {
 }
 
 void WindowManager::close_window() {
-    ref_scene.send_event(Events::Window::QUIT);
+    m_scene->send_event(Events::Window::QUIT);
     glfwSetWindowShouldClose(m_window, true);
 }
 

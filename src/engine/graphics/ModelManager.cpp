@@ -19,7 +19,7 @@
 #include <iostream> // DEBUG: _
 #include <lib/utilities/DebugAssert.hpp>
 
-ModelManager::ModelManager(TextureManager& tex_manager, std::string bin_dir): ref_tex_manager(tex_manager) {
+ModelManager::ModelManager(TextureManager& tex_manager, std::string bin_dir): m_tex_manager{&tex_manager} {
     // check if mapper file exists in bin_dir else create
     std::string mapper_file = bin_dir + '/' + BIN_MAP_FNAME;
 
@@ -227,7 +227,7 @@ ModelManager::MeshDrawData ModelManager::setup_mesh(std::string model_path, Mesh
         if(mesh_texture.type == MeshTextureType::NORMAL)
             gamma_correct_texture = false;
 
-        unsigned int texture_id = ref_tex_manager.texture_from_file(tex_path, gamma_correct_texture);
+        unsigned int texture_id = m_tex_manager->texture_from_file(tex_path, gamma_correct_texture);
         mesh_draw_data.textures.push_back(std::make_pair(texture_id, mesh_texture.type));
     }
 
