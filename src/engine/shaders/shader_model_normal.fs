@@ -34,6 +34,8 @@ in vec3 world_Normal;
 
 // ---
 
+const float GAMMA_FACTOR = 2.2;
+
 const float att_const = 1.0;
 const float att_linear = 0.00009;
 const float att_quadratic = 0.000032;
@@ -88,6 +90,6 @@ void main() {
         result += component;
     }
 
-    result = pow(result, vec3(1.0/2.2)); // do gamma correction
+    result = pow(result, vec3(1.0/GAMMA_FACTOR)); // do gamma correction
     FragColor = vec4(vec3(result), 1.0);
 }
