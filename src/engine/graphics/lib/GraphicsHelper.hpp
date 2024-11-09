@@ -42,17 +42,24 @@ public:
         return mvp;
     }
 
-    static void set_mvp(const std::unique_ptr<Shader>& shader, const Transform& transform, const CameraWrapper& camera_wrapper) {
+    // static void set_mvp(const std::unique_ptr<Shader>& shader, const Transform& transform, const CameraWrapper& camera_wrapper) {
+    //     MVP mvp = get_mvp(transform, camera_wrapper);
+    //     set_mvp(shader, mvp);
+    // }
+
+    // static void set_mvp(const std::unique_ptr<Shader>& shader, MVP mvp, 
+    //     const std::string model_uniform = "model", const std::string view_uniform = "view", const std::string projection_uniform = "projection") {
+    //     shader->activate();
+
+    //     shader->set_uniform<glm::mat4>(model_uniform, mvp.model);
+    //     shader->set_uniform<glm::mat4>(view_uniform, mvp.view);
+    //     shader->set_uniform<glm::mat4>(projection_uniform, mvp.projection);
+    // }
+
+    static glm::mat4 get_mvp_matrix(const Transform& transform, const CameraWrapper& camera_wrapper) {
         MVP mvp = get_mvp(transform, camera_wrapper);
-        set_mvp(shader, mvp);
-    }
+        glm::mat4 mvp_matrix = mvp.projection * mvp.view * mvp.model;
 
-    static void set_mvp(const std::unique_ptr<Shader>& shader, MVP mvp, 
-        const std::string model_uniform = "model", const std::string view_uniform = "view", const std::string projection_uniform = "projection") {
-        shader->activate();
-
-        shader->set_uniform<glm::mat4>(model_uniform, mvp.model);
-        shader->set_uniform<glm::mat4>(view_uniform, mvp.view);
-        shader->set_uniform<glm::mat4>(projection_uniform, mvp.projection);
+        return mvp_matrix;
     }
 };

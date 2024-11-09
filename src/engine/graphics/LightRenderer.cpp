@@ -5,11 +5,12 @@ LightRenderer::LightRenderer() {
 }
 
 void LightRenderer::draw_light_cube(Transform& transform, const CameraWrapper& camera_wrapper, glm::vec3 light_color) {
-    GraphicsHelper::set_mvp(m_light_cube_shader, transform, camera_wrapper);
-
     m_light_cube_shader->activate();
+
+    glm::mat4 mvp_matrix = GraphicsHelper::get_mvp_matrix(transform, camera_wrapper);
+
+    m_light_cube_shader->set_uniform<glm::mat4>("u_MVP", mvp_matrix);
     m_light_cube_shader->set_uniform<glm::vec3>("lightColor", light_color);
-    // m_light_cube_shader->set_uniform("lightPosition", transform.position);
 
     glBindVertexArray(g_graphics_objects.cube.VAO);
     glDrawArrays(GL_TRIANGLES, 0, g_graphics_objects.cube.num_vertices);
