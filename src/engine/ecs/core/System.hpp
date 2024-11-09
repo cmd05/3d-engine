@@ -11,6 +11,5 @@ class System
 public:
     System(Scene& scene) : m_scene{&scene} {}
 protected:
-    // TODO: use scene pointer `Scene* m_scene` and modify for all systems
     Scene* const m_scene;
 };
