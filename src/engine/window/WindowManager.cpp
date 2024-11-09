@@ -19,9 +19,8 @@ WindowManager::WindowManager(Scene &scene, InputHandler &input_handler):
 
 void WindowManager::init(std::string const &window_title, unsigned int window_width,
                          unsigned int window_height, unsigned int window_position_x, unsigned int window_position_y) {
-    // setup window
+    // initialize glfw library
     glfwInit();
-    m_window = glfwCreateWindow(window_width, window_height, window_title.c_str(), NULL, NULL);
 
     // set window hints
     glfwWindowHint(GLFW_RESIZABLE, GLFW_TRUE);
@@ -29,7 +28,15 @@ void WindowManager::init(std::string const &window_title, unsigned int window_wi
     glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
     glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
     glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
-    
+    glfwWindowHint(GLFW_MAXIMIZED, GL_TRUE); // maximize window when created
+
+    m_window = glfwCreateWindow(window_width, window_height, window_title.c_str(), NULL, NULL);
+
+    if (!m_window) {
+        glfwTerminate();
+        ASSERT_MESSAGE("Could not create GLFW window");
+    }
+
     glfwSetWindowUserPointer(m_window, reinterpret_cast<void*>(this));
     glfwSetScrollCallback(m_window, scroll_callback);
     glfwSetCursorPosCallback(m_window, WindowManager::mouse_callback);
@@ -46,6 +53,8 @@ void WindowManager::init(std::string const &window_title, unsigned int window_wi
 
     if(!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress))
         ASSERT_MESSAGE("Failed to load glad");
+
+    // glfwSwapInterval(1); // use vsync and set interval
 
     // send event for OpenGL being initialized
     Event event {Events::Window::GL_INIT};
