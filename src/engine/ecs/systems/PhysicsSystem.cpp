@@ -11,13 +11,13 @@ void PhysicsSystem::init() {}
 
 void PhysicsSystem::update(float dt)
 {
-    for (const auto& entity : SceneView<RigidBody, Transform, Gravity>(ref_scene))
+    for (const auto& entity : SceneView<RigidBody, Transform, Gravity>(*m_scene))
     {
-        auto& rigid_body = ref_scene.get_component<RigidBody>(entity);
-        auto& transform = ref_scene.get_component<Transform>(entity);
+        auto& rigid_body = m_scene->get_component<RigidBody>(entity);
+        auto& transform = m_scene->get_component<Transform>(entity);
 
         // forces
-        const auto& gravity = ref_scene.get_component<Gravity>(entity);
+        const auto& gravity = m_scene->get_component<Gravity>(entity);
 
         // bounce of "ground"
         if(transform.position.y <= -100) {

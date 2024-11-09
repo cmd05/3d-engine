@@ -12,19 +12,19 @@
 
 #include <engine/config/GraphicsConfig.hpp>
 
-CameraControlSystem::CameraControlSystem(Scene& scene, InputHandler& input_handler): System(scene) {
+CameraControlSystem::CameraControlSystem(Scene& scene, InputHandler& input_handler): System{scene} {
     m_input_handler = &input_handler;
 
-    ref_scene.add_event_listener(METHOD_LISTENER(Events::Input::MOUSE, CameraControlSystem::mouse_listener));
-    ref_scene.add_event_listener(METHOD_LISTENER(Events::Input::SCROLL, CameraControlSystem::scroll_listener));
+    m_scene->add_event_listener(METHOD_LISTENER(Events::Input::MOUSE, CameraControlSystem::mouse_listener));
+    m_scene->add_event_listener(METHOD_LISTENER(Events::Input::SCROLL, CameraControlSystem::scroll_listener));
 }
 
 void CameraControlSystem::update(float dt) {
     if(!WindowManager::is_window_focused())
         return;
 
-    for (Entity entity : SceneView<Camera, Transform>(ref_scene)) {
-        CameraWrapper camera_wrapper{ref_scene, entity};
+    for (Entity entity : SceneView<Camera, Transform>(*m_scene)) {
+        CameraWrapper camera_wrapper{*m_scene, entity};
         float cam_offset = dt * GraphicsConfig::Camera::CAMERA_SPEED;
 
         // poll camera keys

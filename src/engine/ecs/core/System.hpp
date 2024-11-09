@@ -9,8 +9,8 @@ class Scene;
 class System
 {
 public:
-    System(Scene& scene) : ref_scene(scene) {}
+    System(Scene& scene) : m_scene{&scene} {}
 protected:
     // TODO: use scene pointer `Scene* m_scene` and modify for all systems
-    Scene& ref_scene;
+    Scene* const m_scene;
 };

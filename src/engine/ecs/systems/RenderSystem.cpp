@@ -34,7 +34,7 @@ RenderSystem::RenderSystem(Scene& scene, Entity camera, GUIState& gui_state):
     glEnable(GL_DEPTH_TEST);
 
     // add window resize listener
-    ref_scene.add_event_listener(METHOD_LISTENER(Events::Window::RESIZED, RenderSystem::window_size_listener));
+    m_scene->add_event_listener(METHOD_LISTENER(Events::Window::RESIZED, RenderSystem::window_size_listener));
 
     // initialize shaders
     m_model_shader = std::make_unique<Shader>(std::string(FS_SHADERS_DIR) + "shader_model_normal.vs", std::string(FS_SHADERS_DIR) + "shader_model_normal.fs");
@@ -70,9 +70,9 @@ void RenderSystem::update(float dt)
     m_model_shader->set_uniform<glm::vec3>("viewPos", m_camera_wrapper.get_transform_component().position);
     
     int i_lights = 0;
-    for(const auto& entity : SceneView<PointLightComponent, Transform>(ref_scene)) {
-        glm::vec3 light_color = ref_scene.get_component<PointLightComponent>(entity).light_color;
-        Transform light_transform = ref_scene.get_component<Transform>(entity);
+    for(const auto& entity : SceneView<PointLightComponent, Transform>(*m_scene)) {
+        glm::vec3 light_color = m_scene->get_component<PointLightComponent>(entity).light_color;
+        Transform light_transform = m_scene->get_component<Transform>(entity);
 
         m_light_renderer.draw_light_cube(light_transform, m_camera_wrapper, light_color);
 
@@ -94,9 +94,9 @@ void RenderSystem::update(float dt)
     // ---
 
     // draw models
-    for(const auto& entity : SceneView<RenderableComponent, Model, Transform>(ref_scene)) {
-        const auto& transform = ref_scene.get_component<Transform>(entity);
-        const auto& object_model = ref_scene.get_component<Model>(entity);
+    for(const auto& entity : SceneView<RenderableComponent, Model, Transform>(*m_scene)) {
+        const auto& transform = m_scene->get_component<Transform>(entity);
+        const auto& object_model = m_scene->get_component<Model>(entity);
 
         m_model_manager.draw_model(m_model_shader, object_model.model_id, m_camera_wrapper, transform);
     }
@@ -104,8 +104,8 @@ void RenderSystem::update(float dt)
     glDisable(GL_CULL_FACE);
 
     // draw cubemaps
-    for(const auto& entity : SceneView<RenderableComponent, Cubemap>(ref_scene))
-        draw_cubemap(ref_scene.get_component<Cubemap>(entity).id);
+    for(const auto& entity : SceneView<RenderableComponent, Cubemap>(*m_scene))
+        draw_cubemap(m_scene->get_component<Cubemap>(entity).id);
 }
 
 void RenderSystem::set_uniforms_pre_rendering() {
@@ -124,8 +124,8 @@ void RenderSystem::window_size_listener(Event& event) {
     glViewport(0, 0, window_width, window_height);
 
     // resize view size for all cameras
-    for(auto& entity : SceneView<Camera, Transform>(ref_scene)) {
-        CameraWrapper camera_wrapper{ref_scene, entity};
+    for(auto& entity : SceneView<Camera, Transform>(*m_scene)) {
+        CameraWrapper camera_wrapper{*m_scene, entity};
         camera_wrapper.resize_view(window_width, window_height);
     }
 }
