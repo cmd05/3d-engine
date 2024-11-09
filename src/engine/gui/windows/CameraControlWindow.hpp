@@ -11,7 +11,7 @@ public:
         // Always center this window when appearing
         // ImVec2 center = ImGui::GetMainViewport()->GetCenter();
         // ImGui::SetNextWindowPos(center, ImGuiCond_Appearing, ImVec2(0.1f, 0.1f));
-        ImGui::SetNextWindowPos(ImVec2(10, 60), ImGuiCond_Once); // TBD: fix these magic values for window size and placements 
+        ImGui::SetNextWindowPos(ImVec2(10, 120), ImGuiCond_Once); // TBD: fix these magic values for window size and placements 
                                                                  // and put in engine/config/GUIconfig.hpp
         
         ImGui::Begin("Camera Control");                          // Create a window called "Hello, world!" and append into it.
