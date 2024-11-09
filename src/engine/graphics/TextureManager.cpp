@@ -137,3 +137,8 @@ void TextureManager::draw_cubemap(unsigned int cubemap_id, const std::unique_ptr
     glBindVertexArray(0);
     glDepthFunc(GL_LESS); // set depth function back to default
 }
+
+bool TextureManager::gamma_correct_required(MeshTextureType tex_type) const {
+    // return `true` if texture type is not in `m_no_gamma_correct`
+    return std::find(m_no_gamma_correct.begin(), m_no_gamma_correct.end(), tex_type) == m_no_gamma_correct.end();
+}

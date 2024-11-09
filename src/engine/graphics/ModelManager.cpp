@@ -223,11 +223,9 @@ ModelManager::MeshDrawData ModelManager::setup_mesh(std::string model_path, Mesh
     for(MeshTexture& mesh_texture : mesh.m_textures) {
         std::string tex_path =  model_dir + '/' + mesh_texture.path;
     
-        bool gamma_correct_texture = gamma_correction;
-        if(mesh_texture.type == MeshTextureType::NORMAL)
-            gamma_correct_texture = false;
+        bool gamma_correct_required = m_tex_manager->gamma_correct_required(mesh_texture.type);
 
-        unsigned int texture_id = m_tex_manager->texture_from_file(tex_path, gamma_correct_texture);
+        unsigned int texture_id = m_tex_manager->texture_from_file(tex_path, gamma_correct_required);
         mesh_draw_data.textures.push_back(std::make_pair(texture_id, mesh_texture.type));
     }
 
