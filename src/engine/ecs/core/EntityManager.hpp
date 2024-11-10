@@ -19,7 +19,7 @@ public:
     void clear();
 
 private:
-    std::queue<Entity> destroyed_entities{};
+    std::queue<Entity> destroyed_entities;
 
     // sparse set: map from entities to signatures
     std::array<entity_count_size_type, MAX_ENTITIES> m_sparse_array;

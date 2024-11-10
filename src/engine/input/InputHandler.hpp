@@ -49,6 +49,7 @@ private:
     bool input_keys[WIN_INPUT_KEYS_LEN] = {0};
     bool input_keys_processed[WIN_INPUT_KEYS_LEN] = {0};
 
+    // default initialize `m_mouse_data` and `m_scroll_data`
     MouseData m_mouse_data{};
     ScrollData m_scroll_data{};
 };

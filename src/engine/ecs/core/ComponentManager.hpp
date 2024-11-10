@@ -61,8 +61,8 @@ private:
     ComponentArray<T>* get_component_array();
 
 private:
-    std::unordered_map<std::type_index, ComponentType> m_component_types{};
-    std::unordered_map<std::type_index, std::unique_ptr<IComponentArray>> m_component_arrays{};
+    std::unordered_map<std::type_index, ComponentType> m_component_types;
+    std::unordered_map<std::type_index, std::unique_ptr<IComponentArray>> m_component_arrays;
 
     ComponentType m_next_component_type{};
 };

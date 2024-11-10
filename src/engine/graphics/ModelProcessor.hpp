@@ -24,15 +24,16 @@ class ModelProcessor {
     ModelProcessor();
     ModelProcessor(const std::string& path, bool gamma = ENABLE_GAMMA_CORRECTION);
     
-    void clear(); // clear data so that same model can be reused for different model
+    void clear(); // clear data so that same ModelProcessor object can be reused for different model
 private:
     std::vector<MeshTexture> m_textures_loaded;	// optimization to store loaded textures
-    
+
+    // initialize to zero by default
     unsigned int m_num_vertices = 0;
     unsigned int m_num_indices = 0;
-    
+
     std::vector<Mesh> m_meshes;
-    
+
     bool m_gamma_correction;
     std::string m_model_path;
 private:
