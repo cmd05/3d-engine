@@ -6,8 +6,7 @@
 
 #include <engine/graphics/Shader.hpp>
 
-Shader::Shader(std::string const& vertex_path, std::string const& fragment_path)
-{
+Shader::Shader(std::string const& vertex_path, std::string const& fragment_path) {
     std::string fragment_file_contents;
     std::string vertex_file_contents;
 
@@ -44,8 +43,7 @@ Shader::Shader(std::string const& vertex_path, std::string const& fragment_path)
     char info_log[512];
     glGetShaderiv(vertex_shader, GL_COMPILE_STATUS, &success);
 
-    if (!success)
-    {
+    if (!success) {
         glGetShaderInfoLog(vertex_shader, 512, nullptr, info_log);
         std::cerr << "Error compiling vertex shader: " << info_log << "\n";
     }
@@ -59,8 +57,7 @@ Shader::Shader(std::string const& vertex_path, std::string const& fragment_path)
 
     glGetShaderiv(fragment_shader, GL_COMPILE_STATUS, &success);
 
-    if (!success)
-    {
+    if (!success) {
         glGetShaderInfoLog(fragment_shader, 512, nullptr, info_log);
         std::cerr << "Error compiling fragment shader: " << info_log << "\n";
     }
@@ -75,8 +72,7 @@ Shader::Shader(std::string const& vertex_path, std::string const& fragment_path)
     
     glGetProgramiv(m_id, GL_LINK_STATUS, &success);
 
-    if (!success)
-    {
+    if (!success) {
         glGetProgramInfoLog(m_id, 512, nullptr, info_log);
         std::cerr << "Error linking shaders: " << info_log << "\n";
     }
@@ -85,8 +81,7 @@ Shader::Shader(std::string const& vertex_path, std::string const& fragment_path)
     glDeleteShader(fragment_shader);
 }
 
-void Shader::activate()
-{
+void Shader::activate() {
     glUseProgram(m_id);
 }
 

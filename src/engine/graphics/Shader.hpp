@@ -6,8 +6,7 @@
 #include <glad/glad.h>
 #include <glm/glm.hpp>
 
-class Shader
-{
+class Shader {
 public:
     Shader(std::string const& vertex_path, std::string const& fragment_path);
 
@@ -22,30 +21,24 @@ private:
 };
 
 template<typename T>
-void Shader::set_uniform(const std::string& name, const std::type_identity_t<T>& value)
-{
-    if constexpr (std::is_same_v<T, glm::mat4>)
-    {
+void Shader::set_uniform(const std::string& name, const std::type_identity_t<T>& value) {
+    if constexpr (std::is_same_v<T, glm::mat4>) {
         glUniformMatrix4fv(glGetUniformLocation(m_id, name.c_str()), 1, GL_FALSE, &value[0][0]);
     }
     
-    if constexpr (std::is_same_v<T, glm::mat3>)
-    {
+    if constexpr (std::is_same_v<T, glm::mat3>) {
         glUniformMatrix3fv(glGetUniformLocation(m_id, name.c_str()), 1, GL_FALSE, &value[0][0]);
     }
 
-    if constexpr (std::is_same_v<T, glm::vec3>)
-    {
+    if constexpr (std::is_same_v<T, glm::vec3>) {
         glUniform3fv(glGetUniformLocation(m_id, name.c_str()), 1, &value[0]); 
     }
     
-    if constexpr (std::is_same_v<T, float>)
-    {
+    if constexpr (std::is_same_v<T, float>) {
         glUniform1f(glGetUniformLocation(m_id, name.c_str()), value); 
     }
     
-    if constexpr (std::is_same_v<T, int>)
-    {
+    if constexpr (std::is_same_v<T, int>) {
         glUniform1i(glGetUniformLocation(m_id, name.c_str()), value); 
     }
     
