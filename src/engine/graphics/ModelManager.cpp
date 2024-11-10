@@ -141,6 +141,7 @@ ModelManager::ModelData ModelManager::load_model_data(std::string model_bin_path
 
         // textures
         // read count of different available textures
+        // `MeshTexturesAvailable` is POD
         ifs.read(reinterpret_cast<char*>(&mesh.m_textures_available), sizeof(mesh.m_textures_available));
 
         // resize `m_textures`
