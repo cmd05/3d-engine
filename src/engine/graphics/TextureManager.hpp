@@ -35,6 +35,7 @@ private:
     std::unordered_map<std::string, unsigned int> m_loaded_textures; // absolute texture path, texture id
     std::vector<unsigned int> m_cubemaps;
 
+    // TODO: move to a config file
     std::vector<MeshTextureType> m_no_gamma_correct {
         MeshTextureType::NORMAL
     };
