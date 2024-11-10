@@ -30,12 +30,12 @@ public:
     bool io_want_capture_keyboard() { return ImGui::GetIO().WantCaptureKeyboard; }
     bool io_want_capture_mouse() { return m_imgui_io->WantCaptureMouse; }
 private:
-    std::string m_glsl_version;
-    std::string m_gui_name;
+    const std::string m_glsl_version;
+    GUIState* const m_gui_state;
 
     WindowManager* m_window_manager;
-    GUIState* m_gui_state;
     GLFWwindow* m_window;
+    std::string m_gui_name;
     ImGuiIO* m_imgui_io;
 
     // list of gui windows

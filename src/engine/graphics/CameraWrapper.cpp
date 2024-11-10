@@ -5,8 +5,7 @@
 
 #include <engine/config/GraphicsConfig.hpp>
 
-CameraWrapper::CameraWrapper(Scene& scene, Entity camera) {
-    m_scene = &scene;
+CameraWrapper::CameraWrapper(Scene& scene, Entity camera): m_scene{&scene} {
     m_camera = camera;
 }
 

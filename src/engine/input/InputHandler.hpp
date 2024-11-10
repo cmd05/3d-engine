@@ -19,7 +19,7 @@ public:
         double y_offset = 0;
     };
 
-    InputHandler(Scene& scene) { m_scene = &scene; }
+    InputHandler(Scene& scene);
 
     void set_key(std::size_t key) { input_keys[key] = true; }
     void reset_key(std::size_t key) { input_keys[key] = false; }
@@ -43,11 +43,12 @@ public:
     // react_key_noprocess
     // react_key_processed
 private:
-    Scene* m_scene;
+    Scene* const m_scene;
 
     // default initialize all array elements to zero (false)
     bool input_keys[WIN_INPUT_KEYS_LEN] = {0};
     bool input_keys_processed[WIN_INPUT_KEYS_LEN] = {0};
+
     MouseData m_mouse_data{};
     ScrollData m_scroll_data{};
 };

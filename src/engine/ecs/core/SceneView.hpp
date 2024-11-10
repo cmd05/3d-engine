@@ -22,7 +22,7 @@ public:
     iterator end() const { return m_end; }
 
 private:
-    Scene* m_scene;
+    Scene* const m_scene;
 
     bool m_exclusive;
     Signature m_excluded; // default std::bitset is all zero's
@@ -99,9 +99,8 @@ SceneView<ComponentTypes...>::SceneView(Scene& scene, SceneViewExclude<ExcludeTy
 }
 
 template<typename ...ComponentTypes>
-SceneView<ComponentTypes...>::SceneView(Scene& scene, bool exclusive) {
+SceneView<ComponentTypes...>::SceneView(Scene& scene, bool exclusive): m_scene{&scene} {
     m_exclusive = exclusive;
-    m_scene = &scene;
 
     auto [begin, end] = m_scene->get_smallest_component_array<ComponentTypes...>();
 

@@ -13,9 +13,10 @@ public:
     GUIWindow(WindowManager& window_manager, GUIState& gui_state, ImVec2 window_pos);
     virtual void update() = 0;
 protected:
-    WindowManager* m_window_manager;
+    WindowManager* const m_window_manager;
+    GUIState* const m_gui_state;
+
     GLFWwindow* m_window;
-    GUIState* m_gui_state;
     ImGuiIO* m_imgui_io;
 
     ImVec2 m_window_pos;

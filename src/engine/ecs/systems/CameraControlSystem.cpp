@@ -12,9 +12,8 @@
 
 #include <engine/config/GraphicsConfig.hpp>
 
-CameraControlSystem::CameraControlSystem(Scene& scene, InputHandler& input_handler): System{scene} {
-    m_input_handler = &input_handler;
-
+CameraControlSystem::CameraControlSystem(Scene& scene, InputHandler& input_handler): 
+    System{scene}, m_input_handler{&input_handler} {
     m_scene->add_event_listener(METHOD_LISTENER(Events::Input::MOUSE, CameraControlSystem::mouse_listener));
     m_scene->add_event_listener(METHOD_LISTENER(Events::Input::SCROLL, CameraControlSystem::scroll_listener));
 }

@@ -25,5 +25,5 @@ public:
     const Camera& get_camera_component() const;
 private:
     Entity m_camera;
-    Scene* m_scene;
+    Scene* const m_scene;
 };

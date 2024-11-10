@@ -40,11 +40,11 @@ public:
 
     static bool is_window_focused();
 private:
-    GLFWwindow* m_window;
-    InputHandler* m_input_handler;
-    GUIMain* m_gui_main;
-
+    InputHandler* const m_input_handler;
     Scene* const m_scene;
+
+    GLFWwindow* m_window;
+    GUIMain* m_gui_main;
 
     // bool m_window_focused = false;
 };

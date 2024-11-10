@@ -25,5 +25,5 @@ private:
     void mouse_listener(Event& event);
     void scroll_listener(Event& event);
 
-    InputHandler* m_input_handler;
+    InputHandler* const m_input_handler;
 };

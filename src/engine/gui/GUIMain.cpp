@@ -1,9 +1,7 @@
 #include <engine/gui/GUIMain.hpp>
 
-GUIMain::GUIMain(GUIState& gui_state, const char* glsl_version) {
-    m_gui_state = &gui_state;
-    m_glsl_version = glsl_version;
-}
+GUIMain::GUIMain(GUIState& gui_state, const char* glsl_version):
+    m_gui_state{&gui_state}, m_glsl_version{glsl_version} {}
 
 void GUIMain::bind_window_manager(WindowManager &window_manager) {
     m_window_manager = &window_manager;

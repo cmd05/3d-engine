@@ -3,6 +3,9 @@
 #include <engine/ecs/core/Event.hpp>
 #include <engine/input/InputHandler.hpp>
 
+InputHandler::InputHandler(Scene &scene): 
+    m_scene{&scene} {}
+
 void InputHandler::handle_key_callback(int key, int scancode, int action, int mods) {
     if(key >= WIN_INPUT_KEYS_START && key < WIN_INPUT_KEYS_END) {
         if(action == GLFW_PRESS)
