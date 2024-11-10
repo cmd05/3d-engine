@@ -6,8 +6,7 @@ class Scene;
 
 // A system is any functionality that iterates upon a list of entities
 // with a certain signature of components.
-class System
-{
+class System {
 public:
     System(Scene& scene) : m_scene{&scene} {}
 protected:
