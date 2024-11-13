@@ -1,5 +1,7 @@
 /build
+/out
 /.vscode
+/.vs
 /out
 /includes
 test.cpp
@@ -9,3 +11,4 @@ test.cpp
 *.out
 /src/resources
 /imgui.ini
+/CMakeSettings.json
