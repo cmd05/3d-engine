@@ -148,16 +148,16 @@ int main() {
 
     models_interface_type models_map = render_system.load_models(models);
 
-    cubemaps_interface_type cubemaps = render_system.load_cubemaps({
-        {"sky", {
-            .right = (std::string(FS_RESOURCES_DIR) + "textures/skybox/right.jpg"),
-            .left = (std::string(FS_RESOURCES_DIR) + "textures/skybox/left.jpg"),
-            .top = (std::string(FS_RESOURCES_DIR) + "textures/skybox/top.jpg"),
-            .bottom = (std::string(FS_RESOURCES_DIR) + "textures/skybox/bottom.jpg"),
-            .front = (std::string(FS_RESOURCES_DIR) + "textures/skybox/front.jpg"),
-            .back = (std::string(FS_RESOURCES_DIR) + "textures/skybox/back.jpg"),
-        }},
-    });
+    // cubemaps_interface_type cubemaps = render_system.load_cubemaps({
+    //     {"sky", {
+    //         .right = (std::string(FS_RESOURCES_DIR) + "textures/skybox/right.jpg"),
+    //         .left = (std::string(FS_RESOURCES_DIR) + "textures/skybox/left.jpg"),
+    //         .top = (std::string(FS_RESOURCES_DIR) + "textures/skybox/top.jpg"),
+    //         .bottom = (std::string(FS_RESOURCES_DIR) + "textures/skybox/bottom.jpg"),
+    //         .front = (std::string(FS_RESOURCES_DIR) + "textures/skybox/front.jpg"),
+    //         .back = (std::string(FS_RESOURCES_DIR) + "textures/skybox/back.jpg"),
+    //     }},
+    // });
 
     /// -------------------------------------------------
 
