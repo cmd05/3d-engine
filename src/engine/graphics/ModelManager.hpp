@@ -40,6 +40,7 @@ public:
         std::vector<MeshDrawData> meshes;
     };
 
+public:
     ModelManager(TextureManager& tex_manager, std::string bin_dir);
 
     void load_mapper_data();
@@ -51,7 +52,6 @@ public:
     void add_model(std::string model_path, std::size_t model_hash, ModelData& model_data);
 
     MeshDrawData setup_mesh(std::string model_path, Mesh& mesh);
-
     
     void draw_mesh(const std::unique_ptr<Shader>& shader, MeshDrawData& mesh_draw_data);
     void draw_model(const std::unique_ptr<Shader>& model_shader, std::size_t model_id, const CameraWrapper& camera_wrapper, const Transform& transform);

@@ -2,8 +2,7 @@
 
 #include <engine/ecs/core/System.hpp>
 
-class PhysicsSystem : public System
-{
+class PhysicsSystem : public System {
 public:
     PhysicsSystem(Scene& scene): System{scene} {}
 

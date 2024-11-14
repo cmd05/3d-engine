@@ -132,6 +132,7 @@ target_sources(
     src/engine/gui/GUIWindow.cpp
 
     src/engine/graphics/objects/GraphicsObjects.cpp
+    src/engine/graphics/lib/GraphicsHelper.cpp
 
     # src/lib/math/Vec2.hpp
     # src/lib/math/Vec3.hpp

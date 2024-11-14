@@ -17,8 +17,7 @@
 
 constexpr const char* MODEL_BIN_PATH = "models/bin";
 
-class RenderSystem : public System
-{
+class RenderSystem : public System {
 public:
     RenderSystem(Scene& scene, Entity camera, GUIState& gui_state);
     // void init();

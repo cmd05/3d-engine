@@ -17,11 +17,10 @@ public:
 
     void draw_light_cube(Transform& transform, const CameraWrapper& camera_wrapper, glm::vec3 light_color);
 
-    void render_model_light(ModelManager& model_manager) {
-        // use the modelmanager from RenderSystem and create model_light_shader.vs,fs
-        // model lights should have a color only according to their textures and won't be affected by
-        // other light sources
-    }
+    // TBD: use the modelmanager from RenderSystem and create model_light_shader.vs,fs
+    // model lights should have a color only according to their textures and won't be affected by
+    // other light sources
+    void render_model_light(ModelManager& model_manager);
 private:
     std::unique_ptr<Shader> m_light_cube_shader; // it can be used for other shapes too
 };
