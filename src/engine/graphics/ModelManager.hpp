@@ -21,8 +21,8 @@ public:
         
         std::vector<Mesh> meshes;
 
-        bool gamma_correction;
         std::string model_path;
+        bool gamma_correction; // TODO: remove from here and ModelProcessor
     };
 
     struct MeshDrawData {
@@ -57,6 +57,8 @@ public:
     void draw_mesh(const std::unique_ptr<Shader>& shader, MeshDrawData& mesh_draw_data);
     void draw_model(const std::unique_ptr<Shader>& model_shader, std::size_t model_id, const CameraWrapper& camera_wrapper, const Transform& transform);
 private:
+    using byte_ptr = char*;
+
     std::unordered_map<std::size_t, ModelDrawData> m_models;
     mapper_data_map_type m_mapper_data;
     

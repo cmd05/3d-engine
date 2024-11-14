@@ -16,8 +16,10 @@
 #include <engine/graphics/ModelProcessor.hpp>
 #include <engine/graphics/MeshProcessor.hpp>
 
-#include <iostream> // DEBUG: _
 #include <lib/utilities/DebugAssert.hpp>
+
+#include <numeric>
+#include <algorithm>
 
 ModelManager::ModelManager(TextureManager& tex_manager, std::string bin_dir): m_tex_manager{&tex_manager} {
     // check if mapper file exists in bin_dir else create
@@ -32,77 +34,6 @@ ModelManager::ModelManager(TextureManager& tex_manager, std::string bin_dir): m_
     load_mapper_data();
 }
 
-// returns model hash id
-mapper_data_map_type::iterator ModelManager::create_model_dump(const std::string& model_path, std::size_t model_hash) {
-    std::string file_name = model_path.substr(model_path.find_last_of("/\\") + 1);
-    std::string bin_name = std::to_string(model_hash) + '_' + file_name; // prefix model_hash so that names do not collide
-    std::string model_bin_path = m_bin_dir + '/' + bin_name + ".bin";
-    
-    std::ofstream ofs {model_bin_path, std::ios::binary};
-    // get model data
-    ModelProcessor model_processor{model_path};
-
-    /// Dump Data
-    // static_assert(std::is_pod_v<std::string> == true);
-
-    // dump counts
-    ofs.write(reinterpret_cast<char*>(&model_processor.m_num_vertices), sizeof(model_processor.m_num_vertices));
-    ofs.write(reinterpret_cast<char*>(&model_processor.m_num_indices), sizeof(model_processor.m_num_indices));
-
-    // dump meshes
-    
-    std::size_t meshes_sz = model_processor.m_meshes.size();
-    ofs.write(reinterpret_cast<char*>(&meshes_sz), sizeof(meshes_sz));
-    
-    for(Mesh& mesh : model_processor.m_meshes) {
-        // vertices
-        std::size_t vec_sz = mesh.m_vertices.size();
-        ofs.write(reinterpret_cast<char*>(&vec_sz), sizeof(std::size_t));
-        ofs.write(reinterpret_cast<char*>(&mesh.m_vertices[0]), vec_sz * sizeof(mesh.m_vertices[0]));
-        
-        // indices
-        vec_sz = mesh.m_indices.size();
-        ofs.write(reinterpret_cast<char*>(&vec_sz), sizeof(std::size_t));
-        ofs.write(reinterpret_cast<char*>(&mesh.m_indices[0]), vec_sz * sizeof(mesh.m_indices[0]));
-        
-        // textures
-        // write count of different available textures
-        ofs.write(reinterpret_cast<char*>(&mesh.m_textures_available), sizeof(mesh.m_textures_available));
-
-        // write size of `m_textures` vector
-        vec_sz = mesh.m_textures.size();
-        ofs.write(reinterpret_cast<char*>(&vec_sz), sizeof(vec_sz));
-
-        // write data for textures
-        for(MeshTexture& mesh_texture : mesh.m_textures) {
-            // write texture type
-            ofs.write(reinterpret_cast<char*>(&mesh_texture.type), sizeof(MeshTextureType));
-
-            // write texture path        
-            std::size_t str_sz = mesh_texture.path.size();
-            ofs.write(reinterpret_cast<char*>(&str_sz), sizeof(str_sz));
-            ofs.write(reinterpret_cast<char*>(&mesh_texture.path[0]), str_sz * sizeof(mesh_texture.path[0]));
-
-        }
-    }
-    
-    // dump additional information
-    ofs.write(reinterpret_cast<char*>(&model_processor.m_gamma_correction), sizeof(model_processor.m_gamma_correction));
-    
-    // dump model path
-    std::size_t str_sz = model_processor.m_model_path.size();
-    ofs.write(reinterpret_cast<char*>(&str_sz), sizeof(str_sz));
-    ofs.write(reinterpret_cast<char*>(&model_processor.m_model_path[0]), str_sz * sizeof(model_processor.m_model_path[0]));
-
-    std::ofstream mapper_ofs {m_mapper_file, std::ios::app};
-    mapper_ofs << model_path << '\t' << model_bin_path << std::endl;
-    
-    // update mapper data in unordered_map
-    auto pair = m_mapper_data.insert({model_path, model_bin_path});
-
-    return pair.first;
-}
-
 std::unordered_map<std::string, std::size_t> ModelManager::load_models(mapper_data_map_type models) {
     std::unordered_map<std::string, std::size_t> model_id_map;
 
@@ -110,66 +41,6 @@ std::unordered_map<std::string, std::size_t> ModelManager::load_models(mapper_da
         model_id_map[model_name] = load_model(model_path);
     
     return model_id_map;
-}
-
-ModelManager::ModelData ModelManager::load_model_data(std::string model_bin_path) {        
-    ModelData model_data;
-    std::ifstream ifs {model_bin_path, std::ios::binary};
-
-    // read counts
-    ifs.read(reinterpret_cast<char*>(&model_data.num_vertices), sizeof(model_data.num_vertices));
-    ifs.read(reinterpret_cast<char*>(&model_data.num_indices), sizeof(model_data.num_indices));
-    
-    // meshes vector size
-    std::size_t meshes_sz;
-    ifs.read(reinterpret_cast<char*>(&meshes_sz), sizeof(meshes_sz));
-    model_data.meshes.resize(meshes_sz); // use resize instead of reserve so that we can loop over the meshes
-    
-    // read meshes
-    for(Mesh& mesh : model_data.meshes) {
-        std::size_t vec_sz;
-        
-        // vertices
-        ifs.read(reinterpret_cast<char*>(&vec_sz), sizeof(vec_sz));
-        mesh.m_vertices.resize(vec_sz);
-        ifs.read(reinterpret_cast<char*>(mesh.m_vertices.data()), vec_sz * sizeof(MeshVertex));
-        
-        // indices
-        ifs.read(reinterpret_cast<char*>(&vec_sz), sizeof(vec_sz));
-        mesh.m_indices.resize(vec_sz);
-        ifs.read(reinterpret_cast<char*>(mesh.m_indices.data()), vec_sz * sizeof(unsigned int));
-
-        // textures
-        // read count of different available textures
-        // `MeshTexturesAvailable` is POD
-        ifs.read(reinterpret_cast<char*>(&mesh.m_textures_available), sizeof(mesh.m_textures_available));
-
-        // resize `m_textures`
-        ifs.read(reinterpret_cast<char*>(&vec_sz), sizeof(vec_sz));
-        mesh.m_textures.resize(vec_sz);
-
-        for(MeshTexture& mesh_texture : mesh.m_textures) {
-            // texture type
-            ifs.read(reinterpret_cast<char*>(&mesh_texture.type), sizeof(MeshTextureType));
-            
-            // texture path
-            std::size_t str_sz;
-            ifs.read(reinterpret_cast<char*>(&str_sz), sizeof(str_sz));
-            mesh_texture.path.resize(str_sz);
-            ifs.read(reinterpret_cast<char*>(mesh_texture.path.data()), str_sz * sizeof(char));
-        }
-    }
-
-    // read additional information
-    ifs.read(reinterpret_cast<char*>(&model_data.gamma_correction), sizeof(model_data.gamma_correction));
-
-    // read texture path
-    std::size_t str_sz;
-    ifs.read(reinterpret_cast<char*>(&str_sz), sizeof(str_sz));
-    model_data.model_path.resize(str_sz);
-    ifs.read(reinterpret_cast<char*>(model_data.model_path.data()), str_sz * sizeof(char));
-
-    return model_data;
 }
 
 ModelManager::MeshDrawData ModelManager::setup_mesh(std::string model_path, Mesh& mesh, bool gamma_correction) {
@@ -357,3 +228,235 @@ void ModelManager::draw_model(const std::unique_ptr<Shader>& model_shader, std::
 std::size_t ModelManager::hasher(const std::string& model_path) {
     return std::hash<std::string>{}(model_path);
 }
+
+/// ------------------------ MODEL SERIALIZATION AND DESERIALIZATION ---------------------------------------------------
+
+// returns model hash id
+mapper_data_map_type::iterator ModelManager::create_model_dump(const std::string& model_path, std::size_t model_hash) {
+    std::string file_name = model_path.substr(model_path.find_last_of("/\\") + 1);
+    std::string bin_name = std::to_string(model_hash) + '_' + file_name; // prefix model_hash so that names do not collide
+    std::string model_bin_path = m_bin_dir + '/' + bin_name + ".bin";
+    
+    std::ofstream ofs {model_bin_path, std::ios::binary};
+    
+    // Get model data
+    ModelProcessor model_processor{model_path};
+
+    /// Dump Data
+    // static_assert(std::is_pod_v<std::string> == true);
+
+    /// A. Total vertices and indices counts
+    ofs.write(reinterpret_cast<byte_ptr>(&model_processor.m_num_vertices), sizeof(model_processor.m_num_vertices));
+    ofs.write(reinterpret_cast<byte_ptr>(&model_processor.m_num_indices), sizeof(model_processor.m_num_indices));
+
+    /// B. Dump meshes
+    
+    // 1. dump count of meshes
+    std::size_t num_meshes = model_processor.m_meshes.size();
+    ofs.write(reinterpret_cast<byte_ptr>(&num_meshes), sizeof(num_meshes));
+
+    // 2. dump per mesh vertices count
+    for(Mesh& mesh : model_processor.m_meshes) {
+        std::size_t vec_sz = mesh.m_vertices.size();
+        ofs.write(reinterpret_cast<byte_ptr>(&vec_sz), sizeof(vec_sz));
+    }
+
+    // 3. dump per mesh vertices
+    for(Mesh& mesh : model_processor.m_meshes) {
+        std::size_t vec_sz = mesh.m_vertices.size();
+        ofs.write(reinterpret_cast<byte_ptr>(&mesh.m_vertices[0]), vec_sz * sizeof(mesh.m_vertices[0]));
+    }
+
+    // 4. dump per mesh indices count
+    for(Mesh& mesh : model_processor.m_meshes) {
+        std::size_t vec_sz = mesh.m_indices.size();
+        ofs.write(reinterpret_cast<byte_ptr>(&vec_sz), sizeof(vec_sz));
+    }
+
+    // 5. dump per mesh indices
+    for(Mesh& mesh : model_processor.m_meshes) {
+        std::size_t vec_sz = mesh.m_indices.size();
+        ofs.write(reinterpret_cast<byte_ptr>(&mesh.m_indices[0]), vec_sz * sizeof(mesh.m_indices[0]));
+    }
+
+    // 6. write `MeshTexturesAvailable` data per mesh
+    for(Mesh& mesh : model_processor.m_meshes) {
+        ofs.write(reinterpret_cast<byte_ptr>(&mesh.m_textures_available), sizeof(mesh.m_textures_available));
+    }
+
+    // 7. write size of `m_textures` vector per mesh
+    for(Mesh& mesh : model_processor.m_meshes) {
+        std::size_t vec_sz = mesh.m_textures.size();
+        ofs.write(reinterpret_cast<byte_ptr>(&vec_sz), sizeof(vec_sz));
+    }
+
+    // 8. write textures types per texture per mesh
+    for(Mesh& mesh : model_processor.m_meshes) {
+        for(MeshTexture& mesh_texture : mesh.m_textures)
+            ofs.write(reinterpret_cast<byte_ptr>(&mesh_texture.type), sizeof(mesh_texture.type));
+    }
+
+    // 9. write textures path length per texture per mesh
+    for(Mesh& mesh : model_processor.m_meshes) {
+        for(MeshTexture& mesh_texture : mesh.m_textures) {
+            std::size_t len_str = mesh_texture.path.size();
+            ofs.write(reinterpret_cast<byte_ptr>(&len_str), sizeof(len_str));
+        }
+    }
+
+    // 10. write texture paths per texture per mesh
+    for(Mesh& mesh : model_processor.m_meshes) {
+        for(MeshTexture& mesh_texture : mesh.m_textures) {
+            std::size_t len_str = mesh_texture.path.size();
+            ofs.write(reinterpret_cast<byte_ptr>(&mesh_texture.path[0]), len_str * sizeof(mesh_texture.path[0]));
+        }
+    }
+    
+    /// C. Dump additional information
+    
+    // 1. Dump model path
+    std::size_t len_str = model_processor.m_model_path.size();
+    ofs.write(reinterpret_cast<byte_ptr>(&len_str), sizeof(len_str));
+    ofs.write(reinterpret_cast<byte_ptr>(&model_processor.m_model_path[0]), len_str * sizeof(model_processor.m_model_path[0]));
+
+    /// Write to mapper file
+    std::ofstream mapper_ofs {m_mapper_file, std::ios::app};
+    mapper_ofs << model_path << '\t' << model_bin_path << std::endl;
+    
+    // Update loaded mapper data in memory
+    auto pair = m_mapper_data.insert({model_path, model_bin_path});
+
+    return pair.first;
+}
+
+ModelManager::ModelData ModelManager::load_model_data(std::string model_bin_path) {        
+    // Create ModelData and initialize input stream 
+    ModelData model_data;
+    std::ifstream ifs {model_bin_path, std::ios::binary};
+
+    /// A. Total vertices and indices counts
+    ifs.read(reinterpret_cast<byte_ptr>(&model_data.num_vertices), sizeof(model_data.num_vertices));
+    ifs.read(reinterpret_cast<byte_ptr>(&model_data.num_indices), sizeof(model_data.num_indices));
+    
+    /// B. Load meshes
+
+    // 1. load count of meshes
+    std::size_t num_meshes;
+    ifs.read(reinterpret_cast<byte_ptr>(&num_meshes), sizeof(num_meshes));
+
+    // 2. load per mesh vertices count
+    std::vector<std::size_t> mesh_vertex_counts;
+    mesh_vertex_counts.resize(num_meshes);
+    ifs.read(reinterpret_cast<byte_ptr>(mesh_vertex_counts.data()), num_meshes * sizeof(std::size_t));
+
+    // 3. load per mesh vertices
+    std::vector<MeshVertex> mesh_vertices;
+    mesh_vertices.resize(model_data.num_vertices);
+    ifs.read(reinterpret_cast<byte_ptr>(mesh_vertices.data()), model_data.num_vertices * sizeof(MeshVertex));
+
+    // 4. load per mesh indices count
+    std::vector<std::size_t> mesh_index_counts;
+    mesh_index_counts.resize(num_meshes);
+    ifs.read(reinterpret_cast<byte_ptr>(mesh_index_counts.data()), num_meshes * sizeof(std::size_t));
+
+    // 5. load per mesh indices
+    std::vector<unsigned int> mesh_indices;
+    mesh_indices.resize(model_data.num_indices);
+    ifs.read(reinterpret_cast<byte_ptr>(mesh_indices.data()), model_data.num_indices * sizeof(unsigned int));
+
+    // 6. load `MeshTexturesAvailable` data per mesh
+    std::vector<MeshTexturesAvailable> mesh_textures_available;
+    mesh_textures_available.resize(num_meshes);
+    ifs.read(reinterpret_cast<byte_ptr>(mesh_textures_available.data()), num_meshes * sizeof(MeshTexturesAvailable));
+
+    // 7. load size of `m_textures` vector per mesh
+    std::vector<std::size_t> mesh_textures_counts;
+    mesh_textures_counts.resize(num_meshes);
+    ifs.read(reinterpret_cast<byte_ptr>(mesh_textures_counts.data()), num_meshes * sizeof(std::size_t));
+
+    // 8. load texture types per texture per mesh
+    std::size_t sum_mesh_texture_counts = std::accumulate(mesh_textures_counts.begin(), mesh_textures_counts.end(), (std::size_t) 0);
+    
+    std::vector<MeshTextureType> mesh_texture_types;
+    mesh_texture_types.resize(sum_mesh_texture_counts);
+    ifs.read(reinterpret_cast<byte_ptr>(mesh_texture_types.data()), sum_mesh_texture_counts * sizeof(MeshTextureType));
+
+    // 9. load texture path lengths per texture per mesh
+    // TBD: we can optimize here, for not repeating path names and 
+    // instead having some sort of indicator to existing loaded path name in the vector
+    std::vector<std::size_t> mesh_texture_path_lengths;
+    mesh_texture_path_lengths.resize(sum_mesh_texture_counts);
+    ifs.read(reinterpret_cast<byte_ptr>(mesh_texture_path_lengths.data()), sum_mesh_texture_counts * sizeof(std::size_t));
+
+    // 10. load texture path per texture per mesh
+    std::size_t sum_mesh_texture_path_lengths = std::accumulate(mesh_texture_path_lengths.begin(), mesh_texture_path_lengths.end(), (std::size_t) 0);
+
+    std::vector<char> mesh_texture_paths;
+    mesh_texture_paths.resize(sum_mesh_texture_path_lengths);
+    ifs.read(reinterpret_cast<byte_ptr>(mesh_texture_paths.data()), sum_mesh_texture_path_lengths * sizeof(char));
+
+    /// C. Load additional data
+
+    // 1. load model path
+    std::size_t len_model_path;
+    ifs.read(reinterpret_cast<byte_ptr>(&len_model_path), sizeof(len_model_path));
+
+    // std::string model_path;
+    model_data.model_path.resize(len_model_path);
+    ifs.read(reinterpret_cast<byte_ptr>(model_data.model_path.data()), len_model_path * sizeof(char));
+
+    /// Load meshes into `model_data`
+    model_data.meshes.resize(num_meshes);
+
+    // keep iterators for vectors
+    auto next_vertex_it = mesh_vertices.begin();
+    auto next_index_it = mesh_indices.begin();
+    auto next_texture_type_it = mesh_texture_types.begin();
+    auto next_texture_path_len_it = mesh_texture_path_lengths.begin();
+    auto next_texture_path_char_it = mesh_texture_paths.begin();
+
+    for(std::size_t i = 0; i < num_meshes; i++) {
+        Mesh& current_mesh = model_data.meshes[i];
+        
+        std::size_t num_vertices = mesh_vertex_counts[i];
+        std::size_t num_indices = mesh_index_counts[i];
+        
+        // **USE std::move if the data won't be used again **
+        // does std::move work for local variables here?
+
+        // move vertices
+        current_mesh.m_vertices.resize(num_vertices);
+        std::move(next_vertex_it, next_vertex_it + num_vertices, current_mesh.m_vertices.begin());
+        next_vertex_it += num_vertices;
+
+        // move indices
+        current_mesh.m_indices.resize(num_indices);
+        std::move(next_index_it, next_index_it + num_indices, current_mesh.m_indices.begin());
+        next_index_it += num_indices;
+
+        // copy `MeshTexturesAvailable`
+        current_mesh.m_textures_available = std::move(mesh_textures_available[i]);
+
+        // load data to `m_textures`
+        std::size_t num_textures = mesh_textures_counts[i];
+        current_mesh.m_textures.resize(num_textures);
+    
+        /// TBD: can this O(n^2) be optimized? profile and decide
+        /// use single loop instead
+        for (std::size_t j = 0; j < num_textures; j++) {
+            current_mesh.m_textures[j].type = *next_texture_type_it;
+            next_texture_type_it++;
+
+            std::size_t str_len = *next_texture_path_len_it;
+            current_mesh.m_textures[j].path.resize(str_len);
+            next_texture_path_len_it++;
+            
+            std::move(next_texture_path_char_it, next_texture_path_char_it + str_len, current_mesh.m_textures[j].path.begin());
+            next_texture_path_char_it += str_len;
+        }
+    }
+
+    return model_data;
+}
+
+/// --------------------------------------------------------------------------------------------------------------------

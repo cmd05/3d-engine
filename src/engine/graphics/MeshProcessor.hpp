@@ -49,8 +49,8 @@ public:
     // mesh data
     std::vector<MeshVertex> m_vertices;
     std::vector<unsigned int> m_indices;
-    std::vector<MeshTexture> m_textures;
     MeshTexturesAvailable m_textures_available;
+    std::vector<MeshTexture> m_textures;
 
     Mesh() {}
     Mesh(std::vector<MeshVertex> vertices, std::vector<unsigned int> indices, 

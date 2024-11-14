@@ -96,7 +96,6 @@ target_sources(
     src/engine/graphics/MeshProcessor.cpp
     src/engine/graphics/ModelProcessor.cpp
     src/engine/graphics/ModelManager.cpp
-    src/engine/graphics/SoACode.cpp
 
     src/engine/graphics/TextureManager.cpp
     src/engine/graphics/CameraWrapper.cpp
