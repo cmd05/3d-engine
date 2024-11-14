@@ -34,53 +34,21 @@ unsigned int TextureManager::texture_from_file(std::string file_path, bool gamma
 
     int width, height, num_components;
 
+    // unsigned char *img_data = stbi_load(file_path.c_str(), &width, &height, &num_components, 0);
+    
     // check if file at same path with ".tex_bin" exists
-    std::string bin_path = file_path + ".tex_bin";
-    std::ifstream ifs_bin {bin_path, std::ios::binary};
-    bool bin_exists = ifs_bin.good();
-
     unsigned char* img_data = nullptr;
 
+    std::string bin_path = file_path + ".tex_bin";
+    bool bin_exists = (std::ifstream{bin_path, std::ios::binary}).good();
+
     // stbi_load: 8-bits-per-channel interface
-    if(!bin_exists) {
-        // create binary file
-        std::ofstream ofs_bin{bin_path, std::ios::binary};
-        img_data = stbi_load(file_path.c_str(), &width, &height, &num_components, 0);
+    if(!bin_exists)
+        dump_texture_bin(bin_path, img_data, width, height, num_components);
+    else
+        load_texture_bin(bin_path, img_data, width, height, num_components);
 
-        // TODO: confirm if correct
-        std::size_t num_bytes = width * height * num_components;
-
-        // 1. dump width
-        ofs_bin.write(reinterpret_cast<byte_ptr>(&width), sizeof(width));
-
-        // 2. dump height
-        ofs_bin.write(reinterpret_cast<byte_ptr>(&height), sizeof(height));
-
-        // 3. dump number of components
-        ofs_bin.write(reinterpret_cast<byte_ptr>(&num_components), sizeof(num_components));
-        
-        // 4. dump image data
-        ofs_bin.write(reinterpret_cast<byte_ptr>(img_data), num_bytes * sizeof(unsigned char));
-    } else {
-        // 1. read width
-        ifs_bin.read(reinterpret_cast<byte_ptr>(&width), sizeof(width));
-
-        // 2. read height
-        ifs_bin.read(reinterpret_cast<byte_ptr>(&height), sizeof(height));
-
-        // 3. read number of components
-        ifs_bin.read(reinterpret_cast<byte_ptr>(&num_components), sizeof(num_components));
-
-        std::size_t num_bytes = width * height * num_components;
-
-        // 4. read image data
-        img_data = new unsigned char[num_bytes];
-        ifs_bin.read(reinterpret_cast<byte_ptr>(img_data), num_bytes * sizeof(unsigned char));
-    }
-
-    // unsigned char *img_data = stbi_load(file_path.c_str(), &width, &height, &num_components, 0);
-
-    if (img_data) {
+    if(img_data) {
         GLenum internal_format, data_format;
 
         if (num_components == 1) {
@@ -106,17 +74,65 @@ unsigned int TextureManager::texture_from_file(std::string file_path, bool gamma
         ASSERT_MESSAGE("Texture data could not be loaded: " << file_path);
     }
 
+    // stbi_image_free(img_data);
+
     if(!bin_exists)
         stbi_image_free(img_data);
     else
-        delete[] img_data;
-
-    // stbi_image_free(img_data);
+        free_tex_bytes(img_data);
 
     glBindTexture(GL_TEXTURE_2D, 0); // reset bound texture
     m_loaded_textures[file_path] = texture_id; // add to loaded textures
 
     return texture_id;
+}
+
+void TextureManager::load_texture_bin(std::string bin_path, unsigned char*& img_data, int& width, int& height, int& num_components) {
+    std::ifstream ifs_bin {bin_path, std::ios::binary};
+    
+    // 1. read width
+    ifs_bin.read(reinterpret_cast<byte_ptr>(&width), sizeof(width));
+
+    // 2. read height
+    ifs_bin.read(reinterpret_cast<byte_ptr>(&height), sizeof(height));
+
+    // 3. read number of components
+    ifs_bin.read(reinterpret_cast<byte_ptr>(&num_components), sizeof(num_components));
+
+    std::size_t num_bytes = width * height * num_components;
+
+    // 4. read image data
+    alloc_tex_bytes(img_data, num_bytes);
+    ifs_bin.read(reinterpret_cast<byte_ptr>(img_data), num_bytes * sizeof(unsigned char));
+}
+
+void TextureManager::dump_texture_bin(std::string bin_path, unsigned char*& img_data, int& width, int& height, int& num_components) {
+    // create binary file
+    std::ofstream ofs_bin{bin_path, std::ios::binary};
+    img_data = stbi_load(bin_path.c_str(), &width, &height, &num_components, 0);
+
+    // stbi_load: 8-bits-per-channel interface
+    std::size_t num_bytes = width * height * num_components;
+
+    // 1. dump width
+    ofs_bin.write(reinterpret_cast<byte_ptr>(&width), sizeof(width));
+
+    // 2. dump height
+    ofs_bin.write(reinterpret_cast<byte_ptr>(&height), sizeof(height));
+
+    // 3. dump number of components
+    ofs_bin.write(reinterpret_cast<byte_ptr>(&num_components), sizeof(num_components));
+    
+    // 4. dump image data
+    ofs_bin.write(reinterpret_cast<byte_ptr>(img_data), num_bytes * sizeof(unsigned char));
+}
+
+void TextureManager::alloc_tex_bytes(unsigned char*& img_data, int num_bytes) {
+    img_data = new unsigned char[num_bytes];
+}
+
+void TextureManager::free_tex_bytes(unsigned char*& img_data) {
+    delete[] img_data;
 }
 
 cubemaps_interface_type TextureManager::load_cubemaps(std::unordered_map<std::string, CubemapFaces> cubemaps) {

@@ -26,6 +26,12 @@ public:
     // User should provide `gamma_correction` parameter, ideally by use of `gamma_correct_required()`
     unsigned int texture_from_file(std::string file_path, bool gamma_correction = false, bool vflip_texture = false);
 
+    void load_texture_bin(std::string bin_path, unsigned char*& img_data, int& width, int& height, int& num_components);
+    void dump_texture_bin(std::string bin_path, unsigned char*& img_data, int& width, int& height, int& num_components);
+
+    void alloc_tex_bytes(unsigned char*& img_data, int num_bytes);
+    void free_tex_bytes(unsigned char*& img_data);
+
     cubemaps_interface_type load_cubemaps(std::unordered_map<std::string, CubemapFaces> cubemaps);
     unsigned int add_cubemap(CubemapFaces faces);
     void draw_cubemap(unsigned int cubemap_id, const std::unique_ptr<Shader>& cubemap_shader, const CameraWrapper& camera_wrapper);
