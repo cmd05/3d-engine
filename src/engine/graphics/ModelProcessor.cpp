@@ -26,7 +26,7 @@ void copy_assimp_vec3(glm::vec3& to, aiVector3D& from) {
     to.z = from.z;
 }
 
-ModelProcessor::ModelProcessor(const std::string& path, bool gamma): m_gamma_correction{gamma} {
+ModelProcessor::ModelProcessor(const std::string& path) {
     load_model(path);
 }
 
@@ -217,5 +217,4 @@ void ModelProcessor::clear() {
     m_textures_loaded.clear();
     m_meshes.clear();
     m_model_path.clear();
-    m_gamma_correction = ENABLE_GAMMA_CORRECTION;
 }

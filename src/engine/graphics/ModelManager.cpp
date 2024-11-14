@@ -43,7 +43,7 @@ std::unordered_map<std::string, std::size_t> ModelManager::load_models(mapper_da
     return model_id_map;
 }
 
-ModelManager::MeshDrawData ModelManager::setup_mesh(std::string model_path, Mesh& mesh, bool gamma_correction) {
+ModelManager::MeshDrawData ModelManager::setup_mesh(std::string model_path, Mesh& mesh) {
     MeshDrawData mesh_draw_data;
 
     // set counts
@@ -108,7 +108,7 @@ void ModelManager::add_model(std::string model_path, std::size_t model_hash, Mod
     ModelDrawData model_draw_data;
     
     for(Mesh& mesh : model_data.meshes)
-        model_draw_data.meshes.push_back(setup_mesh(model_path, mesh, model_data.gamma_correction));
+        model_draw_data.meshes.push_back(setup_mesh(model_path, mesh));
 
     m_models[model_hash] = model_draw_data; // update list of loaded models
 }

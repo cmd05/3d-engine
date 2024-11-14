@@ -22,7 +22,6 @@ public:
         std::vector<Mesh> meshes;
 
         std::string model_path;
-        bool gamma_correction; // TODO: remove from here and ModelProcessor
     };
 
     struct MeshDrawData {
@@ -51,7 +50,7 @@ public:
     ModelData load_model_data(std::string model_bin_path);
     void add_model(std::string model_path, std::size_t model_hash, ModelData& model_data);
 
-    MeshDrawData setup_mesh(std::string model_path, Mesh& mesh, bool gamma_correction);
+    MeshDrawData setup_mesh(std::string model_path, Mesh& mesh);
 
     
     void draw_mesh(const std::unique_ptr<Shader>& shader, MeshDrawData& mesh_draw_data);
