@@ -39,4 +39,6 @@ private:
     std::vector<MeshTextureType> m_no_gamma_correct {
         MeshTextureType::NORMAL
     };
+
+    using byte_ptr = char*;
 };
