@@ -11,6 +11,8 @@
 
 #include <lib/utilities/DebugAssert.hpp>
 
+#include <fstream>
+
 TextureManager::TextureManager() {
 
 }
@@ -31,7 +33,52 @@ unsigned int TextureManager::texture_from_file(std::string file_path, bool gamma
     glGenTextures(1, &texture_id);
 
     int width, height, num_components;
-    unsigned char *img_data = stbi_load(file_path.c_str(), &width, &height, &num_components, 0);
+
+    // check if file at same path with ".tex_bin" exists
+    std::string bin_path = file_path + ".tex_bin";
+    std::ifstream ifs_bin {bin_path, std::ios::binary};
+    bool bin_exists = ifs_bin.good();
+
+    unsigned char* img_data = nullptr;
+
+    // stbi_load: 8-bits-per-channel interface
+    if(!bin_exists) {
+        // create binary file
+        std::ofstream ofs_bin{bin_path, std::ios::binary};
+        img_data = stbi_load(file_path.c_str(), &width, &height, &num_components, 0);
+
+        // TODO: confirm if correct
+        std::size_t num_bytes = width * height * num_components;
+
+        // 1. dump width
+        ofs_bin.write(reinterpret_cast<byte_ptr>(&width), sizeof(width));
+
+        // 2. dump height
+        ofs_bin.write(reinterpret_cast<byte_ptr>(&height), sizeof(height));
+
+        // 3. dump number of components
+        ofs_bin.write(reinterpret_cast<byte_ptr>(&num_components), sizeof(num_components));
+        
+        // 4. dump image data
+        ofs_bin.write(reinterpret_cast<byte_ptr>(img_data), num_bytes * sizeof(unsigned char));
+    } else {
+        // 1. read width
+        ifs_bin.read(reinterpret_cast<byte_ptr>(&width), sizeof(width));
+
+        // 2. read height
+        ifs_bin.read(reinterpret_cast<byte_ptr>(&height), sizeof(height));
+
+        // 3. read number of components
+        ifs_bin.read(reinterpret_cast<byte_ptr>(&num_components), sizeof(num_components));
+
+        std::size_t num_bytes = width * height * num_components;
+
+        // 4. read image data
+        img_data = new unsigned char[num_bytes];
+        ifs_bin.read(reinterpret_cast<byte_ptr>(img_data), num_bytes * sizeof(unsigned char));
+    }
+
+    // unsigned char *img_data = stbi_load(file_path.c_str(), &width, &height, &num_components, 0);
 
     if (img_data) {
         GLenum internal_format, data_format;
@@ -59,7 +106,12 @@ unsigned int TextureManager::texture_from_file(std::string file_path, bool gamma
         ASSERT_MESSAGE("Texture data could not be loaded: " << file_path);
     }
 
-    stbi_image_free(img_data);
+    if(!bin_exists)
+        stbi_image_free(img_data);
+    else
+        delete[] img_data;
+
+    // stbi_image_free(img_data);
 
     glBindTexture(GL_TEXTURE_2D, 0); // reset bound texture
     m_loaded_textures[file_path] = texture_id; // add to loaded textures
@@ -87,6 +139,7 @@ unsigned int TextureManager::add_cubemap(CubemapFaces faces) {
     int width, height, num_components;
 
     for(std::size_t i = 0; i < faces_ordered.size(); i++) {
+        // TODO: do same binary loading as texture_from_file()
         unsigned char* img_data = stbi_load(faces_ordered[i].c_str(), &width, &height, &num_components, 0);
 
         if (img_data)
