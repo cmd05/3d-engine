@@ -421,9 +421,6 @@ ModelManager::ModelData ModelManager::load_model_data(std::string model_bin_path
         std::size_t num_vertices = mesh_vertex_counts[i];
         std::size_t num_indices = mesh_index_counts[i];
         
-        // **USE std::move if the data won't be used again **
-        // does std::move work for local variables here?
-
         // move vertices
         current_mesh.m_vertices.resize(num_vertices);
         std::move(next_vertex_it, next_vertex_it + num_vertices, current_mesh.m_vertices.begin());
