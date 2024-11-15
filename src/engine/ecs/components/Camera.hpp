@@ -4,6 +4,8 @@
 
 #include <engine/config/GraphicsConfig.hpp>
 
+namespace Components {
+
 struct Camera {
 public:
     Camera(unsigned int width, unsigned int height): view_width{width}, view_height{height} {
@@ -62,4 +64,6 @@ private:
         cam_right = glm::normalize(glm::cross(cam_front, world_up));
         cam_up = glm::normalize(glm::cross(cam_right, cam_front));
     }
+};
+
 };

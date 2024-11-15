@@ -25,6 +25,7 @@ public:
     void update(float dt);
 
     void set_uniforms_pre_rendering();
+    void set_camera(Entity camera) { m_camera_wrapper = CameraWrapper{*m_scene, camera}; }
 
     models_interface_type load_models(std::unordered_map<std::string, std::string> models);
 

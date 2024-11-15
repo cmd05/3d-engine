@@ -11,10 +11,10 @@
 
 #include <engine/ecs/components/Cubemap.hpp>
 #include <engine/ecs/components/Camera.hpp>
-#include <engine/ecs/components/RenderableComponent.hpp>
+#include <engine/ecs/components/Renderable.hpp>
 #include <engine/ecs/components/Transform.hpp>
 #include <engine/ecs/components/Model.hpp>
-#include <engine/ecs/components/PointLightComponent.hpp>
+#include <engine/ecs/components/PointLight.hpp>
 
 #include <engine/graphics/Shader.hpp>
 #include <engine/graphics/objects/CubeObject.hpp>
@@ -27,7 +27,8 @@ void RenderSystem::gl_init_callback(Event& event) {
 
 RenderSystem::RenderSystem(Scene& scene, Entity camera, GUIState& gui_state): 
     System(scene),
-    m_model_manager(m_texture_manager, FS_RESOURCES_DIR + std::string(MODEL_BIN_PATH)), m_camera_wrapper(scene, camera),
+    m_model_manager(m_texture_manager, FS_RESOURCES_DIR + std::string(MODEL_BIN_PATH)),
+    m_camera_wrapper(scene, camera),
     m_gui_state{&gui_state} {
     // setup opengl properties
     glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
@@ -70,9 +71,9 @@ void RenderSystem::update(float dt)
     m_model_shader->set_uniform<glm::vec3>("viewPos", m_camera_wrapper.get_transform_component().position);
     
     int i_lights = 0;
-    for(const auto& entity : SceneView<PointLightComponent, Transform>(*m_scene)) {
-        glm::vec3 light_color = m_scene->get_component<PointLightComponent>(entity).light_color;
-        Transform light_transform = m_scene->get_component<Transform>(entity);
+    for(const auto& entity : SceneView<Components::PointLight, Components::Transform>(*m_scene)) {
+        glm::vec3 light_color = m_scene->get_component<Components::PointLight>(entity).light_color;
+        auto light_transform = m_scene->get_component<Components::Transform>(entity);
 
         m_light_renderer.draw_light_cube(light_transform, m_camera_wrapper, light_color);
 
@@ -94,9 +95,9 @@ void RenderSystem::update(float dt)
     // ---
 
     // draw models
-    for(const auto& entity : SceneView<RenderableComponent, Model, Transform>(*m_scene)) {
-        const auto& transform = m_scene->get_component<Transform>(entity);
-        const auto& object_model = m_scene->get_component<Model>(entity);
+    for(const auto& entity : SceneView<Components::Renderable, Components::Model, Components::Transform>(*m_scene)) {
+        const auto& transform = m_scene->get_component<Components::Transform>(entity);
+        const auto& object_model = m_scene->get_component<Components::Model>(entity);
 
         m_model_manager.draw_model(m_model_shader, object_model.model_id, m_camera_wrapper, transform);
     }
@@ -104,8 +105,8 @@ void RenderSystem::update(float dt)
     glDisable(GL_CULL_FACE);
 
     // draw cubemaps
-    for(const auto& entity : SceneView<RenderableComponent, Cubemap>(*m_scene))
-        draw_cubemap(m_scene->get_component<Cubemap>(entity).id);
+    for(const auto& entity : SceneView<Components::Renderable, Components::Cubemap>(*m_scene))
+        draw_cubemap(m_scene->get_component<Components::Cubemap>(entity).id);
 }
 
 void RenderSystem::set_uniforms_pre_rendering() {
@@ -124,7 +125,7 @@ void RenderSystem::window_size_listener(Event& event) {
     glViewport(0, 0, window_width, window_height);
 
     // resize view size for all cameras
-    for(auto& entity : SceneView<Camera, Transform>(*m_scene)) {
+    for(auto& entity : SceneView<Components::Camera, Components::Transform>(*m_scene)) {
         CameraWrapper camera_wrapper{*m_scene, entity};
         camera_wrapper.resize_view(window_width, window_height);
     }

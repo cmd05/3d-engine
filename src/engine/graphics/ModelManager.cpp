@@ -199,7 +199,7 @@ void ModelManager::draw_mesh(const std::unique_ptr<Shader>& shader, MeshDrawData
 
 
 void ModelManager::draw_model(const std::unique_ptr<Shader>& model_shader, std::size_t model_id, const CameraWrapper& camera_wrapper,
-    const Transform& transform) {    
+    const Components::Transform& transform) {    
     // retrieve model data
     auto it = m_models.begin();
     assert((it = m_models.find(model_id)) != m_models.end() && "Model with given ID does not exist");

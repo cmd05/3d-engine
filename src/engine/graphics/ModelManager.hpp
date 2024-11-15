@@ -54,7 +54,7 @@ public:
     MeshDrawData setup_mesh(std::string model_path, Mesh& mesh);
     
     void draw_mesh(const std::unique_ptr<Shader>& shader, MeshDrawData& mesh_draw_data);
-    void draw_model(const std::unique_ptr<Shader>& model_shader, std::size_t model_id, const CameraWrapper& camera_wrapper, const Transform& transform);
+    void draw_model(const std::unique_ptr<Shader>& model_shader, std::size_t model_id, const CameraWrapper& camera_wrapper, const Components::Transform& transform);
 private:
     using byte_ptr = char*;
 

@@ -22,12 +22,12 @@ cmake --build build > log.txt && ./build/3dengine.exe
 #include <engine/ecs/components/Camera.hpp>
 #include <engine/ecs/components/Gravity.hpp>
 #include <engine/ecs/components/Player.hpp>
-#include <engine/ecs/components/RenderableComponent.hpp>
+#include <engine/ecs/components/Renderable.hpp>
 #include <engine/ecs/components/RigidBody.hpp>
 #include <engine/ecs/components/Thrust.hpp>
 #include <engine/ecs/components/Transform.hpp>
 #include <engine/ecs/components/Model.hpp>
-#include <engine/ecs/components/PointLightComponent.hpp>
+#include <engine/ecs/components/PointLight.hpp>
 
 #include <engine/window/WindowManager.hpp>
 #include <engine/input/InputHandler.hpp>
@@ -81,17 +81,17 @@ int main() {
     /// ------------- Register Components ---------------
     
     main_scene.register_component<
-        Camera,
-        Gravity,
-        RenderableComponent,
-        RigidBody,
-        Transform,
-        Model,
-        Cubemap,
-        PointLightComponent,
+        Components::Camera,
+        Components::Gravity,
+        Components::Renderable,
+        Components::RigidBody,
+        Components::Transform,
+        Components::Model,
+        Components::Cubemap,
+        Components::PointLight,
         
-        Player,
-        Thrust
+        Components::Player,
+        Components::Thrust
     >();
 
     /// -------------------------------------------------
@@ -109,15 +109,15 @@ int main() {
 
     main_scene.add_component(
         camera_entity,
-        Transform {.position = glm::vec3(90.0f, 50.0f, 10.0f)}
+        Components::Transform {.position = glm::vec3(90.0f, 50.0f, 10.0f)}
     );
 
     main_scene.add_component(
         camera_entity,
-        Camera(window_width, window_height)
+        Components::Camera(window_width, window_height)
     );
 
-    Camera& camera_component = main_scene.get_component<Camera>(camera_entity);
+    Components::Camera& camera_component = main_scene.get_component<Components::Camera>(camera_entity);
     camera_component.set_cam_front(glm::vec3(-1.0f, 0.0f, 0.0f));
 
     auto& render_system = main_scene.register_system<RenderSystem>(camera_entity, gui_state);
@@ -162,7 +162,7 @@ int main() {
     /// -------------------------------------------------
 
     // auto cubemap_entity = main_scene.create_entity();
-    // main_scene.add_component(cubemap_entity, RenderableComponent{});
+    // main_scene.add_component(cubemap_entity, Renderable{});
     // main_scene.add_component(cubemap_entity, Cubemap{.id = cubemaps.at("sky")});
     
     // Create entities
@@ -190,14 +190,14 @@ int main() {
     for(int i = 0; i < NR_LIGHTS; i++) {
         auto light_entity = main_scene.create_entity();
 
-        main_scene.add_component(light_entity, Transform{
+        main_scene.add_component(light_entity, Components::Transform{
             // .position = glm::vec3(rand_light_position(generator), 50.0f, rand_light_position(generator)),
             // .scale = glm::vec3(5.0f)
             .position = glm::vec3(10.0f, 50.0f, 10.0f),
             .scale = glm::vec3(5.0f)
         });
         
-        main_scene.add_component(light_entity, PointLightComponent{
+        main_scene.add_component(light_entity, Components::PointLight{
             // .light_color = glm::vec3(rand_color(generator), rand_color(generator), rand_color(generator))
             .light_color = glm::vec3(1.0f)
         });
@@ -213,7 +213,7 @@ int main() {
 
         main_scene.add_component( // automatic type deduction for template parameters
         	entity,
-        	Gravity {
+        	Components::Gravity {
                 .force = glm::vec3(0.0f, -9.8f, 0.0f)
                 // .force = glm::vec3(0.0f, rand_gravity(generator), 0.0f)
             }
@@ -221,7 +221,7 @@ int main() {
 
         main_scene.add_component(
             entity,
-            RigidBody {
+            Components::RigidBody {
                 .velocity = glm::vec3(0.0f, 0.0f, 0.0f),
                 .acceleration = glm::vec3(0.0f, 0.0f, 0.0f)
             }
@@ -229,7 +229,7 @@ int main() {
 
         main_scene.add_component(
             entity,
-            Transform {
+            Components::Transform {
                 // .position = glm::vec3(rand_position(generator), rand_position(generator), rand_position(generator)),
                 // .scale = glm::vec3(scale, scale, scale),
                 .position = glm::vec3(0.0f),
@@ -239,7 +239,7 @@ int main() {
 
         main_scene.add_component(
             entity,
-            RenderableComponent {
+            Components::Renderable {
                 .color = glm::vec3(rand_color(generator), rand_color(generator), rand_color(generator))
             }
         );
@@ -249,7 +249,7 @@ int main() {
         std::advance( item, rand() % models_map.size() );
 
         main_scene.add_component(entity,
-            Model{.model_id = item->second }
+            Components::Model{.model_id = item->second }
         );
     }
 

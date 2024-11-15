@@ -15,7 +15,7 @@ class LightRenderer {
 public:
     LightRenderer();
 
-    void draw_light_cube(Transform& transform, const CameraWrapper& camera_wrapper, glm::vec3 light_color);
+    void draw_light_cube(Components::Transform& transform, const CameraWrapper& camera_wrapper, glm::vec3 light_color);
 
     // TBD: use the modelmanager from RenderSystem and create model_light_shader.vs,fs
     // model lights should have a color only according to their textures and won't be affected by

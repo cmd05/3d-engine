@@ -2,6 +2,10 @@
 
 #include <glm/glm.hpp>
 
-struct RenderableComponent {
+namespace Components {
+
+struct Renderable {
     glm::vec3 color;
 };
+
+}

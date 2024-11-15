@@ -2,6 +2,10 @@
 
 #include <glm/glm.hpp>
 
-struct PointLightComponent {
+namespace Components {
+
+struct PointLight {
     glm::vec3 light_color;
 };
+
+}

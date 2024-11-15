@@ -4,7 +4,7 @@ LightRenderer::LightRenderer() {
     m_light_cube_shader = std::make_unique<Shader>(std::string(FS_SHADERS_DIR) + "light_cube.vs", std::string(FS_SHADERS_DIR) + "light_cube.fs");
 }
 
-void LightRenderer::draw_light_cube(Transform& transform, const CameraWrapper& camera_wrapper, glm::vec3 light_color) {
+void LightRenderer::draw_light_cube(Components::Transform& transform, const CameraWrapper& camera_wrapper, glm::vec3 light_color) {
     m_light_cube_shader->activate();
 
     glm::mat4 mvp_matrix = GraphicsHelper::get_mvp_matrix(transform, camera_wrapper);

@@ -22,8 +22,8 @@ public:
         glm::mat4 projection;
     };
 
-    static glm::mat4 create_model_matrix(const Transform& transform);
-    static MVP get_mvp(const Transform& transform, const CameraWrapper& camera_wrapper);
+    static glm::mat4 create_model_matrix(const Components::Transform& transform);
+    static MVP get_mvp(const Components::Transform& transform, const CameraWrapper& camera_wrapper);
     // static void set_mvp(const std::unique_ptr<Shader>& shader, const Transform& transform, const CameraWrapper& camera_wrapper);
-    static glm::mat4 get_mvp_matrix(const Transform& transform, const CameraWrapper& camera_wrapper);
+    static glm::mat4 get_mvp_matrix(const Components::Transform& transform, const CameraWrapper& camera_wrapper);
 };
