@@ -9,6 +9,8 @@ uniform bool ambient_tex_exists;
 uniform bool diffuse_tex_exists;
 uniform bool specular_tex_exists;
 
+// TODO: if normal map doesn't exist for mesh use world space normal
+uniform bool u_normal_map_exists;
 
 uniform float u_ambient_strength;
 
