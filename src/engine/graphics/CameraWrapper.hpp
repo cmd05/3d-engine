@@ -11,12 +11,7 @@
 class CameraWrapper {
 public:
     CameraWrapper(Scene& scene, Entity camera);
-
-    CameraWrapper& operator=(const CameraWrapper& camera_wrapper) {
-        m_camera = camera_wrapper.m_camera;
-        // TBD: m_scene is assumed to be the same if assignment operator is used
-        return *this;
-    }
+    CameraWrapper& operator=(const CameraWrapper& camera_wrapper);
 
     void resize_view(unsigned int new_width, unsigned int new_height);
 

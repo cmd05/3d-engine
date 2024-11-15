@@ -74,6 +74,12 @@ void CameraWrapper::rotate_camera(double x_offset, double y_offset) {
     // camera_transform.qrotation = glm::normalize(camera_transform.qrotation);
 }
 
+CameraWrapper& CameraWrapper::operator=(const CameraWrapper& camera_wrapper) {
+    m_camera = camera_wrapper.m_camera;
+    // TBD: m_scene is assumed to be the same if assignment operator is used
+    return *this;
+}
+
 void CameraWrapper::translate_camera(BasicMovement direction, float distance) {
     auto& camera_transform = m_scene->get_component<Components::Transform>(m_camera);
     auto& camera = m_scene->get_component<Components::Camera>(m_camera);
