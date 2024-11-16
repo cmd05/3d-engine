@@ -79,8 +79,6 @@ void RenderSystem::update(float dt)
 
         m_model_shader->activate();
 
-        // TODO: fix all uniforms to use layout= instead of glGetUniform. This will require adding a new method to Shader.cpp
-        // provide shader.set_uniform_locations(std::unordered_map<std::string, int (location=)>). set in code / loaded by json file
         m_model_shader->set_uniform<glm::vec3>("pointLights[" + std::to_string(i_lights) + "].position", light_transform.position);
         m_model_shader->set_uniform<glm::vec3>("pointLights[" + std::to_string(i_lights) + "].color", light_color);
 

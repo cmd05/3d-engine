@@ -155,7 +155,7 @@ unsigned int TextureManager::add_cubemap(CubemapFaces faces) {
     int width, height, num_components;
 
     for(std::size_t i = 0; i < faces_ordered.size(); i++) {
-        // TODO: do same binary loading as texture_from_file()
+        // TODO: do same binary loading as texture_from_file() for add_cubemap()
         unsigned char* img_data = stbi_load(faces_ordered[i].c_str(), &width, &height, &num_components, 0);
 
         if (img_data)
