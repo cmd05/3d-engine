@@ -159,8 +159,10 @@ void ModelManager::draw_mesh(const std::unique_ptr<Shader>& shader, MeshDrawData
     unsigned int normal_nr = 1;
     unsigned int ambient_nr = 1;
 
-    int specular_tex_exists = (mesh_draw_data.textures_available.specular > 0);
+    int specular_tex_exists = (mesh_draw_data.textures_available.specular != 0);
+    int normal_tex_exists = (mesh_draw_data.textures_available.normal != 0);
     shader->set_uniform<int>("specular_tex_exists", specular_tex_exists);
+    shader->set_uniform<int>("u_normal_tex_exists", normal_tex_exists);
 
     // if(has_spec_tex)
     //     ASSERT_MESSAGE("has spec");
