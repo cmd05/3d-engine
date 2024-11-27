@@ -20,7 +20,8 @@ public:
     void set_world_up(glm::vec3 new_world_up) {
         world_up = glm::normalize(new_world_up);
 
-        update_cam_vectors(); 
+        update_cam_vectors();
+	    update_euler_angles();
     }
 
     void set_cam_front(glm::vec3 new_cam_front) {
