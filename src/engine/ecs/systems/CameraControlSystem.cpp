@@ -27,7 +27,7 @@ void CameraControlSystem::update(float dt) {
         float cam_offset = dt * GraphicsConfig::Camera::CAMERA_SPEED;
 
         // poll camera keys
-        // TODO: move these keys to a common key mapping .cpp file and for WindowManager::update too - KeyMap.cpp
+        // TBD: move these keys to a common key mapping .cpp file and for WindowManager::update too - KeyMap.cpp
         if(m_input_handler->get_key(GLFW_KEY_W))
             // no need to reset_key here
             camera_wrapper.translate_camera(BasicMovement::Forward, cam_offset);
@@ -42,7 +42,7 @@ void CameraControlSystem::update(float dt) {
         else if(m_input_handler->get_key(GLFW_KEY_E))
             camera_wrapper.translate_camera(BasicMovement::Down, cam_offset);
 
-        // TODO:
+        // TBD:
         // m_input_handler->react_key_noprocess(GLFW_KEY_W, []() {})
 
         // rotate camera
