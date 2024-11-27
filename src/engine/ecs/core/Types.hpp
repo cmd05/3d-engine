@@ -10,7 +10,7 @@ using entity_count_size_type = std::uint32_t;
 // using entity_count_signed_size_type = std::int64_t;
 using Entity = entity_count_size_type;
 const Entity MAX_ENTITIES = 100;
-const Entity MAX_ENTITIES_AFTER_CAMERA = MAX_ENTITIES - 1; // camera entity created in engine/ecs/systems/RenderSystem.cpp
+const Entity MAX_ENTITIES_AFTER_CAMERA = MAX_ENTITIES - 1; // after user creates a `Camera` entity is created for RenderSystem
 
 const entity_count_size_type NO_SIGNATURE_MARKER = MAX_ENTITIES;
 const entity_count_size_type NO_COMPONENT_MARKER = MAX_ENTITIES; // entities: 0 to MAX_ENTITIES-1
