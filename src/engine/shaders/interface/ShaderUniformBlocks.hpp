@@ -3,8 +3,6 @@
 #include <glm/glm.hpp>
 #include <glad/glad.h>
 
-constexpr unsigned int UBLOCK_OFFSET_BEGIN = 0;
-
 struct ShaderUniformBlocks {
 	void init() {
         /// Matrices
@@ -65,4 +63,6 @@ public:
     // ub_light_params light_params;
     // unsigned int bp_light_params;
     // unsigned int ubo_light_params;
+public:
+    static constexpr unsigned int UBLOCK_OFFSET_BEGIN = 0; // symbolic name for beginning offset of a uniform block
 };

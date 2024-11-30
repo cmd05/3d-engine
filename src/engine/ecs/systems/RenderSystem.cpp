@@ -70,7 +70,7 @@ void RenderSystem::update(float dt) {
     // buffer camera data     
     m_shader_uniform_blocks.camera.view_pos = glm::vec4(m_camera_wrapper.get_transform_component().position, 0.0);
     glBindBuffer(GL_UNIFORM_BUFFER, m_shader_uniform_blocks.ubo_camera);
-    glBufferSubData(GL_UNIFORM_BUFFER, UBLOCK_OFFSET_BEGIN, sizeof(m_shader_uniform_blocks.camera), &m_shader_uniform_blocks.camera);
+    glBufferSubData(GL_UNIFORM_BUFFER, ShaderUniformBlocks::UBLOCK_OFFSET_BEGIN, sizeof(m_shader_uniform_blocks.camera), &m_shader_uniform_blocks.camera);
 
     // draw lights
     m_model_shader->activate();
@@ -97,7 +97,7 @@ void RenderSystem::update(float dt) {
     m_shader_uniform_blocks.gui_state.attenuation = m_gui_state->attenuation;
     
     glBindBuffer(GL_UNIFORM_BUFFER, m_shader_uniform_blocks.ubo_gui_state);
-    glBufferSubData(GL_UNIFORM_BUFFER, UBLOCK_OFFSET_BEGIN, sizeof(m_shader_uniform_blocks.gui_state), &m_shader_uniform_blocks.gui_state);
+    glBufferSubData(GL_UNIFORM_BUFFER, ShaderUniformBlocks::UBLOCK_OFFSET_BEGIN, sizeof(m_shader_uniform_blocks.gui_state), &m_shader_uniform_blocks.gui_state);
 
     // buffer uniform block matrices
     GraphicsHelper::MVP mvp;
@@ -108,7 +108,7 @@ void RenderSystem::update(float dt) {
     m_shader_uniform_blocks.matrices.projection = mvp.projection;
 
     glBindBuffer(GL_UNIFORM_BUFFER, m_shader_uniform_blocks.ubo_matrices);
-    glBufferSubData(GL_UNIFORM_BUFFER, UBLOCK_OFFSET_BEGIN, sizeof(m_shader_uniform_blocks.matrices), &m_shader_uniform_blocks.matrices);
+    glBufferSubData(GL_UNIFORM_BUFFER, ShaderUniformBlocks::UBLOCK_OFFSET_BEGIN, sizeof(m_shader_uniform_blocks.matrices), &m_shader_uniform_blocks.matrices);
     // glBufferSubData(GL_UNIFORM_BUFFER, offsetof(ShaderNormalData::ub_matrices, normal_matrix), sizeof(glm::mat3), &shader_normal_data.matrices.normal_matrix);
 
     // draw models
