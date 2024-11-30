@@ -13,7 +13,6 @@ static constexpr std::uint32_t operator "" _hash(char const* s, std::size_t coun
     return fnv1a_32(s, count);
 }
 
-/// TODO: move all this to seperate config files. unrelated to ECS
 namespace Events::Window {
     const EventId QUIT = "Events::Window::QUIT"_hash;
     const EventId RESIZED = "Events::Window::RESIZED"_hash;
