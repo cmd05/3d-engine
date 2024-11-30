@@ -1,4 +1,5 @@
 #include <engine/gui/GUIMain.hpp>
+#include <engine/config/GUIConfig.hpp>
 
 GUIMain::GUIMain(GUIState& gui_state, const char* glsl_version):
     m_gui_state{&gui_state}, m_glsl_version{glsl_version} {}
@@ -21,7 +22,7 @@ void GUIMain::init_gui() {
     ImGui::CreateContext();
 
     m_imgui_io = &ImGui::GetIO();
-    m_imgui_io->ConfigFlags |= IMGUI_CONFIG_FLAGS;
+    m_imgui_io->ConfigFlags |= GUIConfig::IMGUI_CONFIG_FLAGS;
     
     ImGuiStyle& style = ImGui::GetStyle();
     
