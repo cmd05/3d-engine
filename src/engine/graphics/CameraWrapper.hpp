@@ -8,6 +8,8 @@
 #include <engine/ecs/components/Camera.hpp>
 #include <engine/ecs/components/Transform.hpp>
 
+#include <engine/config/InputConfig.hpp>
+
 class CameraWrapper {
 public:
     CameraWrapper(Scene& scene, Entity camera);
@@ -18,7 +20,7 @@ public:
     glm::mat4 get_view_matrix() const;
     glm::mat4 get_projection_matrix() const;
 
-    void translate_camera(BasicMovement direction, float distance);
+    void translate_camera(InputConfig::BasicMovement direction, float distance);
     void rotate_camera(double x_offset, double y_offset);
     void zoom_camera(double offset);
 

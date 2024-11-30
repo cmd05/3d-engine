@@ -81,28 +81,3 @@ namespace Events::Input::Mouse {
 namespace Events::Input::Scroll {
     const ParamId SCROLL_DATA = "Events::Input::Scroll::SCROLL_DATA"_hash;
 }
-
-// GLFW Keys information
-constexpr int WIN_INPUT_KEYS_START = 0;
-constexpr int WIN_INPUT_KEYS_END = 1024; // not included
-constexpr int WIN_INPUT_KEYS_LEN = WIN_INPUT_KEYS_END;
-
-enum class InputButtons {
-    W,
-    A,
-    S,
-    D,
-    Q,
-    E
-};
-
-enum class BasicMovement {
-    Forward,
-    Right,
-    Left,
-    Backward,
-    Up,
-    Down
-};
-
-using BasicMoves = std::bitset<8>;

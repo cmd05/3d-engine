@@ -80,21 +80,21 @@ CameraWrapper& CameraWrapper::operator=(const CameraWrapper& camera_wrapper) {
     return *this;
 }
 
-void CameraWrapper::translate_camera(BasicMovement direction, float distance) {
+void CameraWrapper::translate_camera(InputConfig::BasicMovement direction, float distance) {
     auto& camera_transform = m_scene->get_component<Components::Transform>(m_camera);
     auto& camera = m_scene->get_component<Components::Camera>(m_camera);
 
-    if (direction == BasicMovement::Forward)
+    if (direction == InputConfig::BasicMovement::Forward)
         camera_transform.position += camera.cam_front * distance;
-    else if (direction == BasicMovement::Backward)
+    else if (direction == InputConfig::BasicMovement::Backward)
         camera_transform.position -= camera.cam_front * distance;
-    if (direction == BasicMovement::Right)
+    if (direction == InputConfig::BasicMovement::Right)
         camera_transform.position += camera.cam_right * distance;
-    else if (direction == BasicMovement::Left)
+    else if (direction == InputConfig::BasicMovement::Left)
         camera_transform.position -= camera.cam_right * distance;
-    if (direction == BasicMovement::Up)
+    if (direction == InputConfig::BasicMovement::Up)
         camera_transform.position += camera.world_up * distance;
-    else if (direction == BasicMovement::Down)
+    else if (direction == InputConfig::BasicMovement::Down)
         camera_transform.position -= camera.world_up * distance;
 }
 

@@ -3,6 +3,8 @@
 #include <engine/ecs/core/Scene.hpp>
 #include <engine/ecs/core/Types.hpp>
 
+#include <engine/config/InputConfig.hpp>
+
 class InputHandler {
 public:
     struct MouseData {
@@ -46,8 +48,8 @@ private:
     Scene* const m_scene;
 
     // default initialize all array elements to zero (false)
-    bool input_keys[WIN_INPUT_KEYS_LEN] = {0};
-    bool input_keys_processed[WIN_INPUT_KEYS_LEN] = {0};
+    bool input_keys[InputConfig::WIN_INPUT_KEYS_LEN] = {0};
+    bool input_keys_processed[InputConfig::WIN_INPUT_KEYS_LEN] = {0};
 
     // default initialize `m_mouse_data` and `m_scroll_data`
     MouseData m_mouse_data{};

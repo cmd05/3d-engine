@@ -7,7 +7,7 @@ InputHandler::InputHandler(Scene &scene):
     m_scene{&scene} {}
 
 void InputHandler::handle_key_callback(int key, int scancode, int action, int mods) {
-    if(key >= WIN_INPUT_KEYS_START && key < WIN_INPUT_KEYS_END) {
+    if(key >= InputConfig::WIN_INPUT_KEYS_START && key < InputConfig::WIN_INPUT_KEYS_END) {
         if(action == GLFW_PRESS)
             set_key(key);
         else if(action == GLFW_RELEASE) {

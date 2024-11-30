@@ -11,6 +11,7 @@
 #include <engine/ecs/components/Camera.hpp>
 
 #include <engine/config/GraphicsConfig.hpp>
+#include <engine/config/InputConfig.hpp>
 
 CameraControlSystem::CameraControlSystem(Scene& scene, InputHandler& input_handler): 
     System{scene}, m_input_handler{&input_handler} {
@@ -30,17 +31,17 @@ void CameraControlSystem::update(float dt) {
         // TBD: move these keys to a common key mapping .cpp file and for WindowManager::update too - KeyMap.cpp
         if(m_input_handler->get_key(GLFW_KEY_W))
             // no need to reset_key here
-            camera_wrapper.translate_camera(BasicMovement::Forward, cam_offset);
+            camera_wrapper.translate_camera(InputConfig::BasicMovement::Forward, cam_offset);
         else if(m_input_handler->get_key(GLFW_KEY_S))
-            camera_wrapper.translate_camera(BasicMovement::Backward, cam_offset);
+            camera_wrapper.translate_camera(InputConfig::BasicMovement::Backward, cam_offset);
         if(m_input_handler->get_key(GLFW_KEY_A))
-            camera_wrapper.translate_camera(BasicMovement::Left, cam_offset);
+            camera_wrapper.translate_camera(InputConfig::BasicMovement::Left, cam_offset);
         else if(m_input_handler->get_key(GLFW_KEY_D))
-            camera_wrapper.translate_camera(BasicMovement::Right, cam_offset);
+            camera_wrapper.translate_camera(InputConfig::BasicMovement::Right, cam_offset);
         if(m_input_handler->get_key(GLFW_KEY_Q))
-            camera_wrapper.translate_camera(BasicMovement::Up, cam_offset);
+            camera_wrapper.translate_camera(InputConfig::BasicMovement::Up, cam_offset);
         else if(m_input_handler->get_key(GLFW_KEY_E))
-            camera_wrapper.translate_camera(BasicMovement::Down, cam_offset);
+            camera_wrapper.translate_camera(InputConfig::BasicMovement::Down, cam_offset);
 
         // TBD:
         // m_input_handler->react_key_noprocess(GLFW_KEY_W, []() {})
