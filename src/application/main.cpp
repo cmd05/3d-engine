@@ -136,6 +136,7 @@ int main() {
         // {"cyborg", std::string(FS_RESOURCES_DIR) + "models/cyborg/cyborg.obj"},
         // {"backpack", std::string(FS_RESOURCES_DIR) +"models/forest-backpack/backpack.obj"},
         {"sponza-khronos", std::string(FS_RESOURCES_DIR) + "models/sponza-gltf-khronos/Sponza.gltf"},
+        // {"sponza-glb", std::string(FS_RESOURCES_DIR) + "models/sponza-glb/sponza.glb"},
 
         // {"sponza", std::string(FS_RESOURCES_DIR) + "models/sponza2/sponza.obj"},
         // {"low_poly_house", std::string(FS_RESOURCES_DIR) +"models/low_poly_house/low_poly_house.fbx"},

@@ -44,7 +44,7 @@ unsigned int TextureManager::texture_from_file(std::string file_path, bool gamma
 
     // stbi_load: 8-bits-per-channel interface
     if(!bin_exists)
-        dump_texture_bin(bin_path, img_data, width, height, num_components);
+        dump_texture_bin(file_path, bin_path, img_data, width, height, num_components);
     else
         load_texture_bin(bin_path, img_data, width, height, num_components);
 
@@ -106,10 +106,10 @@ void TextureManager::load_texture_bin(std::string bin_path, unsigned char*& img_
     ifs_bin.read(reinterpret_cast<byte_ptr>(img_data), num_bytes * sizeof(unsigned char));
 }
 
-void TextureManager::dump_texture_bin(std::string bin_path, unsigned char*& img_data, int& width, int& height, int& num_components) {
+void TextureManager::dump_texture_bin(std::string tex_path, std::string bin_path, unsigned char*& img_data, int& width, int& height, int& num_components) {
     // create binary file
     std::ofstream ofs_bin{bin_path, std::ios::binary};
-    img_data = stbi_load(bin_path.c_str(), &width, &height, &num_components, 0);
+    img_data = stbi_load(tex_path.c_str(), &width, &height, &num_components, 0);
 
     // stbi_load: 8-bits-per-channel interface
     std::size_t num_bytes = width * height * num_components;

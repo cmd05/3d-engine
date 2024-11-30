@@ -28,7 +28,7 @@ public:
     unsigned int texture_from_file(std::string file_path, bool gamma_correction = false, bool vflip_texture = false);
 
     void load_texture_bin(std::string bin_path, unsigned char*& img_data, int& width, int& height, int& num_components);
-    void dump_texture_bin(std::string bin_path, unsigned char*& img_data, int& width, int& height, int& num_components);
+    void dump_texture_bin(std::string tex_path, std::string bin_path, unsigned char*& img_data, int& width, int& height, int& num_components);
 
     void alloc_tex_bytes(unsigned char*& img_data, int num_bytes);
     void free_tex_bytes(unsigned char*& img_data);
