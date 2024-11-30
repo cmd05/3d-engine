@@ -148,7 +148,12 @@ int main() {
         // {"nanosuit", std::string(FS_RESOURCES_DIR) +"models/nanosuit/nanosuit.obj"},
     };
 
-    models_interface_type models_map = render_system.load_models(models);
+    models_interface_type models_map;
+    try {
+        models_map = render_system.load_models(models);
+    } catch(...) {
+        ASSERT_MESSAGE("Error importing models. Check debug");
+    }
 
     // NOTE: cubemap loading will be slow since stb_image is being used each time
     // cubemaps_interface_type cubemaps = render_system.load_cubemaps({
