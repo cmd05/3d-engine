@@ -148,7 +148,7 @@ int main() {
 
     models_interface_type models_map = render_system.load_models(models);
 
-    // TODO: cubemap loading will be slow since stb_image is being used each time
+    // NOTE: cubemap loading will be slow since stb_image is being used each time
     // cubemaps_interface_type cubemaps = render_system.load_cubemaps({
     //     {"sky", {
     //         .right = (std::string(FS_RESOURCES_DIR) + "textures/skybox/right.jpg"),
