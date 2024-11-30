@@ -1,10 +1,12 @@
+#include <lib/utilities/DebugAssert.hpp>
+
 #include <engine/window/WindowManager.hpp>
 
 #include <engine/ecs/core/Scene.hpp>
 #include <engine/ecs/core/Event.hpp>
 
 #include <engine/gui/GUIMain.hpp>
-#include <lib/utilities/DebugAssert.hpp>
+#include <engine/config/Events.hpp>
 
 // assuming single GLFW window
 // static global variable - only visible to WindowManager.cpp

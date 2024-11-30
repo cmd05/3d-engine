@@ -19,6 +19,8 @@
 #include <engine/graphics/Shader.hpp>
 #include <engine/graphics/objects/CubeObject.hpp>
 
+#include <engine/config/Events.hpp>
+
 void RenderSystem::gl_init_callback(Event& event) {
     // build default objects and their VBO's
     g_graphics_objects.init();

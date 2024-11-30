@@ -12,6 +12,7 @@
 
 #include <engine/config/GraphicsConfig.hpp>
 #include <engine/config/InputConfig.hpp>
+#include <engine/config/Events.hpp>
 
 CameraControlSystem::CameraControlSystem(Scene& scene, InputHandler& input_handler): 
     System{scene}, m_input_handler{&input_handler} {

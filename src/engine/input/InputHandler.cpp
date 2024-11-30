@@ -2,6 +2,7 @@
 
 #include <engine/ecs/core/Event.hpp>
 #include <engine/input/InputHandler.hpp>
+#include <engine/config/Events.hpp>
 
 InputHandler::InputHandler(Scene &scene): 
     m_scene{&scene} {}
