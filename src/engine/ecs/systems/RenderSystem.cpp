@@ -21,13 +21,12 @@
 
 void RenderSystem::gl_init_callback(Event& event) {
     // build default objects and their VBO's
-    // this should happen only after opengl context is setup
     g_graphics_objects.init();
 }
 
 RenderSystem::RenderSystem(Scene& scene, Entity camera, GUIState& gui_state): 
     System(scene),
-    m_model_manager(m_texture_manager, FS_RESOURCES_DIR + std::string(MODEL_BIN_PATH)),
+    m_model_manager(m_texture_manager),
     m_camera_wrapper(scene, camera),
     m_gui_state{&gui_state} {
     // setup opengl properties
@@ -41,8 +40,8 @@ RenderSystem::RenderSystem(Scene& scene, Entity camera, GUIState& gui_state):
     m_model_shader = std::make_unique<Shader>(std::string(FS_SHADERS_DIR) + "shader_model_normal.vs", std::string(FS_SHADERS_DIR) + "shader_model_normal.fs");
     m_cubemap_shader = std::make_unique<Shader>(std::string(FS_SHADERS_DIR) + "cubemap.vs", std::string(FS_SHADERS_DIR) + "cubemap.fs");
 
-    // store GUIState pointer
-    // m_gui_state = &gui_state;
+    // Initialize state of shader data
+    m_shader_uniform_blocks.init();
 }
 
 models_interface_type RenderSystem::load_models(std::unordered_map<std::string, std::string> models) {
@@ -57,8 +56,7 @@ void RenderSystem::draw_cubemap(unsigned int cubemap_id) {
     m_texture_manager.draw_cubemap(cubemap_id, m_cubemap_shader, m_camera_wrapper);
 }
 
-void RenderSystem::update(float dt)
-{
+void RenderSystem::update(float dt) {
     // clear screen and buffers
     glClearColor(0.2f, 0.2f, 0.2f, 1.0f);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -67,10 +65,15 @@ void RenderSystem::update(float dt)
     glEnable(GL_DEPTH_TEST);
     glEnable(GL_CULL_FACE);
 
+    // buffer camera data     
+    m_shader_uniform_blocks.camera.view_pos = glm::vec4(m_camera_wrapper.get_transform_component().position, 0.0);
+    glBindBuffer(GL_UNIFORM_BUFFER, m_shader_uniform_blocks.ubo_camera);
+    glBufferSubData(GL_UNIFORM_BUFFER, UBLOCK_OFFSET_BEGIN, sizeof(m_shader_uniform_blocks.camera), &m_shader_uniform_blocks.camera);
+
+    // draw lights
     m_model_shader->activate();
-    m_model_shader->set_uniform<glm::vec3>("viewPos", m_camera_wrapper.get_transform_component().position);
-    
     int i_lights = 0;
+    
     for(const auto& entity : SceneView<Components::PointLight, Components::Transform>(*m_scene)) {
         glm::vec3 light_color = m_scene->get_component<Components::PointLight>(entity).light_color;
         auto light_transform = m_scene->get_component<Components::Transform>(entity);
@@ -79,25 +82,39 @@ void RenderSystem::update(float dt)
 
         m_model_shader->activate();
 
-        m_model_shader->set_uniform<glm::vec3>("pointLights[" + std::to_string(i_lights) + "].position", light_transform.position);
-        m_model_shader->set_uniform<glm::vec3>("pointLights[" + std::to_string(i_lights) + "].color", light_color);
+        // set lights for model shader (tbd: this will be changed to ssbo for lights)
+        m_model_shader->set_uniform<glm::vec3>("u_point_lights[" + std::to_string(i_lights) + "].position", light_transform.position);
+        m_model_shader->set_uniform<glm::vec3>("u_point_lights[" + std::to_string(i_lights) + "].color", light_color);
 
         i_lights++;
     }
 
-    // experiment with lighting
-
+    // buffer GUI parameters
     m_model_shader->activate();
-    m_model_shader->set_uniform<float>("u_ambient_strength", m_gui_state->ambient_strength);
+    m_shader_uniform_blocks.gui_state.ambient_strength = m_gui_state->ambient_strength;
+    m_shader_uniform_blocks.gui_state.attenuation = m_gui_state->attenuation;
+    
+    glBindBuffer(GL_UNIFORM_BUFFER, m_shader_uniform_blocks.ubo_gui_state);
+    glBufferSubData(GL_UNIFORM_BUFFER, UBLOCK_OFFSET_BEGIN, sizeof(m_shader_uniform_blocks.gui_state), &m_shader_uniform_blocks.gui_state);
 
-    // ---
+    // buffer uniform block matrices
+    GraphicsHelper::MVP mvp;
+    mvp.view = m_camera_wrapper.get_view_matrix();
+    mvp.projection = m_camera_wrapper.get_projection_matrix();
+
+    m_shader_uniform_blocks.matrices.view = mvp.view;
+    m_shader_uniform_blocks.matrices.projection = mvp.projection;
+
+    glBindBuffer(GL_UNIFORM_BUFFER, m_shader_uniform_blocks.ubo_matrices);
+    glBufferSubData(GL_UNIFORM_BUFFER, UBLOCK_OFFSET_BEGIN, sizeof(m_shader_uniform_blocks.matrices), &m_shader_uniform_blocks.matrices);
+    // glBufferSubData(GL_UNIFORM_BUFFER, offsetof(ShaderNormalData::ub_matrices, normal_matrix), sizeof(glm::mat3), &shader_normal_data.matrices.normal_matrix);
 
     // draw models
     for(const auto& entity : SceneView<Components::Renderable, Components::Model, Components::Transform>(*m_scene)) {
         const auto& transform = m_scene->get_component<Components::Transform>(entity);
         const auto& object_model = m_scene->get_component<Components::Model>(entity);
 
-        m_model_manager.draw_model(m_model_shader, object_model.model_id, m_camera_wrapper, transform);
+        m_model_manager.draw_model(m_model_shader, object_model.model_id, transform, mvp);
     }
 
     glDisable(GL_CULL_FACE);
@@ -109,10 +126,6 @@ void RenderSystem::update(float dt)
 
 void RenderSystem::set_uniforms_pre_rendering() {
     // call some private function which sets the pre render loop uniforms
-    
-    // i=0=>use GL_TEXTURE0, i=1=>GL_TEXTURE1 ...
-    // right now set in TextureManager::draw_cubemap. do this when multiple cubemaps are required
-    m_cubemap_shader->activate();
 }
 
 void RenderSystem::window_size_listener(Event& event) {

@@ -22,6 +22,7 @@ struct CubemapFaces {
 class TextureManager {
 public:
     TextureManager();
+
     // texture_from_file should not decide if gamma correction is required.
     // User should provide `gamma_correction` parameter, ideally by use of `gamma_correct_required()`
     unsigned int texture_from_file(std::string file_path, bool gamma_correction = false, bool vflip_texture = false);
@@ -40,11 +41,6 @@ public:
 private:
     std::unordered_map<std::string, unsigned int> m_loaded_textures; // absolute texture path, texture id
     std::vector<unsigned int> m_cubemaps;
-
-    // TODO: move to a config file
-    std::vector<MeshTextureType> m_no_gamma_correct {
-        MeshTextureType::NORMAL
-    };
 
     using byte_ptr = char*;
 };

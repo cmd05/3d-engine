@@ -1,6 +1,7 @@
 #pragma once
 
 #include <glm/glm.hpp>
+#include <engine/graphics/MeshProcessor.hpp>
 
 struct GraphicsConfig {
     struct Camera { 
@@ -27,4 +28,9 @@ struct GraphicsConfig {
         // camera position (stored in `Transform`)
         static constexpr glm::vec3 DEFAULT_CAM_POS = glm::vec3(0.0f);
     };
+
+    static constexpr const char* MODEL_BIN_PATH = FS_RESOURCES_DIR "models/bin";
+    static constexpr const char* MODEL_BIN_MAPPER_PATH = FS_RESOURCES_DIR "models/bin/bin_mapper.map";
+
+    static constexpr MeshTextureType NO_GAMMA_CORRECT_MAPS = MeshTextureType::NORMAL; // ( | MeshTextureType::MAP | ... ) 
 };

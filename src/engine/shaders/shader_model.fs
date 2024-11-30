@@ -1,4 +1,4 @@
-#version 330 core
+#version 460 core
 out vec4 FragColor;
 
 in VS_OUT {
@@ -13,7 +13,6 @@ uniform sampler2D texture_specular1;
 uniform bool ambient_tex_exists;
 uniform bool diffuse_tex_exists;
 uniform bool specular_tex_exists;
-// normal, metallic, roughness ...
 
 uniform vec3 lightPos;
 uniform vec3 lightColor;
@@ -31,12 +30,6 @@ uniform Light point_lights[NR_POINT_LIGHTS];
 const float att_const = 1.0;
 const float att_linear = 0.00009;
 const float att_quadratic = 0.000032;
-
-// void main()
-// {    
-//     FragColor = texture(texture_diffuse1, TexCoords);
-//     // FragColor = vec4(vec3(gl_FragDepth), 1.0f);
-// }
 
 void main() {
     vec3 color = texture(texture_diffuse1, fs_in.TexCoords).rgb;

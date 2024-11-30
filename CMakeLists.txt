@@ -153,7 +153,7 @@ target_link_libraries(
     glfw
     glm::glm
     assimp
-    stb_image
+    stb
     imgui
 )
 

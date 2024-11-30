@@ -21,6 +21,8 @@ public:
         ImGui::SliderFloat("Ambient Strength", &m_gui_state->ambient_strength, 0.0f, 1.0f);            // Edit 1 float using a slider from 0.0f to 1.0f
         ImGui::ColorEdit3("clear color", (float*)&clear_color); // Edit 3 floats representing a color
         // ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / this->m_imgui_io->Framerate, this->m_imgui_io->Framerate);
+        ImGui::Checkbox("Attenuation", &m_gui_state->attenuation);
+        
         ImGui::End();
     }
 private:

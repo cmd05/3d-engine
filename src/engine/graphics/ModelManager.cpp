@@ -10,7 +10,6 @@
 
 #include <engine/graphics/ModelManager.hpp>
 
-#include <engine/graphics/lib/GraphicsHelper.hpp>
 #include <engine/graphics/TextureManager.hpp>
 #include <engine/graphics/Shader.hpp>
 #include <engine/graphics/ModelProcessor.hpp>
@@ -18,18 +17,16 @@
 
 #include <lib/utilities/DebugAssert.hpp>
 
+#include <engine/shaders/interface/ShaderUniformBlocks.hpp>
+#include <engine/shaders/interface/ShaderDataTypes.hpp>
+
 #include <numeric>
 #include <algorithm>
 
-ModelManager::ModelManager(TextureManager& tex_manager, std::string bin_dir): m_tex_manager{&tex_manager} {
+ModelManager::ModelManager(TextureManager& tex_manager): m_tex_manager{&tex_manager} {
     // check if mapper file exists in bin_dir else create
-    std::string mapper_file = bin_dir + '/' + BIN_MAP_FNAME;
-
-    if(!std::ifstream(mapper_file) && !std::ofstream(mapper_file))
+    if(!std::ifstream(m_mapper_file) && !std::ofstream(m_mapper_file))
         ASSERT_MESSAGE("Could not create mapper file");
-
-    m_bin_dir = bin_dir;
-    m_mapper_file = mapper_file;
 
     load_mapper_data();
 }
@@ -159,17 +156,19 @@ void ModelManager::draw_mesh(const std::unique_ptr<Shader>& shader, MeshDrawData
     unsigned int normal_nr = 1;
     unsigned int ambient_nr = 1;
 
-    int specular_tex_exists = (mesh_draw_data.textures_available.specular != 0);
-    int normal_tex_exists = (mesh_draw_data.textures_available.normal != 0);
-    shader->set_uniform<int>("specular_tex_exists", specular_tex_exists);
-    shader->set_uniform<int>("u_normal_tex_exists", normal_tex_exists);
-
-    // if(has_spec_tex)
+    // DEBUGGING:
+    // if(mesh_draw_data.textures_available.specular)
     //     ASSERT_MESSAGE("has spec");
-    // if(has_diff_tex)
+    // if(mesh_draw_data.textures_available.diffuse)
     //     ASSERT_MESSAGE("has diff");
-    // if(has_normal_tex)
+    // if(mesh_draw_data.textures_available.normal)
     //     ASSERT_MESSAGE("has normal");
+
+    // set mesh uniforms
+    shader->set_uniform<int>("u_mesh_textures_available.ambient", mesh_draw_data.textures_available.ambient);
+    shader->set_uniform<int>("u_mesh_textures_available.diffuse", mesh_draw_data.textures_available.diffuse);
+    shader->set_uniform<int>("u_mesh_textures_available.specular", mesh_draw_data.textures_available.specular);
+    shader->set_uniform<int>("u_mesh_textures_available.normal", mesh_draw_data.textures_available.normal);
 
     for(unsigned int i = 0; i < mesh_draw_data.textures.size(); i++) {
         glActiveTexture(GL_TEXTURE0 + i);
@@ -199,28 +198,23 @@ void ModelManager::draw_mesh(const std::unique_ptr<Shader>& shader, MeshDrawData
     glActiveTexture(GL_TEXTURE0); // reset active texture
 }
 
-
-void ModelManager::draw_model(const std::unique_ptr<Shader>& model_shader, std::size_t model_id, const CameraWrapper& camera_wrapper,
-    const Components::Transform& transform) {    
+void ModelManager::draw_model(const std::unique_ptr<Shader>& model_shader, std::size_t model_id,
+    const Components::Transform& transform, const GraphicsHelper::MVP& mvp) {    
     // retrieve model data
     auto it = m_models.begin();
     assert((it = m_models.find(model_id)) != m_models.end() && "Model with given ID does not exist");
     ModelDrawData& model_draw_data = it->second;
     
     model_shader->activate();
-    
-    // set uniforms
-    glm::mat4 model_matrix = GraphicsHelper::create_model_matrix(transform);
-    glm::mat4 view_matrix = camera_wrapper.get_view_matrix();
-    glm::mat4 projection_matrix = camera_wrapper.get_projection_matrix();
-    glm::mat4 mvp_matrix = projection_matrix * view_matrix * model_matrix;
 
-    model_shader->set_uniform<glm::mat4>("model", model_matrix);
-    model_shader->set_uniform<glm::mat4>("view", view_matrix);
-    model_shader->set_uniform<glm::mat4>("projection", projection_matrix);
+    ShaderDataTypes::MeshMatrices mesh_matrices;
+    mesh_matrices.model_matrix = GraphicsHelper::create_model_matrix(transform);
+    mesh_matrices.mvp_matrix = mvp.projection * mvp.view * mesh_matrices.model_matrix;
+    mesh_matrices.normal_matrix = glm::inverseTranspose(glm::mat3(mesh_matrices.model_matrix));
     
-    model_shader->set_uniform<glm::mat4>("u_MVP", mvp_matrix);
-    model_shader->set_uniform<glm::mat3>("normalMatrix", glm::inverseTranspose(glm::mat3(model_matrix))); // glm::highp_mat3
+    model_shader->set_uniform<glm::mat4>("u_mesh_matrices.model_matrix", mesh_matrices.model_matrix);
+    model_shader->set_uniform<glm::mat4>("u_mesh_matrices.mvp_matrix", mesh_matrices.mvp_matrix);
+    model_shader->set_uniform<glm::mat3>("u_mesh_matrices.normal_matrix", mesh_matrices.normal_matrix);
 
     // draw meshes
     for(MeshDrawData& mesh_draw_data : model_draw_data.meshes)

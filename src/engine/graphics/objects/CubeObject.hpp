@@ -84,11 +84,11 @@ struct CubeObject {
         glVertexAttribPointer(0, len_pos, GL_FLOAT, GL_FALSE, stride, reinterpret_cast<void*>(attrib_pos_begin));
         glEnableVertexAttribArray(0);
 
-        // // vertex normals (position = 1)
+        // vertex normals (position = 1)
         glVertexAttribPointer(1, len_normal, GL_FLOAT, GL_FALSE, stride, reinterpret_cast<void*>(attrib_normal_begin));
         glEnableVertexAttribArray(1);
         
-        // // vertex texture coords (position = 2)
+        // vertex texture coords (position = 2)
         glVertexAttribPointer(2, len_tex_coords, GL_FLOAT, GL_FALSE, stride, reinterpret_cast<void*>(attrib_tex_coords_begin));
         glEnableVertexAttribArray(2);
         
@@ -99,7 +99,6 @@ struct CubeObject {
         // // vertex bitangent (position = 4)
         // glEnableVertexAttribArray(4);
         // glVertexAttribPointer(4, 3, GL_FLOAT, GL_FALSE, sizeof(vertices), (void*) offsetof(vertices, bitangent));
-
     };
 
     unsigned int VAO;

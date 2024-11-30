@@ -13,6 +13,7 @@ public:
     float specular_highlight = 32.0f;
 
     // attenuation
+    bool attenuation = false;
     float att_const = 1.0f;
     float att_linear = 0.09;
     float att_quadratic = 0.032;

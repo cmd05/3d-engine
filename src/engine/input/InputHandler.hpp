@@ -36,10 +36,10 @@ public:
 
     MouseData& get_mouse_data() { return m_mouse_data; }
 
-    // TODO: to listen for continuous presses: get_key
+    // TBD: to listen for continuous presses: get_key
     // to listen for single press: get_key and reset_key after that (see breakout implementation)
     
-    // TODO: implement support for execution for key by lambdas
+    // TBD: implement support for execution for key by lambdas
     // react_key_noprocess
     // react_key_processed
 private:

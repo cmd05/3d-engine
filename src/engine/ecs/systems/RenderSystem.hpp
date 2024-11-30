@@ -9,13 +9,12 @@
 #include <engine/graphics/TextureManager.hpp>
 #include <engine/graphics/CameraWrapper.hpp>
 #include <engine/graphics/Shader.hpp>
-
 #include <engine/graphics/objects/GraphicsObjects.hpp>
 #include <engine/graphics/LightRenderer.hpp>
 
 #include <engine/gui/GUIState.hpp>
 
-constexpr const char* MODEL_BIN_PATH = "models/bin";
+#include <engine/shaders/interface/ShaderUniformBlocks.hpp>
 
 class RenderSystem : public System {
 public:
@@ -28,7 +27,6 @@ public:
     void set_camera(Entity camera) { m_camera_wrapper = CameraWrapper{*m_scene, camera}; }
 
     models_interface_type load_models(std::unordered_map<std::string, std::string> models);
-
     cubemaps_interface_type load_cubemaps(std::unordered_map<std::string, CubemapFaces> cubemaps);
     void draw_cubemap(unsigned int cubemap_id);
 
@@ -42,9 +40,10 @@ private:
     ModelManager m_model_manager;
     TextureManager m_texture_manager;
     LightRenderer m_light_renderer;
-    
+
     GUIState* const m_gui_state;
 
+    ShaderUniformBlocks m_shader_uniform_blocks;
 private:
     void window_size_listener(Event& event);
 };

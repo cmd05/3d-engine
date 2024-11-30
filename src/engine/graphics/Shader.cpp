@@ -1,67 +1,59 @@
 #include <fstream>
-#include <iostream>
-#include <sstream>
+#include <memory>
 
 #include <glad/glad.h>
 
 #include <engine/graphics/Shader.hpp>
+#include <engine/config/ShaderConfig.hpp>
 
-Shader::Shader(std::string const& vertex_path, std::string const& fragment_path) {
-    std::string fragment_file_contents;
-    std::string vertex_file_contents;
+#define STB_INCLUDE_IMPLEMENTATION
+#define STB_INCLUDE_LINE_NONE
+#include <stb/stb_include.h>
 
-    // Read in the vertex shader
-    std::ifstream vertex_file;
+Shader::Shader(const std::string& vertex_path, const std::string& fragment_path) {
+    static constexpr std::size_t err_len = 512;
+    char stb_err_msg[err_len];
 
-    vertex_file.open(vertex_path);
-    std::stringstream vertex_file_stream;
+    std::string shader_dir = FS_SHADERS_DIR;
+    auto p_vertex_src = std::unique_ptr<char, decltype([](char* ptr) { if(ptr) free(ptr); })>(
+            stb_include_file(((std::string) vertex_path).data(), nullptr, shader_dir.data(), stb_err_msg));
+    
+    auto p_fragment_src = std::unique_ptr<char, decltype([](char* ptr) { if(ptr) free(ptr); })>(
+            stb_include_file(((std::string) fragment_path).data(), nullptr, shader_dir.data(), stb_err_msg));
 
-    vertex_file_stream << vertex_file.rdbuf();
-    vertex_file_contents = vertex_file_stream.str();
+    if (p_vertex_src.get() == nullptr)
+        ASSERT_MESSAGE("Error stb_include_file() (SHADER::VERT): " << stb_err_msg);
+    
+    if (p_fragment_src.get() == nullptr)
+        ASSERT_MESSAGE("Error stb_include_file() (SHADER::FRAG): " << stb_err_msg);
 
-    vertex_file.close();
-
-    // Read in the fragment shader
-    std::ifstream fragment_file;
-
-    fragment_file.open(fragment_path);
-
-    std::stringstream fragment_file_stream;
-    fragment_file_stream << fragment_file.rdbuf();
-    fragment_file_contents = fragment_file_stream.str();
-
-    fragment_file.close();
-
-    // create vertex shader
     GLuint vertex_shader = glCreateShader(GL_VERTEX_SHADER);
 
-    const GLchar* vertex_shader_source = vertex_file_contents.c_str();
+    const GLchar* vertex_shader_source = p_vertex_src.get();
     glShaderSource(vertex_shader, 1, &vertex_shader_source, nullptr);
     glCompileShader(vertex_shader);
 
     int success;
-    char info_log[512];
+    char info_log[err_len];
     glGetShaderiv(vertex_shader, GL_COMPILE_STATUS, &success);
 
     if (!success) {
-        glGetShaderInfoLog(vertex_shader, 512, nullptr, info_log);
-        std::cerr << "Error compiling vertex shader: " << info_log << "\n";
+        glGetShaderInfoLog(vertex_shader, err_len, nullptr, info_log);
+        ASSERT_MESSAGE("Error compiling vertex shader: " << info_log);
     }
-
 
     GLuint fragment_shader = glCreateShader(GL_FRAGMENT_SHADER);
 
-    const GLchar* fragment_shader_source = fragment_file_contents.c_str();
+    const GLchar* fragment_shader_source = p_fragment_src.get();
     glShaderSource(fragment_shader, 1, &fragment_shader_source, nullptr);
     glCompileShader(fragment_shader);
 
     glGetShaderiv(fragment_shader, GL_COMPILE_STATUS, &success);
 
     if (!success) {
-        glGetShaderInfoLog(fragment_shader, 512, nullptr, info_log);
-        std::cerr << "Error compiling fragment shader: " << info_log << "\n";
+        glGetShaderInfoLog(fragment_shader, err_len, nullptr, info_log);
+        ASSERT_MESSAGE("Error compiling fragment shader: " << info_log);
     }
-
 
     m_id = glCreateProgram();
 
@@ -73,12 +65,14 @@ Shader::Shader(std::string const& vertex_path, std::string const& fragment_path)
     glGetProgramiv(m_id, GL_LINK_STATUS, &success);
 
     if (!success) {
-        glGetProgramInfoLog(m_id, 512, nullptr, info_log);
-        std::cerr << "Error linking shaders: " << info_log << "\n";
+        glGetProgramInfoLog(m_id, err_len, nullptr, info_log);
+        ASSERT_MESSAGE("Error linking shaders: " << info_log);
     }
 
     glDeleteShader(vertex_shader);
     glDeleteShader(fragment_shader);
+
+    cache_uniform_locations();
 }
 
 void Shader::activate() {
@@ -87,4 +81,36 @@ void Shader::activate() {
 
 GLuint Shader::get_id() const { 
     return m_id; 
+}
+
+void Shader::cache_uniform_locations() {
+    int count, length, size;
+    unsigned int type;
+    constexpr auto buf_size = ShaderConfig::MAX_UNIFORM_NAME_LEN;
+    char name[buf_size];
+
+    glGetProgramiv(m_id, GL_ACTIVE_UNIFORMS, &count);
+
+    for (int i = 0; i < count; i++) {
+        glGetActiveUniform(m_id, (GLuint)i, buf_size, &length, &size, &type, name);
+        GLint location = glGetUniformLocation(m_id, name);
+
+        // printf("Uniform #%d Type: %u Name: %s Location: %d Size: %d \n", i, type, name, location, size);
+        if(location == -1)
+            ENGINE_LOG("Uniform: " << name << " is inactive (type=" << type <<  ") (shader_id=" << m_id << ")");
+
+        UniformData data;
+        data.location = location;
+        data.type = type;
+
+        m_uniforms_cache[(std::string) name] = data;
+    }
+
+    /// Get active attributes
+    // glGetProgramiv(program, GL_ACTIVE_ATTRIBUTES, &count);
+    // printf("Active Attributes: %d\n", count);
+    // for (i = 0; i < count; i++) {
+    //     glGetActiveAttrib(program, (GLuint)i, bufSize, &length, &size, &type, name);
+    //     printf("Attribute #%d Type: %u Name: %s\n", i, type, name);
+    // }
 }

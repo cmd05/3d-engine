@@ -10,20 +10,6 @@ glm::mat4 GraphicsHelper::create_model_matrix(const Components::Transform& trans
     return model;
 }
 
-// static void set_mvp(const std::unique_ptr<Shader>& shader, const Transform& transform, const CameraWrapper& camera_wrapper) {
-//     MVP mvp = get_mvp(transform, camera_wrapper);
-//     set_mvp(shader, mvp);
-// }
-
-// static void set_mvp(const std::unique_ptr<Shader>& shader, MVP mvp, 
-//     const std::string model_uniform = "model", const std::string view_uniform = "view", const std::string projection_uniform = "projection") {
-//     shader->activate();
-
-//     shader->set_uniform<glm::mat4>(model_uniform, mvp.model);
-//     shader->set_uniform<glm::mat4>(view_uniform, mvp.view);
-//     shader->set_uniform<glm::mat4>(projection_uniform, mvp.projection);
-// }
-
 GraphicsHelper::MVP GraphicsHelper::get_mvp(const Components::Transform& transform, const CameraWrapper& camera_wrapper) {
     MVP mvp;
 

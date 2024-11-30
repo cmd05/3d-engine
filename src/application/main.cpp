@@ -148,6 +148,7 @@ int main() {
 
     models_interface_type models_map = render_system.load_models(models);
 
+    // TODO: cubemap loading will be slow since stb_image is being used each time
     // cubemaps_interface_type cubemaps = render_system.load_cubemaps({
     //     {"sky", {
     //         .right = (std::string(FS_RESOURCES_DIR) + "textures/skybox/right.jpg"),
@@ -159,11 +160,11 @@ int main() {
     //     }},
     // });
 
-    /// -------------------------------------------------
+    // /// -------------------------------------------------
 
     // auto cubemap_entity = main_scene.create_entity();
-    // main_scene.add_component(cubemap_entity, Renderable{});
-    // main_scene.add_component(cubemap_entity, Cubemap{.id = cubemaps.at("sky")});
+    // main_scene.add_component(cubemap_entity, Components::Renderable{});
+    // main_scene.add_component(cubemap_entity, Components::Cubemap{.id = cubemaps.at("sky")});
     
     // Create entities
 

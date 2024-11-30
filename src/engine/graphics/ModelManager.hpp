@@ -6,8 +6,8 @@
 #include <engine/graphics/CameraWrapper.hpp>
 
 #include <engine/ecs/components/Transform.hpp>
-
-constexpr const char* BIN_MAP_FNAME = "bin_mapper.map";
+#include <engine/graphics/lib/GraphicsHelper.hpp>
+#include <engine/config/GraphicsConfig.hpp>
 
 using mapper_data_map_type = std::unordered_map<std::string, std::string>;
 using models_interface_type = std::unordered_map<std::string, std::size_t>;
@@ -41,7 +41,7 @@ public:
     };
 
 public:
-    ModelManager(TextureManager& tex_manager, std::string bin_dir);
+    ModelManager(TextureManager& tex_manager);
 
     void load_mapper_data();
 
@@ -54,7 +54,9 @@ public:
     MeshDrawData setup_mesh(std::string model_path, Mesh& mesh);
     
     void draw_mesh(const std::unique_ptr<Shader>& shader, MeshDrawData& mesh_draw_data);
-    void draw_model(const std::unique_ptr<Shader>& model_shader, std::size_t model_id, const CameraWrapper& camera_wrapper, const Components::Transform& transform);
+
+    void draw_model(const std::unique_ptr<Shader>& model_shader, std::size_t model_id,
+        const Components::Transform& transform, const GraphicsHelper::MVP& mvp);
 private:
     using byte_ptr = char*;
 
@@ -63,8 +65,8 @@ private:
     
     TextureManager* const m_tex_manager;
 
-    std::string m_mapper_file;
-    std::string m_bin_dir;
+    std::string m_mapper_file = GraphicsConfig::MODEL_BIN_MAPPER_PATH;
+    std::string m_bin_dir = GraphicsConfig::MODEL_BIN_PATH;
 private:
     std::size_t hasher(const std::string& model_path);
 };
