@@ -122,7 +122,7 @@ entity_count_size_type ComponentManager::size_component_array() const {
     std::type_index type = typeid(T);
 
     auto it = m_component_arrays.begin();
-    assert((it = m_component_arrays.find(type) != m_component_arrays.end()) && "Component not registered.");
+    assert(((it = m_component_arrays.find(type)) != m_component_arrays.end()) && "Component not registered.");
 
     return it->second->size();   
 }
