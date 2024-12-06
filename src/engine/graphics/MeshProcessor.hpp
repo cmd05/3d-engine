@@ -17,11 +17,12 @@ struct MeshVertex {
     glm::vec3 bitangent;
 };
 
+// use numbering as flags
 enum MeshTextureType {
-    DIFFUSE,
-    SPECULAR,
-    NORMAL,
-    AMBIENT
+    DIFFUSE    = 1,
+    SPECULAR   = 2,
+    NORMAL     = 4,
+    AMBIENT    = 8
     // METALLIC,
     // ROUGHNESS,
     // METALLICROUGHNESS,
