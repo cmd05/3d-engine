@@ -147,8 +147,8 @@ Mesh ModelProcessor::process_mesh(aiMesh* mesh, const aiScene* scene) {
     /// DEBUGGING
     // height maps 
     // assimp: "The texture is a height map."
-    // std::vector<MeshTexture> normal_maps = load_material_textures(material, aiTextureType_NORMALS, MeshTextureType::HEIGHT);
-    // textures.insert(textures.end(), normal_maps.begin(), normal_maps.end());
+    // std::vector<MeshTexture> height_maps = load_material_textures(material, aiTextureType_NORMALS, MeshTextureType::HEIGHT);
+    // textures.insert(textures.end(), height_maps.begin(), height_maps.end());
     
     // for(unsigned int i = 0; i < material->GetTextureCount(AI_MATKEY_METALLIC_TEXTURE); i++) {
         // aiString str;
@@ -165,10 +165,6 @@ Mesh ModelProcessor::process_mesh(aiMesh* mesh, const aiScene* scene) {
         // std::cout << "unknown: " << str.C_Str() << '\n';
     // }
     
-
-    // enum textures { bool specular; }
-    // each model can have multiple textures of the same type. ex: door normals, window normals, floor normals etc.
-
     return Mesh(std::move(vertices), std::move(indices), std::move(textures), textures_available);
 }
 
