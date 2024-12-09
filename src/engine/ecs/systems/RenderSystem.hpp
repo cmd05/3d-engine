@@ -19,6 +19,7 @@
 class RenderSystem : public System {
 public:
     RenderSystem(Scene& scene, Entity camera, GUIState& gui_state);
+    void init_framebuffer_size(int win_framebuffer_width, int win_framebuffer_height);
     // void init();
 
     void update(float dt);
@@ -45,6 +46,9 @@ private:
     GUIState* const m_gui_state;
 
     ShaderUniformBlocks m_shader_uniform_blocks;
+
+    unsigned int m_win_framebuffer_width, m_win_framebuffer_height;
+
     GLuint m_hdr_fbo;
     GLuint m_hdr_color_buffer;
     GLuint m_hdr_render_buffer;

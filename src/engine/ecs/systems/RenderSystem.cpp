@@ -20,6 +20,7 @@
 #include <engine/graphics/objects/CubeObject.hpp>
 
 #include <engine/config/Events.hpp>
+#include <lib/utilities/DebugAssert.hpp>
 
 void RenderSystem::gl_init_callback(Event& event) {
     // build default objects and their VBO's
@@ -27,23 +28,31 @@ void RenderSystem::gl_init_callback(Event& event) {
 }
 
 RenderSystem::RenderSystem(Scene& scene, Entity camera, GUIState& gui_state): 
-    System(scene),
-    m_model_manager(m_texture_manager),
-    m_camera_wrapper(scene, camera),
-    m_gui_state{&gui_state} {
+    System{scene},
+    m_model_manager(m_texture_manager), m_camera_wrapper(scene, camera), m_gui_state{&gui_state} {
     // setup opengl properties
     glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
     glEnable(GL_DEPTH_TEST);
 
     // add window resize listener
+    // todo: rename event to Events::Window::FRAMEBUFFER_RESIZED
     m_scene->add_event_listener(METHOD_LISTENER(Events::Window::RESIZED, RenderSystem::window_size_listener));
 
     // initialize shaders
     m_model_shader = std::make_unique<Shader>(std::string(FS_SHADERS_DIR) + "shader_model_normal.vs", std::string(FS_SHADERS_DIR) + "shader_model_normal.fs");
     m_cubemap_shader = std::make_unique<Shader>(std::string(FS_SHADERS_DIR) + "cubemap.vs", std::string(FS_SHADERS_DIR) + "cubemap.fs");
+    m_hdr_shader = std::make_unique<Shader>(std::string(FS_SHADERS_DIR) + "hdr_quad.vs", std::string(FS_SHADERS_DIR) + "hdr_quad.fs");
 
     // Initialize state of shader data
     m_shader_uniform_blocks.init();
+}
+
+void RenderSystem::init_framebuffer_size(int win_framebuffer_width, int win_framebuffer_height) {
+    m_win_framebuffer_width = win_framebuffer_width;
+    m_win_framebuffer_height = win_framebuffer_height;
+
+    // initialize hdr rendering
+    init_hdr_fbo();
 }
 
 models_interface_type RenderSystem::load_models(std::unordered_map<std::string, std::string> models) {
@@ -151,15 +160,21 @@ void RenderSystem::set_uniforms_pre_rendering() {
 }
 
 void RenderSystem::window_size_listener(Event& event) {
-    auto window_width = event.get_param<int>(Events::Window::Resized::WIDTH);
-    auto window_height = event.get_param<int>(Events::Window::Resized::HEIGHT);
+    m_win_framebuffer_width = event.get_param<int>(Events::Window::Resized::WIDTH);
+    m_win_framebuffer_height = event.get_param<int>(Events::Window::Resized::HEIGHT);
+    // ENGINE_LOG(window_width << " " << window_height);
     
     // resize viewport to match new window dimensions
-    glViewport(0, 0, window_width, window_height);
+    glViewport(0, 0, m_win_framebuffer_width, m_win_framebuffer_height);
+
+    resize_hdr_attachments();
 
     // resize view size for all cameras
     for(auto& entity : SceneView<Components::Camera, Components::Transform>(*m_scene)) {
         CameraWrapper camera_wrapper{*m_scene, entity};
+        camera_wrapper.resize_view(m_win_framebuffer_width, m_win_framebuffer_height);
+    }
+}
 
 void RenderSystem::init_hdr_fbo() {
     glGenFramebuffers(1, &m_hdr_fbo);

@@ -37,6 +37,7 @@ public:
     GLFWwindow* get_window() { return m_window; }
     GLFWwindow* get_current_context() { return glfwGetCurrentContext(); }
     void set_current_context(GLFWwindow* window) { glfwMakeContextCurrent(window); }
+    void get_framebuffer_size(int& width, int& height) { glfwGetFramebufferSize(m_window, &width, &height); }
 
     static bool is_window_focused();
 private:
