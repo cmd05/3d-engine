@@ -45,11 +45,7 @@ set(GLFW_BUILD_DOCS OFF)
 set(GLFW_INSTALL OFF)
 add_subdirectory(${INCLUDES_DIR}/glfw-3.4)
 
-# glad (OpenGL function loading)
 add_subdirectory(${INCLUDES_DIR}/glad)
-
-# glm
-# find_package(glm CONFIG REQUIRED)
 add_subdirectory(${INCLUDES_DIR}/glm)
 
 # assimp
@@ -57,28 +53,15 @@ SET(ASSIMP_BUILD_ALL_EXPORTERS_BY_DEFAULT OFF CACHE BOOL "Build Assimp Exporters
 SET(ASSIMP_BUILD_TESTS OFF CACHE BOOL "Build Assimp Tests")
 SET(BUILD_SHARED_LIBS OFF CACHE BOOL "Build Assimp shared library")
 SET(ASSIMP_NO_EXPORT ON CACHE BOOL "Disable Assimp's export functionality.")
-
 add_subdirectory(${INCLUDES_DIR}/assimp)
 
-# stb
 add_subdirectory(${INCLUDES_DIR}/stb)
-
-# imgui
-# target_sources(
-#     3dengine
-#     PRIVATE
-#     includes/imgui/imgui.cpp
-#     includes/imgui/imgui_demo.cpp
-#     includes/imgui/imgui_draw.cpp
-#     includes/imgui/imgui_impl_glfw.cpp
-#     includes/imgui/imgui_impl_opengl3.cpp
-#     includes/imgui/imgui_stdlib.cpp
-#     includes/imgui/imgui_tables.cpp
-#     includes/imgui/imgui_widgets.cpp
-# )
-
-# Add the imgui subdirectory
+# add_subdirectory(${INCLUDES_DIR}/dds-ktx)
 add_subdirectory(${INCLUDES_DIR}/imgui)
+
+###########################################################
+# SOURCES
+###########################################################
 
 target_sources(
     3dengine
@@ -155,6 +138,7 @@ target_link_libraries(
     assimp
     stb
     imgui
+    # ddsktx
 )
 
 target_compile_definitions(3dengine PUBLIC FS_SHADERS_DIR="${CMAKE_CURRENT_SOURCE_DIR}/src/engine/shaders/")
