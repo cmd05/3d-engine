@@ -35,6 +35,7 @@ public:
 private:
     std::unique_ptr<Shader> m_model_shader;
     std::unique_ptr<Shader> m_cubemap_shader;
+    std::unique_ptr<Shader> m_hdr_shader;
     
     CameraWrapper m_camera_wrapper;
     ModelManager m_model_manager;
@@ -44,6 +45,12 @@ private:
     GUIState* const m_gui_state;
 
     ShaderUniformBlocks m_shader_uniform_blocks;
+    GLuint m_hdr_fbo;
+    GLuint m_hdr_color_buffer;
+    GLuint m_hdr_render_buffer;
 private:
     void window_size_listener(Event& event);
+
+    void init_hdr_fbo();
+    void resize_hdr_attachments();
 };

@@ -107,6 +107,9 @@ int main() {
     // create camera entity
     // primary camera to be used for rendering `main_scene`
     Entity camera_entity = main_scene.create_entity();
+    int win_framebuffer_width, win_framebuffer_height;
+    window_manager.get_framebuffer_size(win_framebuffer_width, win_framebuffer_height);
+    ENGINE_LOG(win_framebuffer_width << " " << win_framebuffer_height);
 
     main_scene.add_component(
         camera_entity,
@@ -115,13 +118,15 @@ int main() {
 
     main_scene.add_component(
         camera_entity,
-        Components::Camera(window_width, window_height)
+        // todo: camera should be based on framebuffer dimensions not window dimensions
+        Components::Camera(win_framebuffer_width, win_framebuffer_height)
     );
 
     Components::Camera& camera_component = main_scene.get_component<Components::Camera>(camera_entity);
     camera_component.set_cam_front(glm::vec3(-1.0f, 0.0f, 0.0f));
 
     auto& render_system = main_scene.register_system<RenderSystem>(camera_entity, gui_state);
+    render_system.init_framebuffer_size(win_framebuffer_width, win_framebuffer_height);
     
     const int MODELS_TO_RENDER = 1;
     // const int MODELS_TO_RENDER = 8;

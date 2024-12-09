@@ -72,6 +72,10 @@ void RenderSystem::update(float dt) {
     glBindBuffer(GL_UNIFORM_BUFFER, m_shader_uniform_blocks.ubo_camera);
     glBufferSubData(GL_UNIFORM_BUFFER, ShaderUniformBlocks::UBLOCK_OFFSET_BEGIN, sizeof(m_shader_uniform_blocks.camera), &m_shader_uniform_blocks.camera);
 
+    // 1. offscreen rendering to floating point framebuffer
+    glBindFramebuffer(GL_FRAMEBUFFER, m_hdr_fbo);
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
     // draw lights
     m_model_shader->activate();
     int i_lights = 0;
@@ -124,6 +128,22 @@ void RenderSystem::update(float dt) {
     // draw cubemaps
     for(const auto& entity : SceneView<Components::Renderable, Components::Cubemap>(*m_scene))
         draw_cubemap(m_scene->get_component<Components::Cubemap>(entity).id);
+
+    // 2. render hdr framebuffer to 2D quad and tonemap hdr colors on default framebuffer
+    glBindFramebuffer(GL_FRAMEBUFFER, 0);
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+    m_hdr_shader->activate();
+
+    glActiveTexture(GL_TEXTURE0);
+    glBindTexture(GL_TEXTURE_2D, m_hdr_color_buffer);
+    m_hdr_shader->set_uniform<float>("u_exposure", m_gui_state->exposure);
+    m_hdr_shader->set_uniform<int>("u_hdr_enabled", m_gui_state->hdr_enabled);
+
+    // draw to quad
+    glBindVertexArray(g_graphics_objects.quad_object.VAO);
+    glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
+    glBindVertexArray(0);
 }
 
 void RenderSystem::set_uniforms_pre_rendering() {
@@ -140,6 +160,37 @@ void RenderSystem::window_size_listener(Event& event) {
     // resize view size for all cameras
     for(auto& entity : SceneView<Components::Camera, Components::Transform>(*m_scene)) {
         CameraWrapper camera_wrapper{*m_scene, entity};
-        camera_wrapper.resize_view(window_width, window_height);
-    }
+
+void RenderSystem::init_hdr_fbo() {
+    glGenFramebuffers(1, &m_hdr_fbo);
+
+    // create floating point color buffer (texture)
+    glGenTextures(1, &m_hdr_color_buffer);
+    glBindTexture(GL_TEXTURE_2D, m_hdr_color_buffer);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA16F, m_win_framebuffer_width, m_win_framebuffer_height, 0, GL_RGBA, GL_FLOAT, NULL); // color is in rgba space
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+
+    // create depth buffer (renderbuffer)
+    glGenRenderbuffers(1, &m_hdr_render_buffer);
+    glBindRenderbuffer(GL_RENDERBUFFER, m_hdr_render_buffer);
+    glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT, m_win_framebuffer_width, m_win_framebuffer_height);
+
+    // attach attachments to fbo
+    glBindFramebuffer(GL_FRAMEBUFFER, m_hdr_fbo);
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, m_hdr_color_buffer, 0);
+    glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, m_hdr_render_buffer);
+
+    if(glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE)
+        ASSERT_MESSAGE("HDR framebuffer not complete");
+
+    glBindFramebuffer(GL_FRAMEBUFFER, 0);
+}
+
+void RenderSystem::resize_hdr_attachments() {
+    glDeleteRenderbuffers(1, &m_hdr_render_buffer);
+    glDeleteTextures(1, &m_hdr_color_buffer);
+    glDeleteFramebuffers(1, &m_hdr_fbo);
+
+    init_hdr_fbo();
 }

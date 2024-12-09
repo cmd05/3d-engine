@@ -15,13 +15,15 @@ public:
         ImGui::SetNextWindowSize(ImVec2(m_window_length, m_window_height));
         ImGui::Begin("Light Control");                          // Create a window called "Hello, world!" and append into it.
         
-        ImVec4 clear_color;
+        // ImVec4 clear_color;
         // float f;
 
+        ImGui::SliderFloat("Exposure", &m_gui_state->exposure, 0.0f, 3.0f);            // Edit 1 float using a slider from 0.0f to 1.0f
         ImGui::SliderFloat("Ambient Strength", &m_gui_state->ambient_strength, 0.0f, 1.0f);            // Edit 1 float using a slider from 0.0f to 1.0f
-        ImGui::ColorEdit3("clear color", (float*)&clear_color); // Edit 3 floats representing a color
+        // ImGui::ColorEdit3("Exp", (float*)&clear_color); // Edit 3 floats representing a color
         // ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / this->m_imgui_io->Framerate, this->m_imgui_io->Framerate);
         ImGui::Checkbox("Attenuation", &m_gui_state->attenuation);
+        ImGui::Checkbox("HDR Enabled", &m_gui_state->hdr_enabled);
         
         ImGui::End();
     }

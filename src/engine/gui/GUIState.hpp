@@ -30,4 +30,8 @@ public:
     // -------------------------------------------
 
     // PBR Settings
+
+    // hdr
+    float exposure = 1.5;
+    bool hdr_enabled = true;
 };

@@ -78,7 +78,7 @@ void main() {
     }
 
     // always gamma correct the final fragment color for drawing meshes
-    result = pow(result, vec3(1.0 / GAMMA_FACTOR));
+    // result = pow(result, vec3(1.0 / GAMMA_FACTOR));
     
     FragColor = vec4(vec3(result), 1.0);
 }
