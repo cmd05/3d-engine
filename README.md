@@ -2,8 +2,8 @@
 
 ## Current Status
 
-![](./docs/assets/render-sponza-1.png)
-![](./docs/assets/render-sponza-3.png)
+![](./docs/assets/render-sponza-new.png)
+![](./docs/assets/render-sponza-multiple-lights.png)
 ![](./docs/assets/render-sponza-2.png)
 
 - Blinn Phong Lighting
@@ -11,3 +11,6 @@
 - Normal mapping
 - ImGui Integration
 - Gamma Correction
+
+## TODO
+- PBR (in progress)
