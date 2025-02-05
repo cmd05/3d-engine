@@ -14,3 +14,10 @@
 
 ## TODO
 - PBR (in progress)
+
+## How to Build
+
+```sh
+cmake -B build
+cmake --build build
+```
