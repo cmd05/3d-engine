@@ -12,7 +12,7 @@
 
 #define ASSERT_MESSAGE(message) ASSERT(false, message)
 
-#define ENGINE_LOG(message) std::clog << "[log] " << message << std::endl;
+#define ENGINE_LOG(message) std::clog << "[log] " << message << std::endl
 
 #else
 #define ASSERT(condition, message) do { } while (false)
