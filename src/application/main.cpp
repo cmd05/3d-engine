@@ -45,6 +45,12 @@ void quit_handler(Event& event) {
     quit = true;
 }
 
+void update_frame_times(float new_time, float& curr, float& last, float& dt) {
+    curr = new_time;
+    dt = curr - last;
+    last = curr;
+}
+
 int main() {
     // -- register essential callbacks --
 
@@ -199,7 +205,7 @@ int main() {
     std::uniform_real_distribution<float> rand_scale(3.0f, 5.0f);
     float scale = rand_scale(generator);
     
-    const int NR_LIGHTS = 1;
+    const int NR_LIGHTS = 3;
     for(int i = 0; i < NR_LIGHTS; i++) {
         auto light_entity = main_scene.create_entity();
 
@@ -213,6 +219,7 @@ int main() {
         main_scene.add_component(light_entity, Components::PointLight{
             // .light_color = glm::vec3(rand_color(generator), rand_color(generator), rand_color(generator))
             .light_color = glm::vec3(1.0f)
+            // .light_color = glm::vec3(1.0f, 1.0f, 0.0f)
         });
     }
 
@@ -344,9 +351,7 @@ int main() {
 
         window_manager.update(); // window updation happens after windows have been processed
 
-        current_frame = window_manager.get_time();
-        dt = current_frame - last_frame;
-        last_frame = current_frame;
+        update_frame_times(window_manager.get_time(), current_frame, last_frame, dt);
     }
 
     // clean resources
