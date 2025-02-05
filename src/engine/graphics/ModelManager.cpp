@@ -155,6 +155,7 @@ void ModelManager::draw_mesh(const std::unique_ptr<Shader>& shader, MeshDrawData
     unsigned int specular_nr = 1;
     unsigned int normal_nr = 1;
     unsigned int ambient_nr = 1;
+    unsigned int metallic_roughness_nr = 1;
 
     // DEBUGGING:
     // if(mesh_draw_data.textures_available.specular)
@@ -169,6 +170,7 @@ void ModelManager::draw_mesh(const std::unique_ptr<Shader>& shader, MeshDrawData
     shader->set_uniform<int>("u_mesh_textures_available.diffuse", mesh_draw_data.textures_available.diffuse);
     shader->set_uniform<int>("u_mesh_textures_available.specular", mesh_draw_data.textures_available.specular);
     shader->set_uniform<int>("u_mesh_textures_available.normal", mesh_draw_data.textures_available.normal);
+    shader->set_uniform<int>("u_mesh_textures_available.metallic_roughness", mesh_draw_data.textures_available.metallic_roughness);
 
     for(unsigned int i = 0; i < mesh_draw_data.textures.size(); i++) {
         glActiveTexture(GL_TEXTURE0 + i);
@@ -178,12 +180,14 @@ void ModelManager::draw_mesh(const std::unique_ptr<Shader>& shader, MeshDrawData
 
         if(type == MeshTextureType::DIFFUSE)
             tex_name = "texture_diffuse" + std::to_string(diffuse_nr++);
-        if(type == MeshTextureType::SPECULAR)
+        else if(type == MeshTextureType::SPECULAR)
             tex_name = "texture_specular" + std::to_string(specular_nr++);
-        if(type == MeshTextureType::NORMAL)
+        else if(type == MeshTextureType::NORMAL)
             tex_name = "texture_normal" + std::to_string(normal_nr++);
-        if(type == MeshTextureType::AMBIENT)
+        else if(type == MeshTextureType::AMBIENT)
             tex_name = "texture_ambient" + std::to_string(ambient_nr++);
+        else if(type == MeshTextureType::METALLICROUGHNESS)
+            tex_name = "texture_metallic_roughness" + std::to_string(metallic_roughness_nr++);
 
         // set value of texture sampler as the texture unit
         shader->set_uniform<int>(tex_name.c_str(), i);

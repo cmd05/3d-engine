@@ -17,4 +17,5 @@ struct MeshTexturesAvailable {
     int diffuse;
     int specular;
     int normal;
+    int metallic_roughness;
 };

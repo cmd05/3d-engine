@@ -137,12 +137,18 @@ Mesh ModelProcessor::process_mesh(aiMesh* mesh, const aiScene* scene) {
     std::vector<MeshTexture> ambient_maps = load_material_textures(material, aiTextureType_AMBIENT, MeshTextureType::AMBIENT);
     textures.insert(textures.end(), ambient_maps.begin(), ambient_maps.end());
 
+    // metallic-roughness maps
+    std::vector<MeshTexture> metallic_roughness_maps = load_material_textures(material, aiTextureType_METALNESS, MeshTextureType::METALLICROUGHNESS);
+    textures.insert(textures.end(), metallic_roughness_maps.begin(), metallic_roughness_maps.end());
+
+
     MeshTexturesAvailable textures_available;
 
     textures_available.diffuse  = diffuse_maps.size();
     textures_available.specular = specular_maps.size();
     textures_available.normal   = normal_maps.size() + height_maps.size(); /* NOTE: using HEIGHT MAP as NORMAL MAP */
     textures_available.ambient  = ambient_maps.size();
+    textures_available.metallic_roughness = metallic_roughness_maps.size();
 
     /// DEBUGGING
     // height maps 

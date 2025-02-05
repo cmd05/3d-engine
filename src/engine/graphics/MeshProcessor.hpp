@@ -19,13 +19,14 @@ struct MeshVertex {
 
 // use numbering as flags
 enum MeshTextureType {
-    DIFFUSE    = 1,
-    SPECULAR   = 2,
-    NORMAL     = 4,
-    AMBIENT    = 8
+    DIFFUSE    = 1U << 0,
+    SPECULAR   = 1U << 1,
+    NORMAL     = 1U << 2,
+    AMBIENT    = 1U << 3,
+    METALLICROUGHNESS = 1U << 4,
+    AMBIENT_OCCLUSION = 1U << 5,
     // METALLIC,
     // ROUGHNESS,
-    // METALLICROUGHNESS,
     // UNKNOWN // does not match any of the above types only then
 };
 
@@ -34,9 +35,9 @@ struct MeshTexturesAvailable {
     unsigned int specular           = 0;
     unsigned int normal             = 0;
     unsigned int ambient            = 0;
-    unsigned int metallic           = 0;
-    unsigned int roughness          = 0;
     unsigned int metallic_roughness = 0;
+    // unsigned int metallic           = 0;
+    // unsigned int roughness          = 0;
     // unsigned int unknown = 0;
 };
 

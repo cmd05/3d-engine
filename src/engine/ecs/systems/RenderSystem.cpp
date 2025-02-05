@@ -39,7 +39,7 @@ RenderSystem::RenderSystem(Scene& scene, Entity camera, GUIState& gui_state):
     m_scene->add_event_listener(METHOD_LISTENER(Events::Window::RESIZED, RenderSystem::window_size_listener));
 
     // initialize shaders
-    m_model_shader = std::make_unique<Shader>(std::string(FS_SHADERS_DIR) + "shader_model_normal.vs", std::string(FS_SHADERS_DIR) + "shader_model_normal.fs");
+    m_model_shader = std::make_unique<Shader>(std::string(FS_SHADERS_DIR) + "shader_pbr.vs", std::string(FS_SHADERS_DIR) + "shader_pbr.fs");
     m_cubemap_shader = std::make_unique<Shader>(std::string(FS_SHADERS_DIR) + "cubemap.vs", std::string(FS_SHADERS_DIR) + "cubemap.fs");
     m_hdr_shader = std::make_unique<Shader>(std::string(FS_SHADERS_DIR) + "hdr_quad.vs", std::string(FS_SHADERS_DIR) + "hdr_quad.fs");
 
