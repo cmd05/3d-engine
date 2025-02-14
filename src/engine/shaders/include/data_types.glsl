@@ -18,4 +18,6 @@ struct MeshTexturesAvailable {
     int specular;
     int normal;
     int metallic_roughness;
+    int emissive;
+    int ambient_occlusion;
 };

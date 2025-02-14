@@ -11,6 +11,8 @@ uniform sampler2D texture_diffuse1;
 uniform sampler2D texture_specular1;
 uniform sampler2D texture_normal1;
 uniform sampler2D texture_metallic_roughness1; // (G - roughness, B - metallic)
+uniform sampler2D texture_emissive1;
+uniform sampler2D texture_ambient_occlusion1;
 
 uniform MeshTexturesAvailable u_mesh_textures_available;
 uniform Light u_point_lights[NR_POINT_LIGHTS];
@@ -39,13 +41,20 @@ void main() {
     }
 
     vec4 albedo_rgba = texture(texture_diffuse1, fs_in.TexCoords).rgba;
-    vec3 albedo = albedo_rgba.rgb; // convert to linear space
+    vec3 albedo = albedo_rgba.rgb;
     float diffuse_alpha = albedo_rgba.a;
 
     vec4 metallic_roughness_rgba = texture(texture_metallic_roughness1, fs_in.TexCoords).rgba;
     float metallic  = metallic_roughness_rgba.b;
     float roughness = metallic_roughness_rgba.g;
-    // float ao        = texture(aoMap, TexCoords).r;
+    float ao = 1.0;
+    vec3 emissive = vec3(0.0);
+
+    if(u_mesh_textures_available.ambient_occlusion != 0)
+        ao = texture(texture_ambient_occlusion1, fs_in.TexCoords).r;
+
+    if(u_mesh_textures_available.emissive != 0)
+        emissive = texture(texture_emissive1, fs_in.TexCoords).rgb;
 
     if(albedo_rgba.a < 0.1)
         discard;
@@ -56,7 +65,7 @@ void main() {
     // for metallic surfaces, F0 (base reflectivity) will be given by the surface's albedo value
     vec3 F0 = vec3(0.04);
     F0 = mix(F0, albedo, metallic);
-    
+
     // We can think of the loop as solving the integral over Ω for direct light sources.
     // loop over all light sources and add their outgoing radiance contributions
     
@@ -74,15 +83,15 @@ void main() {
 
         float dist = length(u_point_lights[i].position - fs_in.world_pos);
         
-        // use inverse square law instead of (constant-linear-quadratic attenuation equation)
-        // float attenuation = 1.0 / (dist * dist);
-        float attenuation = 1.0 / (att_const + att_linear * dist + att_quadratic * (dist * dist));
 
         float cosTheta = NdotL; // both vectors are already normalized
         vec3 radiance = u_point_lights[i].color * cosTheta; // light color (radiance) when it reaches point p after effect of attenuation
 
-        if(u_attenuation)
+        if(u_attenuation) {
+            // float attenuation = 1.0 / (dist * dist);
+            float attenuation = 1.0 / (att_const + att_linear * dist + att_quadratic * (dist * dist));
             radiance *= attenuation;
+        }
 
         // calculate cook torrance brdf
         float NDF = DistributionGGX(N, H, roughness); // normal distribution
@@ -113,10 +122,9 @@ void main() {
     }
 
     // add ambient color to fragment
-    vec3 ambient = u_ambient_strength * albedo; // take ambient-occlusion into effect
-    // ambient *= ao;
+    vec3 ambient = u_ambient_strength * albedo * ao;
 
-    vec3 color = ambient + Lo;
+    vec3 color = Lo + ambient + emissive;
 
     // color = color / (color + vec3(1.0)); // reinhard tone mapping
     // color = pow(color, vec3(1.0 / 2.2)); // gamma correction

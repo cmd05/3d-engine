@@ -151,11 +151,7 @@ void ModelManager::draw_mesh(const std::unique_ptr<Shader>& shader, MeshDrawData
 
     // bind appropriate textures
     // count for texture names as texture_diffuse1, texture_diffuse2 ...
-    unsigned int diffuse_nr = 1;
-    unsigned int specular_nr = 1;
-    unsigned int normal_nr = 1;
-    unsigned int ambient_nr = 1;
-    unsigned int metallic_roughness_nr = 1;
+    MeshTexturesAvailable tex_counts;
 
     // DEBUGGING:
     // if(mesh_draw_data.textures_available.specular)
@@ -171,6 +167,8 @@ void ModelManager::draw_mesh(const std::unique_ptr<Shader>& shader, MeshDrawData
     shader->set_uniform<int>("u_mesh_textures_available.specular", mesh_draw_data.textures_available.specular);
     shader->set_uniform<int>("u_mesh_textures_available.normal", mesh_draw_data.textures_available.normal);
     shader->set_uniform<int>("u_mesh_textures_available.metallic_roughness", mesh_draw_data.textures_available.metallic_roughness);
+    shader->set_uniform<int>("u_mesh_textures_available.emissive", mesh_draw_data.textures_available.emissive);
+    shader->set_uniform<int>("u_mesh_textures_available.ambient_occlusion", mesh_draw_data.textures_available.ambient_occlusion);
 
     for(unsigned int i = 0; i < mesh_draw_data.textures.size(); i++) {
         glActiveTexture(GL_TEXTURE0 + i);
@@ -179,15 +177,19 @@ void ModelManager::draw_mesh(const std::unique_ptr<Shader>& shader, MeshDrawData
         MeshTextureType type = mesh_draw_data.textures[i].second;
 
         if(type == MeshTextureType::DIFFUSE)
-            tex_name = "texture_diffuse" + std::to_string(diffuse_nr++);
+            tex_name = "texture_diffuse" + std::to_string(1 + (tex_counts.diffuse++));
         else if(type == MeshTextureType::SPECULAR)
-            tex_name = "texture_specular" + std::to_string(specular_nr++);
+            tex_name = "texture_specular" + std::to_string(1 + (tex_counts.specular++));
         else if(type == MeshTextureType::NORMAL)
-            tex_name = "texture_normal" + std::to_string(normal_nr++);
+            tex_name = "texture_normal" + std::to_string(1 + (tex_counts.normal++));
         else if(type == MeshTextureType::AMBIENT)
-            tex_name = "texture_ambient" + std::to_string(ambient_nr++);
+            tex_name = "texture_ambient" + std::to_string(1 + (tex_counts.ambient++));
         else if(type == MeshTextureType::METALLICROUGHNESS)
-            tex_name = "texture_metallic_roughness" + std::to_string(metallic_roughness_nr++);
+            tex_name = "texture_metallic_roughness" + std::to_string(1 + (tex_counts.metallic_roughness++));
+        else if(type == MeshTextureType::EMISSIVE)
+            tex_name = "texture_emissive" + std::to_string(1 + (tex_counts.emissive++));
+        else if(type == MeshTextureType::AMBIENT_OCCLUSION)
+            tex_name = "texture_ambient_occlusion" + std::to_string(1 + (tex_counts.ambient_occlusion++));
 
         // set value of texture sampler as the texture unit
         shader->set_uniform<int>(tex_name.c_str(), i);
