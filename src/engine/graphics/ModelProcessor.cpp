@@ -114,41 +114,33 @@ Mesh ModelProcessor::process_mesh(aiMesh* mesh, const aiScene* scene) {
 
     // Process Materials
     aiMaterial* material = scene->mMaterials[mesh->mMaterialIndex];
-    
-    // diffuse maps
-    std::vector<MeshTexture> diffuse_maps = load_material_textures(material, aiTextureType_DIFFUSE, MeshTextureType::DIFFUSE);
-    textures.insert(textures.end(), diffuse_maps.begin(), diffuse_maps.end());
-    
-    // specular maps
-    std::vector<MeshTexture> specular_maps = load_material_textures(material, aiTextureType_SPECULAR, MeshTextureType::SPECULAR);
-    textures.insert(textures.end(), specular_maps.begin(), specular_maps.end());
-    
-    // normal maps (assimp: "The texture is a (tangent space) normal-map")
-    std::vector<MeshTexture> normal_maps = load_material_textures(material, aiTextureType_NORMALS, MeshTextureType::NORMAL);
-    textures.insert(textures.end(), normal_maps.begin(), normal_maps.end());
-
-    // TBD: USE HEIGHT MAPS AS MeshTextureType::NORMAL FOR NOW. Height maps can be used later for parallax mapping
-    std::vector<MeshTexture> height_maps = load_material_textures(material, aiTextureType_HEIGHT, 
-        MeshTextureType::NORMAL /* NOTE: using HEIGHT MAP as NORMAL MAP */);
-
-    textures.insert(textures.end(), height_maps.begin(), height_maps.end());
-    
-    // ambient maps
-    std::vector<MeshTexture> ambient_maps = load_material_textures(material, aiTextureType_AMBIENT, MeshTextureType::AMBIENT);
-    textures.insert(textures.end(), ambient_maps.begin(), ambient_maps.end());
-
-    // metallic-roughness maps
-    std::vector<MeshTexture> metallic_roughness_maps = load_material_textures(material, aiTextureType_METALNESS, MeshTextureType::METALLICROUGHNESS);
-    textures.insert(textures.end(), metallic_roughness_maps.begin(), metallic_roughness_maps.end());
-
-
     MeshTexturesAvailable textures_available;
 
-    textures_available.diffuse  = diffuse_maps.size();
-    textures_available.specular = specular_maps.size();
-    textures_available.normal   = normal_maps.size() + height_maps.size(); /* NOTE: using HEIGHT MAP as NORMAL MAP */
-    textures_available.ambient  = ambient_maps.size();
-    textures_available.metallic_roughness = metallic_roughness_maps.size();
+    struct TextureInfo {
+        aiTextureType ai_type;
+        unsigned int* count;
+        MeshTextureType tex_type;
+    };
+
+    std::vector<TextureInfo> allowed_textures = {
+        {aiTextureType_DIFFUSE, &textures_available.diffuse, MeshTextureType::DIFFUSE},
+        {aiTextureType_SPECULAR, &textures_available.specular, MeshTextureType::SPECULAR},
+
+        {aiTextureType_NORMALS, &textures_available.normal, MeshTextureType::NORMAL},
+        // TBD: USE HEIGHT MAPS AS MeshTextureType::NORMAL FOR NOW. Height maps can be used later for parallax mapping
+        {aiTextureType_HEIGHT, &textures_available.normal, MeshTextureType::NORMAL},
+
+        {aiTextureType_AMBIENT, &textures_available.ambient, MeshTextureType::AMBIENT},
+        {aiTextureType_METALNESS, &textures_available.metallic_roughness, MeshTextureType::METALLICROUGHNESS},
+        {aiTextureType_LIGHTMAP, &textures_available.ambient_occlusion, MeshTextureType::AMBIENT_OCCLUSION},
+        {aiTextureType_EMISSIVE, &textures_available.emissive, MeshTextureType::EMISSIVE},
+    };
+
+    for(TextureInfo& tex_info : allowed_textures) {
+        std::vector<MeshTexture> maps = load_material_textures(material, tex_info.ai_type, tex_info.tex_type);
+        textures.insert(textures.end(), maps.begin(), maps.end());
+        *(tex_info.count) += maps.size();
+    }
 
     /// DEBUGGING
     // height maps 
