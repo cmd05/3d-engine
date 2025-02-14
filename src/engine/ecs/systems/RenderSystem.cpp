@@ -31,7 +31,8 @@ RenderSystem::RenderSystem(Scene& scene, Entity camera, GUIState& gui_state):
     System{scene},
     m_model_manager(m_texture_manager), m_camera_wrapper(scene, camera), m_gui_state{&gui_state} {
     // setup opengl properties
-    glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
+    glClearColor(GraphicsConfig::GL_CLEAR_COLOR.r, GraphicsConfig::GL_CLEAR_COLOR.g,
+            GraphicsConfig::GL_CLEAR_COLOR.b, GraphicsConfig::GL_CLEAR_COLOR.a);
     glEnable(GL_DEPTH_TEST);
 
     // add window resize listener
@@ -69,7 +70,8 @@ void RenderSystem::draw_cubemap(unsigned int cubemap_id) {
 
 void RenderSystem::update(float dt) {
     // clear screen and buffers
-    glClearColor(0.2f, 0.2f, 0.2f, 1.0f);
+    glClearColor(GraphicsConfig::GL_CLEAR_COLOR.r, GraphicsConfig::GL_CLEAR_COLOR.g,
+            GraphicsConfig::GL_CLEAR_COLOR.b, GraphicsConfig::GL_CLEAR_COLOR.a);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
     // set OpenGL parameters

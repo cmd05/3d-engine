@@ -33,4 +33,6 @@ struct GraphicsConfig {
     static constexpr const char* MODEL_BIN_MAPPER_PATH = FS_RESOURCES_DIR "models/bin/bin_mapper.map";
 
     static constexpr MeshTextureType NO_GAMMA_CORRECT_MAPS = MeshTextureType::NORMAL; // ( | MeshTextureType::MAP | ... ) 
+
+    static constexpr glm::vec4 GL_CLEAR_COLOR {0.0f, 0.0f, 0.0f, 1.0f};
 };
