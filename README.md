@@ -29,4 +29,4 @@ cmake --build build -j($nproc)
 - [GLM](https://github.com/g-truc/glm)
 - [ImGui](https://github.com/ocornut/imgui/)
 
-The licenses/sources of the used assets are located in their respective directories.
+The assets used belong to their respective owners. Licenses/Sources for the assets can be found in their respective directories in `resources/`.
