@@ -1,6 +1,6 @@
 #pragma once
 
-#include <imgui/imgui.h>
+#include <imgui.h>
 
 struct GUIConfig {
     static constexpr auto IMGUI_CONFIG_FLAGS = 

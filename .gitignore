@@ -3,7 +3,6 @@
 /.vscode
 /.vs
 /out
-/includes
 test.cpp
 /log*
 /docs-dev

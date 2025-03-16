@@ -3,9 +3,9 @@
 #include <engine/window/WindowManager.hpp>
 #include <engine/gui/GUIState.hpp>
 
-#include <imgui/imgui.h>
-#include <imgui/imgui_impl_glfw.h>
-#include <imgui/imgui_impl_opengl3.h>
+#include <imgui.h>
+#include <imgui_impl_glfw.h>
+#include <imgui_impl_opengl3.h>
 
 // interface (abstract class)
 class GUIWindow {
