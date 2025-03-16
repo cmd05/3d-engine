@@ -6,6 +6,8 @@
 ![](./docs/assets/render-sponza-multiple-lights.png)
 ![](./docs/assets/render-sponza-2.png)
 
+- Shadow Mapping (in progress)
+- Physically Based Rendering (PBR)
 - Blinn Phong Lighting
 - Multiple Lights
 - Normal mapping
