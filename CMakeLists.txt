@@ -90,8 +90,8 @@ add_library(imgui)
 
 set(IMGUI_INCLUDE_DIR ${imgui_SOURCE_DIR})
 target_include_directories(imgui PUBLIC 
-    ${imgui_SOURCE_DIR}
-    ${imgui_SOURCE_DIR}/backends
+    ${IMGUI_INCLUDE_DIR}
+    ${IMGUI_INCLUDE_DIR}/backends
 )
 
 target_sources(imgui
