@@ -1,6 +1,7 @@
 #pragma once
 
 #include <glm/glm.hpp>
+#include <assimp/postprocess.h>
 #include <engine/graphics/MeshProcessor.hpp>
 
 struct GraphicsConfig {
@@ -31,6 +32,7 @@ struct GraphicsConfig {
 
     static constexpr const char* MODEL_BIN_PATH = FS_RESOURCES_DIR "models/bin";
     static constexpr const char* MODEL_BIN_MAPPER_PATH = FS_RESOURCES_DIR "models/bin/bin_mapper.map";
+    static constexpr auto ASSIMP_READ_FLAGS = (aiProcess_Triangulate | aiProcess_GenSmoothNormals | aiProcess_FlipUVs | aiProcess_CalcTangentSpace | aiProcess_OptimizeMeshes);
 
     static constexpr MeshTextureType NO_GAMMA_CORRECT_MAPS = MeshTextureType::NORMAL; // ( | MeshTextureType::MAP | ... ) 
 

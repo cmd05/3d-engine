@@ -7,9 +7,9 @@
 #include <assimp/postprocess.h>
 
 #include <engine/graphics/ModelProcessor.hpp>
-
 #include <engine/graphics/MeshProcessor.hpp>
 #include <engine/graphics/Shader.hpp>
+#include <engine/config/GraphicsConfig.hpp>
 
 #include <lib/utilities/DebugAssert.hpp>
 
@@ -35,7 +35,7 @@ void ModelProcessor::load_model(const std::string& path) {
 
     // read file via assimp
     Assimp::Importer importer;
-    const aiScene* scene = importer.ReadFile(path, ASSIMP_READ_FLAGS);
+    const aiScene* scene = importer.ReadFile(path, GraphicsConfig::ASSIMP_READ_FLAGS);
 
     // check for errors
     if(!scene || scene->mFlags & AI_SCENE_FLAGS_INCOMPLETE || !scene->mRootNode) { // values should not be zero
