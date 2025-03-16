@@ -28,3 +28,5 @@ cmake --build build -j($nproc)
 - [GLFW](https://github.com/glfw/glfw/)
 - [GLM](https://github.com/g-truc/glm)
 - [ImGui](https://github.com/ocornut/imgui/)
+
+The licenses/sources of the used assets are located in their respective directories.

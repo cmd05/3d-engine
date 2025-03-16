@@ -8,6 +8,22 @@ test.cpp
 /docs-dev
 *.exe
 *.out
-/src/resources
 /imgui.ini
 /CMakeSettings.json
+
+# ignore all models first
+/resources/models/*
+
+# keep resources/models/bin directory
+/resources/models/bin/*.map
+/resources/models/bin/*.bin
+!/resources/models/bin/
+!/resources/models/bin/.gitkeep
+
+# keep sponza-gltf-khronos
+!/resources/models/sponza-gltf-khronos
+/resources/models/sponza-gltf-khronos/*.tex_bin
+
+# ignore all textures except basic skybox
+/resources/textures/*
+!/resources/textures/skybox

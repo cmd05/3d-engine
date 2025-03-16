@@ -169,4 +169,4 @@ target_link_libraries(
 
 ### Macros used in source code
 target_compile_definitions(3dengine PUBLIC FS_SHADERS_DIR="${CMAKE_CURRENT_SOURCE_DIR}/src/engine/shaders/")
-target_compile_definitions(3dengine PUBLIC FS_RESOURCES_DIR="${CMAKE_CURRENT_SOURCE_DIR}/src/resources/")
+target_compile_definitions(3dengine PUBLIC FS_RESOURCES_DIR="${CMAKE_CURRENT_SOURCE_DIR}/resources/")
