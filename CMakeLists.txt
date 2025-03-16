@@ -107,6 +107,8 @@ target_sources(imgui
     ${imgui_SOURCE_DIR}/backends/imgui_impl_opengl3.cpp
 )
 
+target_link_libraries(imgui PRIVATE glfw)
+
 ###########################################################
 # SOURCES
 ###########################################################
