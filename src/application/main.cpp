@@ -8,8 +8,11 @@ cmake --build build > log.txt && ./build/3dengine.exe
 #include <chrono>
 #include <random>
 #include <iostream>
+#include <fstream>
 
 #include <glm/glm.hpp>
+
+#include <nlohmann/json.hpp>
 
 #include <engine/ecs/core/Scene.hpp>
 
@@ -134,30 +137,27 @@ int main() {
     auto& render_system = main_scene.register_system<RenderSystem>(camera_entity, gui_state);
     render_system.init_framebuffer_size(win_framebuffer_width, win_framebuffer_height);
     
-    const int MODELS_TO_RENDER = 1;
-    // const int MODELS_TO_RENDER = 8;
+    int models_render_count = 0;
+    std::unordered_map<std::string, std::string> models;
 
-    std::unordered_map<std::string, std::string> models = {
-        // {"rock", std::string(FS_RESOURCES_DIR) + "models/rock/rock.obj"},
-        // {"m4a1", std::string(FS_RESOURCES_DIR) +"models/m4a1/m4a1.obj"},
-        // {"planet", std::string(FS_RESOURCES_DIR) +"models/planet/planet.obj"},
+    // parse models.json
+    std::ifstream models_ifs {std::string(FS_RESOURCES_DIR) + "models.json"};
+    nlohmann::json j_models;
+    models_ifs >> j_models;
 
-        // {"no-flag-sponza", std::string(FS_RESOURCES_DIR) + "models/sponza-gltf/scene.gltf"},
+    if (j_models.contains("models") && j_models["models"].is_array()) {
+        for (const auto& obj : j_models["models"]) {
+            if (!obj.empty()) {
+                auto it = obj.begin();
+                std::string key = it.key();
+                std::string value = it.value();
+                
+                models[key] = std::string(FS_RESOURCES_DIR) + value;
 
-        // {"cyborg", std::string(FS_RESOURCES_DIR) + "models/cyborg/cyborg.obj"},
-        // {"backpack", std::string(FS_RESOURCES_DIR) +"models/forest-backpack/backpack.obj"},
-        {"sponza-khronos", std::string(FS_RESOURCES_DIR) + "models/sponza-gltf-khronos/Sponza.gltf"},
-        // {"sponza-glb", std::string(FS_RESOURCES_DIR) + "models/sponza-glb/sponza.glb"},
-
-        // {"sponza", std::string(FS_RESOURCES_DIR) + "models/sponza2/sponza.obj"},
-        // {"low_poly_house", std::string(FS_RESOURCES_DIR) +"models/low_poly_house/low_poly_house.fbx"},
-        // {"deccer_cubes", std::string(FS_RESOURCES_DIR) +"models/deccer-cubes/SM_Deccer_Cubes_Textured.fbx"},
-        // {"bunny", std::string(FS_RESOURCES_DIR) +"models/stanford_bunny_pbr/scene.gltf"},
-        // {"teapot", std::string(FS_RESOURCES_DIR) + "models/utah_teapot_pbr/scene.gltf"},
-        // {"cat", std::string(FS_RESOURCES_DIR) + "models/cat/12221_Cat_v1_l3.obj"},
-        // {"low_poly_tree", std::string(FS_RESOURCES_DIR) + "models/low_poly_tree/Lowpoly_tree_sample.fbx"},
-        // {"nanosuit", std::string(FS_RESOURCES_DIR) +"models/nanosuit/nanosuit.obj"},
-    };
+                models_render_count++;
+            }
+        }
+    }
 
     models_interface_type models_map;
     try {
@@ -189,7 +189,7 @@ int main() {
     // camera entity already exists, so we we can use one less than MAX_ENTITIES number of entities
     // std::vector<Entity> entities(MAX_ENTITIES_AFTER_CAMERA); 
 
-    std::vector<Entity> entities(MODELS_TO_RENDER);
+    std::vector<Entity> entities(models_render_count);
 
     // generate random values
     std::default_random_engine generator;

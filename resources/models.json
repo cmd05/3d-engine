@@ -1,0 +1,5 @@
+{
+    "models": [
+        {"sponza-khronos": "models/sponza-gltf-khronos/Sponza.gltf"}
+    ]
+}
