@@ -18,7 +18,7 @@ target_compile_options(
     -fdiagnostics-color=always
     -Wall
 )
-    
+
 # -Wno-reorder
 if (MSVC)
     target_compile_options(3dengine PRIVATE /wd5038)
@@ -32,6 +32,15 @@ set(INCLUDES_DIR ${CMAKE_CURRENT_SOURCE_DIR}/includes)
 ###########################################################
 # 3RD PARTY LIBRARIES
 ###########################################################
+
+### nlohmann-json
+# https://json.nlohmann.me/integration/cmake/#fetchcontent
+FetchContent_Declare(json
+    GIT_REPOSITORY https://github.com/nlohmann/json
+    GIT_TAG v3.11.3
+)
+
+FetchContent_MakeAvailable(json)
 
 ### Glad
 add_subdirectory(${INCLUDES_DIR}/glad)
@@ -81,7 +90,7 @@ FetchContent_Declare(
     imgui
     GIT_REPOSITORY https://github.com/ocornut/imgui.git
     # use "docking" branch
-    GIT_TAG docking
+    GIT_TAG 126d004f9e1eef062bf4b044b3b2faaf58d48c51 # ver 1.91.9 (docking)
 )
 
 FetchContent_MakeAvailable(imgui)
@@ -167,6 +176,7 @@ target_link_libraries(
     assimp
     stb
     imgui
+    nlohmann_json::nlohmann_json
 )
 
 ### Macros used in source code
