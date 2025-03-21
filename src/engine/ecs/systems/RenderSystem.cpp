@@ -69,6 +69,10 @@ void RenderSystem::draw_cubemap(unsigned int cubemap_id) {
 }
 
 void RenderSystem::update(float dt) {
+    // TODO: create a method to update render state before rendering. 
+    // ex: m_gui_state->light0_pos should change `Transform` for first light
+    // update_render_state_gui();
+
     // clear screen and buffers
     glClearColor(GraphicsConfig::GL_CLEAR_COLOR.r, GraphicsConfig::GL_CLEAR_COLOR.g,
             GraphicsConfig::GL_CLEAR_COLOR.b, GraphicsConfig::GL_CLEAR_COLOR.a);
@@ -95,6 +99,10 @@ void RenderSystem::update(float dt) {
         glm::vec3 light_color = m_scene->get_component<Components::PointLight>(entity).light_color;
         auto light_transform = m_scene->get_component<Components::Transform>(entity);
 
+        if(i_lights == 0) {
+            light_transform.position = glm::vec3(m_gui_state->light0_pos[0], m_gui_state->light0_pos[1], m_gui_state->light0_pos[2]);
+        }
+
         m_light_renderer.draw_light_cube(light_transform, m_camera_wrapper, light_color);
 
         m_model_shader->activate();
@@ -102,10 +110,10 @@ void RenderSystem::update(float dt) {
         // set lights for model shader (tbd: this will be changed to ssbo for lights)
         m_model_shader->set_uniform<glm::vec3>("u_point_lights[" + std::to_string(i_lights) + "].position", light_transform.position);
         m_model_shader->set_uniform<glm::vec3>("u_point_lights[" + std::to_string(i_lights) + "].color", light_color);
-
+        
         i_lights++;
     }
-
+    
     // buffer GUI parameters
     m_model_shader->activate();
     m_shader_uniform_blocks.gui_state.ambient_strength = m_gui_state->ambient_strength;

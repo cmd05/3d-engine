@@ -24,6 +24,8 @@ public:
 
     bool gamma_correction = true;
 
+    int light0_pos[3] = {10, 50, 10};
+
     int scene_num; // (1) sponza; (2) cyborg, backpack; 
     int num_point_lights;
 

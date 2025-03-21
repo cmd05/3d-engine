@@ -205,7 +205,7 @@ int main() {
     std::uniform_real_distribution<float> rand_scale(3.0f, 5.0f);
     float scale = rand_scale(generator);
     
-    const int NR_LIGHTS = 3;
+    const int NR_LIGHTS = 1;
     for(int i = 0; i < NR_LIGHTS; i++) {
         auto light_entity = main_scene.create_entity();
 
