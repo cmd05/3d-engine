@@ -50,14 +50,6 @@ void GUIMain::new_frame() {
 void GUIMain::update() {
     m_camera_control_window->update();
     m_light_control_window->update();
-    // bool show_demo_window = true;
-    // ImGui::ShowDemoWindow(&show_demo_window);
-
-
-    // part of GUILayer
-    // ImGui::Begin("Conan Logo");                          // Create a window called "Conan Logo" and append into it.
-    // render_conan_logo();  // draw conan logo if user didn't override update
-    // ImGui::End();
 }
 
 void GUIMain::render() {
