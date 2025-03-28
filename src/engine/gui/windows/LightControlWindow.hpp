@@ -14,6 +14,8 @@ public:
         ImGui::SetNextWindowPos(ImVec2(10, 260), ImGuiCond_Once);
         ImGui::SetNextWindowSize(ImVec2(m_window_length, m_window_height));
         
+        ImGui::Begin("Light Control");
+
         // Position 0th light
         ImGui::SliderInt3("light[0].position", m_gui_state->light0_pos, -100.0f, 100.0f);            // Edit 1 float using a slider from 0.0f to 1.0f
         
