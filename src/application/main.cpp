@@ -273,60 +273,6 @@ int main() {
         );
     }
 
-    /// Debugging
-    // ------------------------------------------------------------------------
-    
-    // destroy some entities
- 	// auto it = entities.begin() + 1000;
-
-    // for(int i = 0; i < 3000; i++) {
-    //     main_scene.destroy_entity(*it);
-    //     it = entities.erase(it);
-    // }
-    
-    // add some entities
-    // for (int i = 0; i < 2000; i++)
-    // {
-    //     // Create entity
-    //     auto entity = main_scene.create_entity();
-        
-    //     // Add components to entity
-    //     main_scene.add_component<Player>(entity, Player{});
-
-    //     main_scene.add_component( // automatic type deduction for template parameters
-    //     	entity,
-    //     	Gravity {
-    //             // .force = glm::vec3(0.0f, -9.8f, 0.0f)
-    //             // .force = glm::vec3(0.0f, rand_gravity(generator), 0.0f)
-    //         }
-    //     );
-
-    //     main_scene.add_component(
-    //         entity,
-    //         RigidBody {
-    //             .velocity = glm::vec3(0.0f, 0.0f, 0.0f),
-    //             .acceleration = glm::vec3(0.0f, 0.0f, 0.0f)
-    //         }
-    //     );
-
-    //     main_scene.add_component(
-    //         entity,
-    //         Transform {
-    //             .position = glm::vec3(rand_position(generator), rand_position(generator), rand_position(generator)),
-    //             .scale = glm::vec3(scale, scale, scale)
-    //         }
-    //     );
-
-    //     main_scene.add_component(
-    //         entity,
-    //         Renderable {
-    //             .color = glm::vec3(rand_color(generator), rand_color(generator), rand_color(generator))
-    //         }
-    //     );
-    // }
-   
-    // ------------------------------------------------------------------------
-
     // timing information
     float last_frame, current_frame;
     last_frame = current_frame = window_manager.get_time(); // note: windowManager.get_time() is not exactly zero at this call
