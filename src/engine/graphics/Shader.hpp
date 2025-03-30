@@ -12,7 +12,7 @@
 
 class Shader {
 public:
-    Shader(std::string const& vertex_path, std::string const& fragment_path);
+    Shader(std::string const& vertex_path, std::string const& fragment_path, std::string geometry_path = "");
 
     void activate();
 

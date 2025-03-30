@@ -10,7 +10,7 @@
 #define STB_INCLUDE_LINE_NONE
 #include <stb/stb_include.h>
 
-Shader::Shader(const std::string& vertex_path, const std::string& fragment_path) {
+Shader::Shader(const std::string& vertex_path, const std::string& fragment_path, std::string geometry_path) {
     static constexpr std::size_t err_len = 512;
     char stb_err_msg[err_len];
 
@@ -27,6 +27,7 @@ Shader::Shader(const std::string& vertex_path, const std::string& fragment_path)
     if (p_fragment_src.get() == nullptr)
         ASSERT_MESSAGE("Error stb_include_file() (SHADER::FRAG): " << stb_err_msg);
 
+    // vertex shader
     GLuint vertex_shader = glCreateShader(GL_VERTEX_SHADER);
 
     const GLchar* vertex_shader_source = p_vertex_src.get();
@@ -42,6 +43,7 @@ Shader::Shader(const std::string& vertex_path, const std::string& fragment_path)
         ASSERT_MESSAGE("Error compiling vertex shader: " << info_log);
     }
 
+    // fragment shader
     GLuint fragment_shader = glCreateShader(GL_FRAGMENT_SHADER);
 
     const GLchar* fragment_shader_source = p_fragment_src.get();
@@ -55,10 +57,36 @@ Shader::Shader(const std::string& vertex_path, const std::string& fragment_path)
         ASSERT_MESSAGE("Error compiling fragment shader: " << info_log);
     }
 
+    // geometry shader
+    GLuint geometry_shader = -1;
+
+    if(geometry_path != "") {
+        auto p_geometry_src = std::unique_ptr<char, decltype([](char* ptr) { if(ptr) free(ptr); })>(
+            stb_include_file(((std::string) geometry_path).data(), nullptr, shader_dir.data(), stb_err_msg));
+
+        if (p_geometry_src.get() == nullptr)
+            ASSERT_MESSAGE("Error stb_include_file() (SHADER::GEOM): " << stb_err_msg);
+    
+        geometry_shader = glCreateShader(GL_GEOMETRY_SHADER);
+
+        const GLchar* geometry_shader_source = p_geometry_src.get();
+        glShaderSource(geometry_shader, 1, &geometry_shader_source, nullptr);
+        glCompileShader(geometry_shader);
+    
+        glGetShaderiv(geometry_shader, GL_COMPILE_STATUS, &success);
+    
+        if (!success) {
+            glGetShaderInfoLog(geometry_shader, err_len, nullptr, info_log);
+            ASSERT_MESSAGE("Error compiling geometry shader: " << info_log);
+        }
+    }
+
+    // create program
     m_id = glCreateProgram();
 
     glAttachShader(m_id, vertex_shader);
     glAttachShader(m_id, fragment_shader);
+    if(geometry_path != "") glAttachShader(m_id, geometry_shader);
 
     glLinkProgram(m_id);
     
@@ -71,6 +99,7 @@ Shader::Shader(const std::string& vertex_path, const std::string& fragment_path)
 
     glDeleteShader(vertex_shader);
     glDeleteShader(fragment_shader);
+    if(geometry_path != "") glDeleteShader(geometry_shader);
 
     cache_uniform_locations();
 }
