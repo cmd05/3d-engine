@@ -31,6 +31,14 @@ public:
     cubemaps_interface_type load_cubemaps(std::unordered_map<std::string, CubemapFaces> cubemaps);
     void draw_cubemap(unsigned int cubemap_id);
 
+    void buffer_camera_data();
+    void buffer_gui_data();
+    void buffer_matrices();
+    
+    void render_point_lights();
+    void render_models();
+    void render_cubemaps();
+
     // callback methods for when opengl context has been created
     static void gl_init_callback(Event& event);
 private:

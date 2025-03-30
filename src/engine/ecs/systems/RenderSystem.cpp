@@ -68,37 +68,39 @@ void RenderSystem::draw_cubemap(unsigned int cubemap_id) {
     m_texture_manager.draw_cubemap(cubemap_id, m_cubemap_shader, m_camera_wrapper);
 }
 
-void RenderSystem::update(float dt) {
-    // TODO: create a method to update render state before rendering. 
-    // ex: m_gui_state->light0_pos should change `Transform` for first light
-    // update_render_state_gui();
-
-    // clear screen and buffers
-    glClearColor(GraphicsConfig::GL_CLEAR_COLOR.r, GraphicsConfig::GL_CLEAR_COLOR.g,
-            GraphicsConfig::GL_CLEAR_COLOR.b, GraphicsConfig::GL_CLEAR_COLOR.a);
-    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
-    // set OpenGL parameters
-    glEnable(GL_DEPTH_TEST);
-    glEnable(GL_CULL_FACE);
-
-    // buffer camera data     
+void RenderSystem::buffer_camera_data() {
+    m_model_shader->activate();
     m_shader_uniform_blocks.camera.view_pos = glm::vec4(m_camera_wrapper.get_transform_component().position, 0.0);
     glBindBuffer(GL_UNIFORM_BUFFER, m_shader_uniform_blocks.ubo_camera);
     glBufferSubData(GL_UNIFORM_BUFFER, ShaderUniformBlocks::UBLOCK_OFFSET_BEGIN, sizeof(m_shader_uniform_blocks.camera), &m_shader_uniform_blocks.camera);
+}
 
-    // 1. offscreen rendering to floating point framebuffer
-    glBindFramebuffer(GL_FRAMEBUFFER, m_hdr_fbo);
-    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
-    // draw lights
+void RenderSystem::buffer_gui_data() {
     m_model_shader->activate();
+    m_shader_uniform_blocks.gui_state.ambient_strength = m_gui_state->ambient_strength;
+    m_shader_uniform_blocks.gui_state.attenuation = m_gui_state->attenuation;
+    
+    glBindBuffer(GL_UNIFORM_BUFFER, m_shader_uniform_blocks.ubo_gui_state);
+    glBufferSubData(GL_UNIFORM_BUFFER, ShaderUniformBlocks::UBLOCK_OFFSET_BEGIN, sizeof(m_shader_uniform_blocks.gui_state), &m_shader_uniform_blocks.gui_state);
+}
+
+void RenderSystem::buffer_matrices() {
+    m_shader_uniform_blocks.matrices.view = m_camera_wrapper.get_view_matrix();
+    m_shader_uniform_blocks.matrices.projection = m_camera_wrapper.get_projection_matrix();
+
+    glBindBuffer(GL_UNIFORM_BUFFER, m_shader_uniform_blocks.ubo_matrices);
+    glBufferSubData(GL_UNIFORM_BUFFER, ShaderUniformBlocks::UBLOCK_OFFSET_BEGIN, sizeof(m_shader_uniform_blocks.matrices), &m_shader_uniform_blocks.matrices);
+    // glBufferSubData(GL_UNIFORM_BUFFER, offsetof(ShaderNormalData::ub_matrices, normal_matrix), sizeof(glm::mat3), &shader_normal_data.matrices.normal_matrix);
+}
+
+void RenderSystem::render_point_lights() {
     int i_lights = 0;
     
     for(const auto& entity : SceneView<Components::PointLight, Components::Transform>(*m_scene)) {
         glm::vec3 light_color = m_scene->get_component<Components::PointLight>(entity).light_color;
         auto light_transform = m_scene->get_component<Components::Transform>(entity);
 
+        // control position of 0th light
         if(i_lights == 0) {
             light_transform.position = glm::vec3(m_gui_state->light0_pos[0], m_gui_state->light0_pos[1], m_gui_state->light0_pos[2]);
         }
@@ -113,26 +115,14 @@ void RenderSystem::update(float dt) {
         
         i_lights++;
     }
-    
-    // buffer GUI parameters
-    m_model_shader->activate();
-    m_shader_uniform_blocks.gui_state.ambient_strength = m_gui_state->ambient_strength;
-    m_shader_uniform_blocks.gui_state.attenuation = m_gui_state->attenuation;
-    
-    glBindBuffer(GL_UNIFORM_BUFFER, m_shader_uniform_blocks.ubo_gui_state);
-    glBufferSubData(GL_UNIFORM_BUFFER, ShaderUniformBlocks::UBLOCK_OFFSET_BEGIN, sizeof(m_shader_uniform_blocks.gui_state), &m_shader_uniform_blocks.gui_state);
+}
 
-    // buffer uniform block matrices
+void RenderSystem::render_models() {
+    m_model_shader->activate();
+
     GraphicsHelper::MVP mvp;
     mvp.view = m_camera_wrapper.get_view_matrix();
     mvp.projection = m_camera_wrapper.get_projection_matrix();
-
-    m_shader_uniform_blocks.matrices.view = mvp.view;
-    m_shader_uniform_blocks.matrices.projection = mvp.projection;
-
-    glBindBuffer(GL_UNIFORM_BUFFER, m_shader_uniform_blocks.ubo_matrices);
-    glBufferSubData(GL_UNIFORM_BUFFER, ShaderUniformBlocks::UBLOCK_OFFSET_BEGIN, sizeof(m_shader_uniform_blocks.matrices), &m_shader_uniform_blocks.matrices);
-    // glBufferSubData(GL_UNIFORM_BUFFER, offsetof(ShaderNormalData::ub_matrices, normal_matrix), sizeof(glm::mat3), &shader_normal_data.matrices.normal_matrix);
 
     // draw models
     for(const auto& entity : SceneView<Components::Renderable, Components::Model, Components::Transform>(*m_scene)) {
@@ -141,12 +131,41 @@ void RenderSystem::update(float dt) {
 
         m_model_manager.draw_model(m_model_shader, object_model.model_id, transform, mvp);
     }
+}
+
+void RenderSystem::render_cubemaps() {
+    for(const auto& entity : SceneView<Components::Renderable, Components::Cubemap>(*m_scene))
+        draw_cubemap(m_scene->get_component<Components::Cubemap>(entity).id);
+}
+
+void RenderSystem::update(float dt) {
+    // TODO: create a method to update render state before rendering. 
+    // ex: m_gui_state->light0_pos should change `Transform` for first light
+    // update_render_state_gui();
+
+    // clear screen and buffers
+    glClearColor(GraphicsConfig::GL_CLEAR_COLOR.r, GraphicsConfig::GL_CLEAR_COLOR.g,
+            GraphicsConfig::GL_CLEAR_COLOR.b, GraphicsConfig::GL_CLEAR_COLOR.a);
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+    // set OpenGL parameters
+    glEnable(GL_DEPTH_TEST);
+    glEnable(GL_CULL_FACE);
+
+    buffer_camera_data();
+    buffer_gui_data();
+    buffer_matrices();
+
+    // 1. offscreen rendering to floating point framebuffer
+    glBindFramebuffer(GL_FRAMEBUFFER, m_hdr_fbo);
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+    render_point_lights();
+    render_models();
 
     glDisable(GL_CULL_FACE);
 
-    // draw cubemaps
-    for(const auto& entity : SceneView<Components::Renderable, Components::Cubemap>(*m_scene))
-        draw_cubemap(m_scene->get_component<Components::Cubemap>(entity).id);
+    render_cubemaps();
 
     // 2. render hdr framebuffer to 2D quad and tonemap hdr colors on default framebuffer
     glBindFramebuffer(GL_FRAMEBUFFER, 0);
