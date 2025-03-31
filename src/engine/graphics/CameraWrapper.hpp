@@ -26,6 +26,9 @@ public:
 
     const Components::Transform& get_transform_component() const;
     const Components::Camera& get_camera_component() const;
+
+    const Components::Camera& get_camera() const { return m_scene->get_component<Components::Camera>(m_camera); }
+    Components::Camera& get_camera() { return m_scene->get_component<Components::Camera>(m_camera); }
 private:
     Entity m_camera;
     Scene* const m_scene;
