@@ -27,3 +27,7 @@ test.cpp
 # ignore all textures except basic skybox
 /resources/textures/*
 !/resources/textures/skybox
+
+# jetbrains
+.idea
+cmake-build-debug
