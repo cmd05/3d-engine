@@ -48,7 +48,7 @@ char *stb_include_strings(char **strs, int count, char *inject, char *path_to_in
 char *stb_include_file(char *filename, char *inject, char *path_to_includes, char error[256]);
 
 // modification: to avoid `defined but unused` error 
-static void stb_include_itoa(char str[9], int n) __attribute__((unused));
+static void stb_include_itoa(char str[9], int n);
 
 #endif
 
