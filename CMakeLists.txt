@@ -127,6 +127,7 @@ target_sources(
     PRIVATE
 
     src/application/main.cpp
+    src/application/Application.cpp
 
     src/engine/ecs/core/ComponentManager.cpp
     src/engine/ecs/core/Scene.cpp
