@@ -142,6 +142,7 @@ void RenderSystem::update(float dt) {
     // TODO: create a method to update render state before rendering. 
     // ex: m_gui_state->light0_pos should change `Transform` for first light
     // update_render_state_gui();
+    // TODO: optimize. without any models: toggling rendersystem->update() causes drop 1700fps -> 700fps
 
     // clear screen and buffers
     glClearColor(GraphicsConfig::GL_CLEAR_COLOR.r, GraphicsConfig::GL_CLEAR_COLOR.g,
