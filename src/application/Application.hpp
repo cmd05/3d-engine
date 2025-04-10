@@ -14,6 +14,8 @@
 class Application {
 public:
     Application();
+    ~Application();
+
     void init();
 
     void load_models();

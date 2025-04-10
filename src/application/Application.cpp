@@ -39,6 +39,10 @@ Application::Application() {
     register_ecs_systems();
 }
 
+Application::~Application() {
+    m_window_manager->shutdown();
+}
+
 void Application::init() {
     load_models();
 
