@@ -37,6 +37,9 @@ public:
     template<typename T>
     void remove_component(Entity entity);
 
+    template <typename... Args>
+    void add_components(Entity, Args&& ...components);
+
     template<typename T>
     T& get_component(Entity entity);
 
@@ -88,6 +91,15 @@ void Scene::add_component(Entity entity, T component) {
 
     auto signature = m_entity_manager->get_signature(entity);
     signature.set(m_component_manager->get_component_type<T>(), true);
+    m_entity_manager->set_signature(entity, signature);
+}
+
+template<typename... Args>
+void Scene::add_components(Entity entity, Args&& ...components) {
+    (m_component_manager->add_component<Args>(entity, std::forward<Args>(components)), ...);
+
+    auto signature = m_entity_manager->get_signature(entity);
+    (signature.set(get_component_type<Args>(), true), ...);
     m_entity_manager->set_signature(entity, signature);
 }
 
