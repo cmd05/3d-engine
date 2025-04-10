@@ -27,7 +27,7 @@ struct GraphicsConfig {
         static constexpr float CAMERA_SPEED = 90.0f;
 
         // camera position (stored in `Transform`)
-        static constexpr glm::vec3 DEFAULT_CAM_POS = glm::vec3(0.0f);
+        static constexpr glm::vec3 DEFAULT_CAM_POS = glm::vec3(90.0f, 50.0f, 10.0f); /* glm::vec3(0.0f) */
     };
 
     static constexpr const char* MODEL_BIN_PATH = FS_RESOURCES_DIR "models/bin";
