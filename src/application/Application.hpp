@@ -55,14 +55,3 @@ private:
     const char* m_glsl_version = "#version 130";
     bool m_quit = false;
 };
-
-/**
-
-int main() {
-    Application app; //
-    app.init();
-
-    app.run();
-}
-
- */
