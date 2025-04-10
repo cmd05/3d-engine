@@ -145,6 +145,9 @@ void Application::init_camera(int width, int height) {
         Components::Transform {.position = GraphicsConfig::Camera::DEFAULT_CAM_POS},
         Components::Camera(width, height)
     );
+
+    Components::Camera& camera_component = m_main_scene.get_component<Components::Camera>(m_camera_entity);
+    camera_component.set_cam_front(glm::vec3(-1.0f, 0.0f, 0.0f));
 }
 
 void Application::register_ecs_systems() {
