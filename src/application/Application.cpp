@@ -14,6 +14,7 @@
 #include <engine/ecs/components/Transform.hpp>
 #include <engine/ecs/components/Model.hpp>
 #include <engine/ecs/components/PointLight.hpp>
+#include <engine/ecs/components/DirectionalLight.hpp>
 
 #include <fstream>
 #include <nlohmann/json.hpp>
@@ -78,20 +79,34 @@ void Application::load_models() {
 }
 
 void Application::init_lights() {
-    const int NR_LIGHTS = 1;
-    std::vector<Entity> light_entities;
+    // constexpr int NR_POINT_LIGHTS = 1;
+    // for(int i = 0; i < NR_POINT_LIGHTS; i++) {
+    //     auto light_entity = m_main_scene.create_entity();
 
-    for(int i = 0; i < NR_LIGHTS; i++) {
+    //     m_main_scene.add_components(light_entity,
+    //         Components::Transform {
+    //             .position = glm::vec3(10.0f, 50.0f, 10.0f),
+    //             .scale = glm::vec3(5.0f)
+    //         },
+
+    //         Components::PointLight {
+    //             .light_color = glm::vec3(1.0f)
+    //         }
+    //     );
+    // }
+
+    constexpr int NR_DIR_LIGHTS = 1;
+    for(int i = 0; i < NR_DIR_LIGHTS; i++) {
         auto light_entity = m_main_scene.create_entity();
 
         m_main_scene.add_components(light_entity,
-            Components::Transform {
-                .position = glm::vec3(10.0f, 50.0f, 10.0f),
-                .scale = glm::vec3(5.0f)
-            },
-
-            Components::PointLight {
+            Components::DirectionalLight {
+                .direction = glm::vec3(-1.0f, 1.0f, 0.0f),
                 .light_color = glm::vec3(1.0f)
+            },
+            Components::Transform {
+                // .position = {1000.0f, 1000.0f, 0.0f}
+                .position = glm::vec3(10.0f, 50.0f, 10.0f)
             }
         );
     }
@@ -179,6 +194,7 @@ void Application::register_ecs_components() {
         Components::Model,
         Components::Cubemap,
         Components::PointLight,
+        Components::DirectionalLight,
         
         Components::Player,
         Components::Thrust

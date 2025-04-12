@@ -35,7 +35,11 @@ public:
     void buffer_gui_data();
     void buffer_matrices();
     
+    // void set_dir_lights();
+    // void set_point_lights();
+
     void render_point_lights();
+    void render_dir_lights();
     void render_models();
     void render_cubemaps();
 

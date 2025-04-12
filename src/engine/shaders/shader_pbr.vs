@@ -9,7 +9,6 @@ layout (location = 4) in vec3 in_bitangent;
 #include "include/ub_camera.glsl"
 
 uniform MeshMatrices u_mesh_matrices;
-uniform Light u_point_lights[NR_POINT_LIGHTS];
 
 out VS_OUT {
     vec3 FragPos;

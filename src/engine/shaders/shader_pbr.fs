@@ -15,7 +15,7 @@ uniform sampler2D texture_emissive1;
 uniform sampler2D texture_ambient_occlusion1;
 
 uniform MeshTexturesAvailable u_mesh_textures_available;
-uniform Light u_point_lights[NR_POINT_LIGHTS];
+uniform DirLight u_dir_lights[NR_DIR_LIGHTS];
 
 in VS_OUT {
     vec3 FragPos;
@@ -69,29 +69,17 @@ void main() {
     // We can think of the loop as solving the integral over Ω for direct light sources.
     // loop over all light sources and add their outgoing radiance contributions
     
-    // point light sources contribute only to a single incoming light direction, 
-    // so we only need to loop once per light source 
-
     // irradiance (outgoing radiance value)
     vec3 Lo = vec3(0.0); // Lo includes both diffuse and specular contributions
 
-    for(int i = 0; i < NR_POINT_LIGHTS; i++) {
+    for(int i = 0; i < NR_DIR_LIGHTS; i++) {
         // first do all lighting calculations in linear space
-        vec3 L = normalize(u_point_lights[i].position - fs_in.world_pos); // frag to light vector (same as W_i)
+        vec3 L = normalize(u_dir_lights[i].direction); // frag to light vector (same as W_i)
         vec3 H = normalize(V + L); // halfway vector
         float NdotL = max(dot(N, L), 0.0);
 
-        float dist = length(u_point_lights[i].position - fs_in.world_pos);
-        
-
         float cosTheta = NdotL; // both vectors are already normalized
-        vec3 radiance = u_point_lights[i].color * cosTheta; // light color (radiance) when it reaches point p after effect of attenuation
-
-        if(u_attenuation) {
-            // float attenuation = 1.0 / (dist * dist);
-            float attenuation = 1.0 / (att_const + att_linear * dist + att_quadratic * (dist * dist));
-            radiance *= attenuation;
-        }
+        vec3 radiance = u_dir_lights[i].color * cosTheta; // light color (radiance) when it reaches point p after effect of attenuation
 
         // calculate cook torrance brdf
         float NDF = DistributionGGX(N, H, roughness); // normal distribution

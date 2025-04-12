@@ -15,6 +15,7 @@
 #include <engine/ecs/components/Transform.hpp>
 #include <engine/ecs/components/Model.hpp>
 #include <engine/ecs/components/PointLight.hpp>
+#include <engine/ecs/components/DirectionalLight.hpp>
 
 #include <engine/graphics/Shader.hpp>
 #include <engine/graphics/objects/CubeObject.hpp>
@@ -99,20 +100,44 @@ void RenderSystem::render_point_lights() {
     for(const auto& entity : SceneView<Components::PointLight, Components::Transform>(*m_scene)) {
         glm::vec3 light_color = m_scene->get_component<Components::PointLight>(entity).light_color;
         auto light_transform = m_scene->get_component<Components::Transform>(entity);
-
+        
         // control position of 0th light
         if(i_lights == 0) {
             light_transform.position = glm::vec3(m_gui_state->light0_pos[0], m_gui_state->light0_pos[1], m_gui_state->light0_pos[2]);
         }
 
         m_light_renderer.draw_light_cube(light_transform, m_camera_wrapper, light_color);
-
+        
         m_model_shader->activate();
-
+        
         // set lights for model shader (tbd: this will be changed to ssbo for lights)
         m_model_shader->set_uniform<glm::vec3>("u_point_lights[" + std::to_string(i_lights) + "].position", light_transform.position);
         m_model_shader->set_uniform<glm::vec3>("u_point_lights[" + std::to_string(i_lights) + "].color", light_color);
         
+        i_lights++;
+    }
+}
+
+void RenderSystem::render_dir_lights() {
+    int i_lights = 0;
+    
+    for(const auto& entity : SceneView<Components::DirectionalLight, Components::Transform>(*m_scene)) {
+        auto light = m_scene->get_component<Components::DirectionalLight>(entity);
+        auto light_transform = m_scene->get_component<Components::Transform>(entity);
+
+        // control position of 0th light
+        if(i_lights == 0) {
+            light.direction = glm::vec3(m_gui_state->dir_light0_direction[0], m_gui_state->dir_light0_direction[1], m_gui_state->dir_light0_direction[2]);
+        }
+
+        // position of directional light is used for shadow mapping
+        m_light_renderer.draw_light_cube(light_transform, m_camera_wrapper, light.light_color);
+
+        m_model_shader->activate();
+        m_model_shader->set_uniform<glm::vec3>("u_dir_lights[" + std::to_string(i_lights) + "].position", light_transform.position);
+        m_model_shader->set_uniform<glm::vec3>("u_dir_lights[" + std::to_string(i_lights) + "].direction", light.direction);
+        m_model_shader->set_uniform<glm::vec3>("u_dir_lights[" + std::to_string(i_lights) + "].color", light.light_color);
+
         i_lights++;
     }
 }
@@ -162,6 +187,7 @@ void RenderSystem::update(float dt) {
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
     render_point_lights();
+    render_dir_lights();
     render_models();
 
     glDisable(GL_CULL_FACE);
@@ -187,6 +213,7 @@ void RenderSystem::update(float dt) {
 
 void RenderSystem::set_uniforms_pre_rendering() {
     // call some private function which sets the pre render loop uniforms
+    // set_dir_lights();
 }
 
 void RenderSystem::window_size_listener(Event& event) {
