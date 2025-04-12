@@ -1,7 +1,14 @@
 #define NR_POINT_LIGHTS 1
+#define NR_DIR_LIGHTS 1
 
 struct Light {
     vec3 position;
+    vec3 color;
+};
+
+struct DirLight {
+    vec3 position;
+    vec3 direction;
     vec3 color;
 };
 
