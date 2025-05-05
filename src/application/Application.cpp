@@ -106,7 +106,8 @@ void Application::init_lights() {
             },
             Components::Transform {
                 // .position = {1000.0f, 1000.0f, 0.0f}
-                .position = glm::vec3(10.0f, 50.0f, 10.0f)
+                .position = glm::vec3(10.0f, 50.0f, 10.0f),
+                .scale = glm::vec3(5.0f) // draw as big cube
             }
         );
     }
@@ -131,10 +132,23 @@ void Application::run() {
     float last_frame, current_frame;
     last_frame = current_frame = m_window_manager->get_time(); // windowManager.get_time() is not exactly zero at this call
     float dt = 0.0f;
+    float diff = 0.001;
+    bool inc = false;
+    bool vary = false;
 
     while (!m_quit) {
         m_window_manager->process_events(); // first process window events
 
+        if(vary) {
+            if(inc)
+                m_gui_state->dir_light0_direction[2] += diff;
+            else
+                m_gui_state->dir_light0_direction[2] -= diff;
+
+            if(m_gui_state->dir_light0_direction[2] >= 1.0 || m_gui_state->dir_light0_direction[2] <= -1.0)
+                inc = !inc;
+        }
+            
         m_camera_control_system->update(dt);
         m_render_system->update(dt);
 

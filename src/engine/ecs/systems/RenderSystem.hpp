@@ -40,7 +40,7 @@ public:
 
     void render_point_lights();
     void render_dir_lights();
-    void render_models();
+    void render_models(const std::unique_ptr<Shader>& shader);
     void render_cubemaps();
 
     // callback methods for when opengl context has been created
@@ -49,7 +49,8 @@ private:
     std::unique_ptr<Shader> m_model_shader;
     std::unique_ptr<Shader> m_cubemap_shader;
     std::unique_ptr<Shader> m_hdr_shader;
-    
+    std::unique_ptr<Shader> m_shadow_depth_shader;
+
     CameraWrapper m_camera_wrapper;
     ModelManager m_model_manager;
     TextureManager m_texture_manager;
@@ -64,9 +65,15 @@ private:
     GLuint m_hdr_fbo;
     GLuint m_hdr_color_buffer;
     GLuint m_hdr_render_buffer;
+
+    const unsigned int SHADOW_WIDTH = 4096, SHADOW_HEIGHT = 4096;
+    GLuint m_shadow_depth_map_fbo;
+    GLuint m_depth_map_tex;
 private:
+    std::unique_ptr<Shader> make_shader(std::string const& vertex_path, std::string const& fragment_path, std::string geometry_path = "");
     void window_size_listener(Event& event);
 
     void init_hdr_fbo();
     void resize_hdr_attachments();
+    void init_shadow_mapping();
 };

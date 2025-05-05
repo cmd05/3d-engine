@@ -14,6 +14,8 @@ uniform sampler2D texture_metallic_roughness1; // (G - roughness, B - metallic)
 uniform sampler2D texture_emissive1;
 uniform sampler2D texture_ambient_occlusion1;
 
+uniform sampler2D texture_depth_shadow_map; // texture unit=10
+
 uniform MeshTexturesAvailable u_mesh_textures_available;
 uniform DirLight u_dir_lights[NR_DIR_LIGHTS];
 
@@ -23,6 +25,7 @@ in VS_OUT {
     vec3 world_normal;
     vec3 view_pos;
     vec3 world_pos;
+    vec4 frag_pos_light_space;
 
     mat3 TBN_matrix;
 } fs_in;
@@ -31,6 +34,44 @@ const float att_const = 1.0;
 const float att_linear = 0.00009;
 const float att_quadratic = 0.000032;
 bool normalMapping = true;
+
+float ShadowCalculation(vec4 fragPosLightSpace) {
+    float shadow = 0.0; // store shadow value
+
+    vec3 projCoords = fragPosLightSpace.xyz / fragPosLightSpace.w; // perform perspective divide
+    projCoords = projCoords * 0.5 + 0.5; // transform to [0,1] range
+
+    // keep the shadow at 0.0 when outside the far_plane region of the light's orthogonal frustum.
+    if(projCoords.z > 1.0) {
+        shadow = 0.0;
+        return shadow;
+    }
+
+    // get closest depth value from light’s perspective (using
+    // [0,1] range fragPosLight as coords)
+    float closestDepth = texture(texture_depth_shadow_map, projCoords.xy).r;
+    float currentDepth = projCoords.z; // get depth of current fragment from light’s perspective
+
+    float bias = max(0.05 * (1.0 - dot(fs_in.world_normal, u_dir_lights[0].direction)), 0.005);
+    // float shadow = (currentDepth - bias) > closestDepth ? 1.0 : 0.0; // check whether current frag pos is in shadow
+
+    // PCF
+    vec2 texelSize = 1.0 / textureSize(texture_depth_shadow_map, 0);
+    const int pcf_bound = 1;
+    const float pcf_grid = pow(pcf_bound * 2 + 1, 2);
+
+    for(int x = -pcf_bound; x <= pcf_bound; ++x) {
+        for(int y = -pcf_bound; y <= pcf_bound; ++y) {
+            vec2 offset = vec2(x, y) * texelSize;
+            float pcfDepth = texture(texture_depth_shadow_map, projCoords.xy + offset)[0];
+            shadow += (currentDepth - bias) > pcfDepth ? 1.0 : 0.0; // find shadow of each texel with the bias
+        }
+    }
+
+    shadow /= pcf_grid; // shadow value is in [0,1] range
+
+    return shadow;
+}
 
 void main() {
     vec3 N = fs_in.world_normal; // use world_normal by default
@@ -71,6 +112,7 @@ void main() {
     
     // irradiance (outgoing radiance value)
     vec3 Lo = vec3(0.0); // Lo includes both diffuse and specular contributions
+    float shadow_coefficient = 1.0 - ShadowCalculation(fs_in.frag_pos_light_space);
 
     for(int i = 0; i < NR_DIR_LIGHTS; i++) {
         // first do all lighting calculations in linear space
@@ -106,16 +148,13 @@ void main() {
         // note that we already multiplied the BRDF by the Fresnel (kS) so we won't multiply by kS again
         // (kD * (albedo / PI) + specular) is eqv to (diffuse + specular)
         // diffuse is given by (kD * (albedo / PI))
-        Lo += (kD * (albedo / PI) + specular) * radiance * NdotL; // add outgoing-radiance due to i-th light source
+        Lo += (kD * (albedo / PI) + specular) * radiance * NdotL * shadow_coefficient; // add outgoing-radiance due to i-th light source
     }
 
     // add ambient color to fragment
     vec3 ambient = u_ambient_strength * albedo * ao;
 
-    vec3 color = Lo + ambient + emissive;
+    vec3 color_sum = Lo + ambient + emissive;
 
-    // color = color / (color + vec3(1.0)); // reinhard tone mapping
-    // color = pow(color, vec3(1.0 / 2.2)); // gamma correction
-
-    FragColor = vec4(color, 1.0);
+    FragColor = vec4(color_sum, 1.0);
 }

@@ -24,8 +24,11 @@ public:
 
     bool gamma_correction = true;
 
+    bool debug_depth_buffer = false;
+
     int light0_pos[3] = {10, 50, 10};
-    float dir_light0_direction[3] = {1.0, 0.0, 0.0};
+    float dir_light0_direction[3] = {0.0, 0.0, 1.0};
+    float dir_light0_pos[3] = {10, 50, 10};
 
     int scene_num; // (1) sponza; (2) cyborg, backpack; 
     int num_point_lights;

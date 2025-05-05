@@ -41,12 +41,16 @@ RenderSystem::RenderSystem(Scene& scene, Entity camera, GUIState& gui_state):
     m_scene->add_event_listener(METHOD_LISTENER(Events::Window::RESIZED, RenderSystem::window_size_listener));
 
     // initialize shaders
-    m_model_shader = std::make_unique<Shader>(std::string(FS_SHADERS_DIR) + "shader_pbr.vs", std::string(FS_SHADERS_DIR) + "shader_pbr.fs");
-    m_cubemap_shader = std::make_unique<Shader>(std::string(FS_SHADERS_DIR) + "cubemap.vs", std::string(FS_SHADERS_DIR) + "cubemap.fs");
-    m_hdr_shader = std::make_unique<Shader>(std::string(FS_SHADERS_DIR) + "hdr_quad.vs", std::string(FS_SHADERS_DIR) + "hdr_quad.fs");
+    m_model_shader = make_shader("shader_pbr.vs", "shader_pbr.fs");
+    m_cubemap_shader = make_shader("cubemap.vs", "cubemap.fs");
+    m_hdr_shader = make_shader("hdr_quad.vs", "hdr_quad.fs");
+    m_shadow_depth_shader = make_shader("depth_shadow_mapping.vs", "depth_shadow_mapping.fs");
 
     // Initialize state of shader data
     m_shader_uniform_blocks.init();
+
+    // initialize shadow mapping components
+    init_shadow_mapping();
 }
 
 void RenderSystem::init_framebuffer_size(int win_framebuffer_width, int win_framebuffer_height) {
@@ -99,7 +103,7 @@ void RenderSystem::render_point_lights() {
     
     for(const auto& entity : SceneView<Components::PointLight, Components::Transform>(*m_scene)) {
         glm::vec3 light_color = m_scene->get_component<Components::PointLight>(entity).light_color;
-        auto light_transform = m_scene->get_component<Components::Transform>(entity);
+        auto& light_transform = m_scene->get_component<Components::Transform>(entity);
         
         // control position of 0th light
         if(i_lights == 0) {
@@ -122,11 +126,12 @@ void RenderSystem::render_dir_lights() {
     int i_lights = 0;
     
     for(const auto& entity : SceneView<Components::DirectionalLight, Components::Transform>(*m_scene)) {
-        auto light = m_scene->get_component<Components::DirectionalLight>(entity);
-        auto light_transform = m_scene->get_component<Components::Transform>(entity);
+        auto& light = m_scene->get_component<Components::DirectionalLight>(entity);
+        auto& light_transform = m_scene->get_component<Components::Transform>(entity);
 
         // control position of 0th light
         if(i_lights == 0) {
+            light_transform.position = glm::vec3(m_gui_state->dir_light0_pos[0], m_gui_state->dir_light0_pos[1], m_gui_state->dir_light0_pos[2]);
             light.direction = glm::vec3(m_gui_state->dir_light0_direction[0], m_gui_state->dir_light0_direction[1], m_gui_state->dir_light0_direction[2]);
         }
 
@@ -142,8 +147,8 @@ void RenderSystem::render_dir_lights() {
     }
 }
 
-void RenderSystem::render_models() {
-    m_model_shader->activate();
+void RenderSystem::render_models(const std::unique_ptr<Shader>& shader) {
+    shader->activate();
 
     GraphicsHelper::MVP mvp;
     mvp.view = m_camera_wrapper.get_view_matrix();
@@ -154,7 +159,7 @@ void RenderSystem::render_models() {
         const auto& transform = m_scene->get_component<Components::Transform>(entity);
         const auto& object_model = m_scene->get_component<Components::Model>(entity);
 
-        m_model_manager.draw_model(m_model_shader, object_model.model_id, transform, mvp);
+        m_model_manager.draw_model(shader, object_model.model_id, transform, mvp);
     }
 }
 
@@ -176,22 +181,70 @@ void RenderSystem::update(float dt) {
 
     // set OpenGL parameters
     glEnable(GL_DEPTH_TEST);
-    glEnable(GL_CULL_FACE);
 
     buffer_camera_data();
     buffer_gui_data();
     buffer_matrices();
 
+    // 0. render to shadow depth map FBO
+    glEnable(GL_CULL_FACE);
+    glCullFace(GL_FRONT);
+
+    glm::mat4 light_projection, light_view, light_space_matrix;
+
+    float ortho_bound = 800.0f;
+    float light_near_plane = 1.0f, light_far_plane = ortho_bound;
+    light_projection = glm::ortho(-ortho_bound, ortho_bound, -ortho_bound, ortho_bound, light_near_plane, light_far_plane);
+
+    render_dir_lights();
+
+    auto dir_light0_entity = *(SceneView<Components::DirectionalLight, Components::Transform>(*m_scene).begin());
+    auto dir_light0_transform = m_scene->get_component<Components::Transform>(dir_light0_entity);
+    auto dir_light0_light = m_scene->get_component<Components::DirectionalLight>(dir_light0_entity);
+    // light_view = glm::lookAt(dir_light0_transform.position, glm::vec3(0.0f), glm::vec3(0.0f, 1.0f, 0.0f));
+    light_view = glm::lookAt(dir_light0_transform.position, dir_light0_transform.position - dir_light0_light.direction, glm::vec3(0.0f, 1.0f, 0.0f));
+
+    light_space_matrix = light_projection * light_view;
+
+    // render scene from light point of view
+    m_shadow_depth_shader->activate();
+    m_shadow_depth_shader->set_uniform<glm::mat4>("u_light_space_matrix", light_space_matrix);
+
+    glViewport(0, 0, SHADOW_WIDTH, SHADOW_HEIGHT);
+    glBindFramebuffer(GL_FRAMEBUFFER, m_shadow_depth_map_fbo);
+    glClear(GL_DEPTH_BUFFER_BIT);
+
+    render_models(m_shadow_depth_shader);
+
+    // reset viewport
+    glBindFramebuffer(GL_FRAMEBUFFER, 0); // imp!!
+    glViewport(0, 0, m_win_framebuffer_width, m_win_framebuffer_height);
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+    glDisable(GL_CULL_FACE);
+    glCullFace(GL_BACK);
+
     // 1. offscreen rendering to floating point framebuffer
     glBindFramebuffer(GL_FRAMEBUFFER, m_hdr_fbo);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+    
+    glEnable(GL_CULL_FACE);
+    glCullFace(GL_BACK);
+
+    // set explicit position
+    constexpr int shadow_map_tex_unit = 10;
+    m_model_shader->activate();
+    m_model_shader->set_uniform<glm::mat4>("u_light_space_matrix", light_space_matrix);
+    
+    m_model_shader->set_uniform<int>("texture_depth_shadow_map", shadow_map_tex_unit);
+    glActiveTexture(GL_TEXTURE0 + shadow_map_tex_unit);
+    glBindTexture(GL_TEXTURE_2D, m_depth_map_tex);
 
     render_point_lights();
     render_dir_lights();
-    render_models();
+    render_models(m_model_shader);
 
     glDisable(GL_CULL_FACE);
-
     render_cubemaps();
 
     // 2. render hdr framebuffer to 2D quad and tonemap hdr colors on default framebuffer
@@ -200,10 +253,13 @@ void RenderSystem::update(float dt) {
 
     m_hdr_shader->activate();
 
-    glActiveTexture(GL_TEXTURE0);
-    glBindTexture(GL_TEXTURE_2D, m_hdr_color_buffer);
+    m_hdr_shader->set_uniform<int>("u_debug_depth_buffer", m_gui_state->debug_depth_buffer);
     m_hdr_shader->set_uniform<float>("u_exposure", m_gui_state->exposure);
     m_hdr_shader->set_uniform<int>("u_hdr_enabled", m_gui_state->hdr_enabled);
+
+    glActiveTexture(GL_TEXTURE0);
+    GLuint quad_tex = m_gui_state->debug_depth_buffer ? m_depth_map_tex : m_hdr_color_buffer;
+    glBindTexture(GL_TEXTURE_2D, quad_tex);
 
     // draw to quad
     glBindVertexArray(g_graphics_objects.quad_object.VAO);
@@ -216,7 +272,15 @@ void RenderSystem::set_uniforms_pre_rendering() {
     // set_dir_lights();
 }
 
-void RenderSystem::window_size_listener(Event& event) {
+std::unique_ptr<Shader> RenderSystem::make_shader(std::string const &vertex_path, std::string const &fragment_path, std::string geometry_path) {
+    if(!geometry_path.empty())
+        geometry_path = std::string(FS_SHADERS_DIR) + geometry_path;
+
+    return (std::make_unique<Shader>(std::string(FS_SHADERS_DIR) + vertex_path,
+        std::string(FS_SHADERS_DIR) + fragment_path, geometry_path));
+}
+
+void RenderSystem::window_size_listener(Event &event) {
     m_win_framebuffer_width = event.get_param<int>(Events::Window::Resized::WIDTH);
     m_win_framebuffer_height = event.get_param<int>(Events::Window::Resized::HEIGHT);
     // ENGINE_LOG(window_width << " " << window_height);
@@ -265,4 +329,39 @@ void RenderSystem::resize_hdr_attachments() {
     glDeleteFramebuffers(1, &m_hdr_fbo);
 
     init_hdr_fbo();
+}
+
+void RenderSystem::init_shadow_mapping() {
+    // Current Optimizations:
+    // - GL_DEPTH_COMPONENT16
+    // - Mipmap generation
+
+    glGenFramebuffers(1, &m_shadow_depth_map_fbo);
+
+    // create depth texture
+    glGenTextures(1, &m_depth_map_tex);
+    glBindTexture(GL_TEXTURE_2D, m_depth_map_tex);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT16, SHADOW_WIDTH, SHADOW_HEIGHT, 0, GL_DEPTH_COMPONENT, GL_FLOAT, NULL);
+
+    // set texture parameters
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_BORDER);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_BORDER);
+
+    glGenerateMipmap(GL_TEXTURE_2D);
+
+    // set a black border color for the texture
+    float border_color[] = { 1.0, 1.0, 1.0, 1.0 };
+    glTexParameterfv(GL_TEXTURE_2D, GL_TEXTURE_BORDER_COLOR, border_color);
+
+    // attach depth texture to the FBO's depth buffer
+    glBindFramebuffer(GL_FRAMEBUFFER, m_shadow_depth_map_fbo);
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, m_depth_map_tex, 0);
+
+    // do not render color data
+    glDrawBuffer(GL_NONE);
+    glReadBuffer(GL_NONE);
+
+    glBindFramebuffer(GL_FRAMEBUFFER, 0);
 }

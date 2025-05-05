@@ -16,8 +16,11 @@ public:
 
         ImGui::Begin("Light Control");
 
-        ImGui::SliderInt3("light[0].position", m_gui_state->light0_pos, -100.0f, 100.0f);
+        ImGui::SliderInt3("point_light[0].position", m_gui_state->light0_pos, -100.0f, 100.0f);
         ImGui::SliderFloat3("dir_light[0].direction", m_gui_state->dir_light0_direction, -1.0f, 1.0f);
+        ImGui::SliderFloat3("dir_light[0].position", m_gui_state->dir_light0_pos, -400.0f, 400.0f);
+
+        ImGui::Checkbox("Debug Depth Buffer", &m_gui_state->debug_depth_buffer);
 
         ImGui::SliderFloat("Exposure", &m_gui_state->exposure, 0.0f, 3.0f);
         ImGui::SliderFloat("Ambient Strength", &m_gui_state->ambient_strength, 0.0f, 1.0f);
@@ -27,6 +30,6 @@ public:
         ImGui::End();
     }
 private:
-    unsigned int m_window_length = 300;
-    unsigned int m_window_height = 150;
+    unsigned int m_window_length = 500;
+    unsigned int m_window_height = 300;
 };

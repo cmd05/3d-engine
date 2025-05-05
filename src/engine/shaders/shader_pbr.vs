@@ -9,6 +9,7 @@ layout (location = 4) in vec3 in_bitangent;
 #include "include/ub_camera.glsl"
 
 uniform MeshMatrices u_mesh_matrices;
+uniform mat4 u_light_space_matrix;
 
 out VS_OUT {
     vec3 FragPos;
@@ -16,6 +17,7 @@ out VS_OUT {
     vec3 world_normal;
     vec3 view_pos;
     vec3 world_pos;
+    vec4 frag_pos_light_space;
 
     mat3 TBN_matrix;
 } vs_out;
@@ -41,6 +43,7 @@ void main() {
     vs_out.world_normal = normalize(u_mesh_matrices.normal_matrix * in_normal);
     vs_out.view_pos = view_pos;
     vs_out.world_pos = vec3(u_mesh_matrices.model_matrix * vec4(in_pos, 1.0));
+    vs_out.frag_pos_light_space = u_light_space_matrix * u_mesh_matrices.model_matrix * vec4(in_pos, 1.0);
 
     gl_Position = u_mesh_matrices.mvp_matrix * vec4(in_pos, 1.0);
 }
