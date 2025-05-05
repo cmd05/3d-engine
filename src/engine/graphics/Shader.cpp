@@ -60,7 +60,7 @@ Shader::Shader(const std::string& vertex_path, const std::string& fragment_path,
     // geometry shader
     GLuint geometry_shader = -1;
 
-    if(geometry_path != "") {
+    if(!geometry_path.empty()) {
         auto p_geometry_src = std::unique_ptr<char, decltype([](char* ptr) { if(ptr) free(ptr); })>(
             stb_include_file(((std::string) geometry_path).data(), nullptr, shader_dir.data(), stb_err_msg));
 
@@ -86,7 +86,7 @@ Shader::Shader(const std::string& vertex_path, const std::string& fragment_path,
 
     glAttachShader(m_id, vertex_shader);
     glAttachShader(m_id, fragment_shader);
-    if(geometry_path != "") glAttachShader(m_id, geometry_shader);
+    if(!geometry_path.empty()) glAttachShader(m_id, geometry_shader);
 
     glLinkProgram(m_id);
     
@@ -99,7 +99,7 @@ Shader::Shader(const std::string& vertex_path, const std::string& fragment_path,
 
     glDeleteShader(vertex_shader);
     glDeleteShader(fragment_shader);
-    if(geometry_path != "") glDeleteShader(geometry_shader);
+    if(!geometry_path.empty()) glDeleteShader(geometry_shader);
 
     cache_uniform_locations();
 }
