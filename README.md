@@ -2,11 +2,12 @@
 
 ## Current Status
 
-![](./docs/assets/render-sponza-new.png)
-![](./docs/assets/render-sponza-multiple-lights.png)
-![](./docs/assets/render-sponza-2.png)
 
-- Shadow Mapping (in progress)
+![](./docs/assets/render-sponza-multiple-lights.png)
+![](./docs/assets/sponza-shadow-mapping-1.png)
+
+
+- Shadow Mapping
 - Physically Based Rendering (PBR)
 - Blinn Phong Lighting
 - Multiple Lights
